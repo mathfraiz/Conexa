@@ -1,0 +1,22 @@
+{
+  "name": "conexa",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "model": "node model/db.js"
+  },
+  "keywords": [],
+  "author": "Ayla Micheluzzi, João Victor Carvalho de Freitas, Matheus Fraiz de Camargo Antonello, Matheus Brehm",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
