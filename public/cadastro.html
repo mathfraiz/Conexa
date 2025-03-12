@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+  <!-- Script JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('cadastroForm');
+      const senhaInput = document.getElementById('senha');
+      const senhaRequisitos = document.getElementById('senhaRequisitos');
+      const modalSucesso = document.getElementById('modalSucesso');
+
+      // Mostrar requisitos da senha ao focar no campo
+      senhaInput.addEventListener('focus', () => {
+        senhaRequisitos.classList.remove('hidden');
+      });
+
+      // Validar formulário ao enviar
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Validar senha
+        const senha = senhaInput.value;
+        const regexSenha = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; // ensinado na aula do dia 11/03
+        if (!regexSenha.test(senha)) {
+          alert('A senha não atende aos requisitos.');
+          return;
+        }
+
+        // Validar telefone (apenas números)
+        const telefone = document.getElementById('telefone').value;
+        if (!/^\d{11}$/.test(telefone)) {
+          alert('O telefone deve conter apenas números e 11 dígitos.');
+          return;
+        }
+
+        // Se tudo estiver válido, mostrar modal e redirecionar
+        modalSucesso.classList.remove('hidden');
+        setTimeout(() => {
+          window.location.href = '/login.html'; // Redirecionar para a tela de login
+        }, 3000); // 3 segundos
+      });
+    });
+  </script>
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tela de Cadastro</title>
+  <link href="./dist/output.css" rel="stylesheet"> <!-- Link para o arquivo CSS do Tailwind -->
+</head>
+<body class="bg-gray-100">
+  <div class="min-h-screen flex">
+    <!-- Lado esquerdo: Imagem -->
+    <div class="w-3/5 bg-cover bg-center" style="background-image: url('https://via.placeholder.com/800');">
+      <!-- Aqui você pode colocar uma imagem de fundo -->
+    </div>
+
+    <!-- Lado direito: Formulário de Cadastro -->
+    <div class="w-2/5 flex items-center justify-center bg-white">
+      <div class="w-full max-w-md p-8">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
+
+        <!-- Formulário -->
+        <form id="cadastroForm">
+          <!-- Campo de Foto de Perfil -->
+          <div class="mb-4">
+            <label for="foto" class="block text-sm font-medium text-gray-700">Foto de Perfil</label>
+            <input
+              type="file"
+              id="foto"
+              name="foto"
+              accept="image/*"
+              class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              required
+            />
+          </div>
+
+          <!-- Campo de Nome -->
+          <div class="mb-4">
+            <label for="nome" class="block text-sm font-medium text-gray-700">Nome</label>
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              placeholder="Digite seu nome"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <!-- Campo de Email -->
+          <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Digite seu email"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <!-- Campo de Número de Telefone -->
+          <div class="mb-4">
+            <label for="telefone" class="block text-sm font-medium text-gray-700">Número de Telefone</label>
+            <input
+              type="tel"
+              id="telefone"
+              name="telefone"
+              placeholder="Digite seu telefone"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              pattern="[0-9]{11}"
+              title="Digite apenas números (11 dígitos)."
+              required
+            />
+          </div>
+
+          <!-- Campo de Senha -->
+          <div class="mb-6">
+            <label for="senha" class="block text-sm font-medium text-gray-700">Senha</label>
+            <input
+              type="password"
+              id="senha"
+              name="senha"
+              placeholder="Digite sua senha"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+            <p id="senhaRequisitos" class="text-sm text-gray-600 mt-2 hidden">
+              A senha deve ter:
+              <ul class="list-disc list-inside">
+                <li>No mínimo 8 caracteres</li>
+                <li>Pelo menos 1 letra maiúscula</li>
+                <li>Pelo menos 1 número</li>
+                <li>Pelo menos 1 caractere especial</li>
+              </ul>
+            </p>
+          </div>
+
+          <!-- Botão de Salvar -->
+          <button
+            type="submit"
+            class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Salvar
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Sucesso -->
+  <div id="modalSucesso" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+      <h3 class="text-2xl font-bold text-green-600 mb-4">Salvo com sucesso!</h3>
+      <p class="text-gray-700">Você será redirecionado para a tela de login.</p>
+    </div>
+  </div>
+
+
+</body>
+</html>
