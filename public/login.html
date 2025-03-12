@@ -2,20 +2,20 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tela de Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Define a largura de visualização como a largura do dispositivo. -->
+  <title>Login</title>
   <link href="./dist/output.css" rel="stylesheet"> <!-- Link para o arquivo CSS do Tailwind -->
 </head>
 <body class="bg-gray-100">
-  <div class="min-h-screen flex">
+  <div class="min-h-screen flex"> <!-- Define a altura mínima do elemento como a altura da tela do dispositivo -->
     <!-- Lado esquerdo: Imagem -->
-    <div class="w-3/5 bg-cover bg-center" style="background-image: url('/caminho/para/sua/imagem.jpg');">
-      <!-- Aqui você pode colocar uma imagem de fundo -->
+    <div class="w-3/5 bg-cover bg-center" style="background-image: url('/imagem.jpg');"> <!-- Usa 3 blocos de 5, bg = background -->
+
     </div>
 
     <!-- Lado direito: Formulário de Login -->
-    <div class="w-2/5 flex items-center justify-center bg-white">
-      <div class="w-full max-w-md p-8">
+    <div class="w-2/5 flex items-center justify-center bg-white">  <!-- Usa 2 blocos de 5 -->
+      <div class="w-full max-w-md p-8"> <!-- largura máxima média, p = espaçamento de 4px de todos os lados-->
         <h2 class="text-2xl font-bold mb-6 text-gray-800">Login</h2>
 
         <!-- Formulário -->
@@ -23,27 +23,15 @@
           <!-- Campo de Email -->
           <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Digite seu email"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+            <input type="email" id="email" name="email" placeholder="Digite seu email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required/>
           </div>
 
           <!-- Campo de Senha -->
           <div class="mb-6">
             <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Digite sua senha"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+            <input type="password" id="password" name="password" placeholder="Digite sua senha" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required/>
           </div>
 
           <!-- Botão de Login -->
@@ -59,7 +47,7 @@
         <div class="mt-4 text-center">
           <p class="text-sm text-gray-600">
             Não está registrado?
-            <a href="cadastro.html" class="text-blue-600 hover:text-blue-500">Crie uma conta</a>
+            <a href="cadastro.html" class="text-blue-600 hover:text-blue-500">Crie uma conta</a> <!-- Redireciona para a página de cadastro -->
           </p>
         </div>
       </div>
