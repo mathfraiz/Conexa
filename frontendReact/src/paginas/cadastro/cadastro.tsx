@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 
 const Cadastro: React.FC = () => {
+
   // Estados para controlar os campos
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -58,7 +59,7 @@ const formatarTelefone = (telefone: string) => {
 // Manipular mudanças no telefone
 const handleTelefoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   let value = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
-  
+
   // Impede mais de 11 dígitos
   if (value.length > 11) {
     value = value.slice(0, 11);
@@ -88,7 +89,7 @@ const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
   // Aguarda a atualização do estado antes de validar
   setTimeout(() => {
-    setEmailErro(validarEmail(value) ? "" : "Email inválido.");
+    setEmailErro(validarEmail(email) ? email : "Email inválido.");
   }, 0);
 
   // Verifica se o usuário digitou "@"
@@ -122,12 +123,9 @@ const selecionarSugestao = (sugestao: string) => {
 
   // Valida o e-mail após atualizar o estado
   setTimeout(() => {
-    setEmailErro(validarEmail(emailCorrigido) ? "" : "Email inválido.");
+    setEmailErro(validarEmail(email) ? "" : "Email inválido.");
   }, 0);
 };
-
-
-
 
 
   // Mostrar/Esconder senha
@@ -160,10 +158,6 @@ const selecionarSugestao = (sugestao: string) => {
 />
 {emailErro && <p className="text-sm text-red-500 mt-2">{emailErro}</p>}
 
-
-
-
-  // Upload de imagem e preview
   const handleImagemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -353,13 +347,13 @@ const selecionarSugestao = (sugestao: string) => {
 </div>
 
 
-            {/* Botão de Salvar */}
-            <button type="submit" className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700">
-              Salvar
-            </button>
-          </form>
-        </div>
-      </div>
+        {/* Botão de Salvar */}
+        <button type="submit" className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700">
+          Salvar
+        </button>
+      </form>
+    </div>
+  </div>
 
       {/* Modal de Sucesso */}
       {mostrarModal && (
