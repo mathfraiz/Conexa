@@ -205,12 +205,12 @@ const selecionarSugestao = (sugestao: string) => {
   };
   
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <div className="flex-min-h-screen flex flex-col md:flex-row">
       {/* Lado esquerdo: Imagem */}
-      <div className="md:w-3/5 w-full h-64 md:h-auto bg-cover bg-center" style={{ backgroundImage: "url('/logo2.jpg')" }}></div>
+      <div className="w-full h-full md:h-auto bg-cover" style={{ backgroundImage: "url('/logo2.jpg')" }}></div>
 
       {/* Lado direito: Formulário de Cadastro */}
-      <div className="w-full md:w-2/5 flex items-center justify-center bg-white p-6">
+      <div className="w-72 md:w-96 p-6 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="w-full max-w-md">
           <h2 className="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
 
