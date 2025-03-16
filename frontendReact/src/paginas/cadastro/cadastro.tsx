@@ -205,30 +205,28 @@ const selecionarSugestao = (sugestao: string) => {
   };
   
   return (
-    <div className="flex-min-h-screen flex flex-col md:flex-row">
-      {/* Lado esquerdo: Imagem */}
-      <div className="w-full h-full md:h-auto bg-cover" style={{ backgroundImage: "url('/logo2.jpg')" }}></div>
+    <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" 
+     style={{ backgroundImage: "url('/logo2.jpg')" }}>
+  
+  {/* Formulário de Cadastro */}
+  <div className="w-72 md:w-96 p-6 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center">
+    <div className="w-full max-w-md">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
 
-      {/* Lado direito: Formulário de Cadastro */}
-      <div className="w-72 md:w-96 p-6 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <div className="w-full max-w-md">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
-
-          {/* Formulário */}
-          <form onSubmit={handleSubmit}>
-{/* Foto de Perfil */}
-<div className="mb-4">
-  <label className="block text-sm font-medium text-gray-700">Foto de Perfil</label>
-  <input
-    type="file"
-    accept="image/*"
-    onChange={handleImagemChange}
-    ref={fileInputRef} // Adiciona referência ao input
-    className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 
-               file:rounded-md file:border-0 file:text-purple-700 
-               file:bg-purple-100 hover:file:bg-purple-200 cursor-pointer"
-  />
-
+      {/* Formulário */}
+      <form onSubmit={handleSubmit}>
+        {/* Foto de Perfil */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Foto de Perfil</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImagemChange}
+            ref={fileInputRef}
+            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 
+                       file:rounded-md file:border-0 file:text-purple-700 
+                       file:bg-purple-100 hover:file:bg-purple-200 cursor-pointer"
+          />    
   {/* Exibir preview da imagem escolhida */}
   {imagemPreview && (
     <div className="mt-2 flex flex-col items-start">
