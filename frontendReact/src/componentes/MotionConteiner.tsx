@@ -1,6 +1,6 @@
 import { motion, MotionProps } from "framer-motion";
 import { ReactNode } from "react";
-
+import React from "react";
 // Definição das props do componente
 interface MotionContainerProps {
   children: ReactNode;
@@ -21,7 +21,7 @@ const MotionContainer: React.FC<MotionContainerProps> = ({
 }) => {
   return (
     <motion.div
-      className={`relative bg-cover bg-center w-full ${height} ${className}`}
+      className={`relative bg-cover bg-center w-full p-8  ${height} ${className}`}
       style={{ backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none" }}
       initial={animation}
       animate={{ opacity: 1, y: 0 }}

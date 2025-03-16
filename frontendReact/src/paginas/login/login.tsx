@@ -3,16 +3,11 @@ import { Link } from 'react-router-dom'; // Para navegação
 
 const Login: React.FC = () => {
   return (
-    <main className="min-h-screen flex">
-      {/* Lado esquerdo: Imagem */}
-      <section
-        className="w-full bg-cover bg-center"
-        style={{ backgroundImage: "url('/logo2.jpg')" }}
-      />
+    <main className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url('/logo.jpg')" }}>
 
       {/* Lado direito: Formulário de Login */}
-      <section className="w-2/5 flex items-center justify-center bg-white">
-        <div className="w-full max-w-md p-8">
+      
+        <div className="w-full max-w-md p-8 bg-white rounded-2xl">
           <h2 className="text-2xl font-bold mb-6 text-gray-800">Login</h2>
 
           {/* Formulário */}
@@ -66,7 +61,6 @@ const Login: React.FC = () => {
             </p>
           </div>
         </div>
-      </section>
     </main>
   );
 };
