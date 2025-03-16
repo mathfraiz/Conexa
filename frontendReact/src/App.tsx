@@ -8,7 +8,7 @@ import Home from './paginas/Index/index'
 
 function App() {
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-screen h-screen">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home/>} />

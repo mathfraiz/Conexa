@@ -5,7 +5,7 @@ import MotionContainer from "../../componentes/MotionConteiner"; // Importando M
 
 const Home = () => {
   return (
-    <div className="min-h-screen w-full bg-fixed overflow-hidden bg-gray-100" style={{ backgroundImage: "url('/logo.jpg')" }}>
+    <div className="w-screen h-screen bg-center bg-fixed bg-cover" style={{ backgroundImage: "url('/logo.jpg')" }}>
 
       {/* Navbar */}
       <Navbar />
@@ -25,7 +25,7 @@ const Home = () => {
       </MotionContainer>
 
       {/* Seção de Eventos em Destaque */}
-      <div className="p-8">
+      <div className=" bg-transparent" >
         <h3 className="text-2xl font-bold text-center text-gray-800">Eventos em Destaque</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           
@@ -72,7 +72,7 @@ const Home = () => {
       </div>
 
       {/* Rodapé */}
-      <footer className="bg-gray-800 text-white text-center p-4 mt-10">
+      <footer className="bg-gray-800 text-white text-center p-4  mb-10">
         <p>© 2025 Eventos+. Todos os direitos reservados.</p>
       </footer>
     </div>
