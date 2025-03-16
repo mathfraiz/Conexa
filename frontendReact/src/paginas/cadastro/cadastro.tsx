@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-const Cadastro: React.FC = () => {
+const Cadastro: React.FC= () => {
 
   // Estados para controlar os campos
   const [nome, setNome] = useState("");

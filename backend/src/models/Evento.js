@@ -1,4 +1,4 @@
-import pool from "../config/db.js";
+import pool from "../config/bd.js";
 
 class Event {
   static async create(titulo, descricao, data, horario, local, organizador_id, capacidade_maxima, categoria_id) {

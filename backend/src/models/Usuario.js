@@ -1,4 +1,4 @@
-import pool from "../config/db.js";
+import pool from "../config/bd.js";
 
 class User {
   static async create(nome, email, senha, telefone, tipo = "participante") {
