@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
-import Usuario from "../models/Usuario.js";
+import Usuario from "../controller/Usuario.js";
 
 dotenv.config();
 

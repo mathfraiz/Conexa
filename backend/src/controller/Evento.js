@@ -1,14 +1,14 @@
 import pool from "../config/bd.js";
 
-class Event {
-  static async create(titulo, descricao, data, horario, local, organizador_id, capacidade_maxima, categoria_id) {
+class Evento {
+  static async createEvento(titulo, descricao, data, horario, local, organizador_id, capacidade_maxima, categoria_id) {
     const sql = `INSERT INTO events (titulo, descricao, data, horario, local, organizador_id, capacidade_maxima, categoria_id) 
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
     const [result] = await pool.query(sql, [titulo, descricao, data, horario, local, organizador_id, capacidade_maxima, categoria_id]);
     return result.insertId;
   }
 
-  static async findAll() {
+  static async findAllEvento() {
     const sql = `SELECT e.*, u.nome AS organizador, c.nome AS categoria 
                  FROM events e
                  JOIN users u ON e.organizador_id = u.id
@@ -17,11 +17,11 @@ class Event {
     return rows;
   }
 
-  static async findById(id) {
+  static async findEventoById(id) {
     const sql = `SELECT * FROM events WHERE id = ?`;
     const [rows] = await pool.query(sql, [id]);
     return rows[0];
   }
 }
 
-export default Event;
+export default Evento;

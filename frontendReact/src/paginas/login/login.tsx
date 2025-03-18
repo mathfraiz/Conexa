@@ -1,12 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // Para navegação
+import React from "react";
+import { Link } from "react-router-dom"; // Para navegação
+import Navbar from "../../componentes/BarraNav";
+import Rodape from "../../componentes/Rodape";
 
 const Login: React.FC = () => {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url('/logo.jpg')" }}>
-
+    <main
+      className="h-screen flex flex-col items-center justify-center bg-cover bg-center "
+      style={{ backgroundImage: "url('/logo.jpg')" }}
+    >
       {/* Lado direito: Formulário de Login */}
-      
+
+      <Navbar login={true}></Navbar>
+
+      <div className="flex flex-1 items-center justify-center">
         <div className="w-full max-w-md p-8 bg-white rounded-2xl">
           <h2 className="text-2xl font-bold mb-6 text-gray-800">Login</h2>
 
@@ -14,7 +21,10 @@ const Login: React.FC = () => {
           <form>
             {/* Campo de Email */}
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <input
@@ -29,7 +39,10 @@ const Login: React.FC = () => {
 
             {/* Campo de Senha */}
             <div className="mb-6">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Senha
               </label>
               <input
@@ -54,13 +67,18 @@ const Login: React.FC = () => {
           {/* Link para Cadastro */}
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
-              Não está registrado?{' '}
-              <Link to="/cadastro" className="text-purple-600 hover:text-purple-500">
+              Não está registrado?{" "}
+              <Link
+                to="/cadastro"
+                className="text-purple-600 hover:text-purple-500"
+              >
                 Crie uma conta
               </Link>
             </p>
           </div>
         </div>
+      </div>
+      <Rodape></Rodape>
     </main>
   );
 };

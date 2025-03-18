@@ -2,10 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav"; // Importando a Navbar
 import MotionContainer from "../../componentes/MotionConteiner"; // Importando MotionContainer
+import Rodape from "../../componentes/Rodape";
 
 const Home = () => {
   return (
-    <div className="w-screen h-screen bg-center bg-fixed bg-cover" style={{ backgroundImage: "url('/logo.jpg')" }}>
+    <div className="min-w-screen min-h-screen bg-fixed bg-cover" style={{ backgroundImage: "url('/logo.jpg')" }}>
 
       {/* Navbar */}
       <Navbar />
@@ -18,16 +19,17 @@ const Home = () => {
         transition={{ duration: 1 }}
         className="flex items-center justify-center"
       >
-        <div className="bg-black bg-opacity-50 p-6 rounded-lg text-center text-white">
+        <div className="bg-amber-400 rounded-xl bg-opacity-50 p-6 text-center text-white">
           <h2 className="text-3xl font-bold mb-2">Encontre e participe dos melhores eventos!</h2>
           <p className="text-lg">Cadastre-se e aproveite experiências incríveis.</p>
         </div>
       </MotionContainer>
 
       {/* Seção de Eventos em Destaque */}
-      <div className=" bg-transparent" >
-        <h3 className="text-2xl font-bold text-center text-gray-800">Eventos em Destaque</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+      <div className=" bg-transparent mb-10 ml-10 mr-10"  >
+        <h3 className="text-2xl font-bold text-center text-white inline-block bg-amber-400 rounded-xl p-3 mb-5
+          ">Eventos em Destaque</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Evento 1 */}
           <MotionContainer 
@@ -72,9 +74,8 @@ const Home = () => {
       </div>
 
       {/* Rodapé */}
-      <footer className="bg-gray-800 text-white text-center p-4  mb-10">
-        <p>© 2025 Eventos+. Todos os direitos reservados.</p>
-      </footer>
+      <Rodape>
+      </Rodape>
     </div>
   );
 };

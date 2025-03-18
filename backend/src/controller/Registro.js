@@ -1,6 +1,6 @@
 import pool from "../config/bd.js";
 
-class Registration {
+class Registro {
   static async create(usuario_id, evento_id, status = "pendente") {
     const sql = `INSERT INTO registrations (usuario_id, evento_id, status) VALUES (?, ?, ?)`;
     const result = await pool.query(sql, [usuario_id, evento_id, status]);
@@ -22,4 +22,4 @@ class Registration {
   }
 }   
 
-export default Registration;
+export default Registro;
