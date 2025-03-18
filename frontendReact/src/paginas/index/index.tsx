@@ -6,27 +6,13 @@ import Rodape from "../../componentes/Rodape";
 
 const Home = () => {
   return (
-    <div className="min-w-screen min-h-screen bg-fixed bg-cover" style={{ backgroundImage: "url('/logo.jpg')" }}>
+    <div className="min-w-screen min-h-screen bg-fixed bg-cover flex flex-col" style={{ backgroundImage: "url('/logo.jpg')" }}>
 
       {/* Navbar */}
       <Navbar />
 
-      {/* Banner utilizando MotionContainer */}
-      <MotionContainer 
-        backgroundImage="/banner.jpg"
-        height="h-[400px]"
-        animation={{ opacity: 0, y: -50 }}
-        transition={{ duration: 1 }}
-        className="flex items-center justify-center"
-      >
-        <div className="bg-amber-400 rounded-xl bg-opacity-50 p-6 text-center text-white">
-          <h2 className="text-3xl font-bold mb-2">Encontre e participe dos melhores eventos!</h2>
-          <p className="text-lg">Cadastre-se e aproveite experiências incríveis.</p>
-        </div>
-      </MotionContainer>
-
       {/* Seção de Eventos em Destaque */}
-      <div className=" bg-transparent mb-10 ml-10 mr-10"  >
+      <div className=" bg-transparent mb-10 ml-10 mr-10 flex-1"  >
         <h3 className="text-2xl font-bold text-center text-white inline-block bg-amber-400 rounded-xl p-3 mb-5
           ">Eventos em Destaque</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

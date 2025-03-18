@@ -231,7 +231,7 @@ const Cadastro: React.FC = () => {
         style={{ backgroundImage: "url('/logo2.jpg')" }}
       >
         <BarraNav cadastro={true}></BarraNav>
-        <div className="w-72 md:w-96 p-6 bg-amber-400 rounded-lg shadow-lg flex flex-col items-center justify-center bg-opacity-100 ">
+        <div className="w-72 md:w-96 p-6 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center">
           <div className="w-full max-w">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
             <form onSubmit={handleSubmit}>
