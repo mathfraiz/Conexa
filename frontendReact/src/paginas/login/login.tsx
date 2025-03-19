@@ -96,6 +96,12 @@ const Login: React.FC = () => {
                 Crie uma conta
               </Link>
             </p>
+            <p className="text-sm text-gray-600">
+              Esqueceu a senha?{" "}
+              <Link to="/recuperação" className="text-purple-600 hover:text-purple-500">
+                Recuperar senha
+              </Link>
+            </p>
           </div>
         </div>
       </div>
