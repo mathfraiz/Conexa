@@ -40,11 +40,11 @@ const Login: React.FC = () => {
   };
 
   return (
-    <main className="h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url('/logo.jpg')" }}>
+    <main className="h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url('/logo2.jpg')" }}>
       <Navbar login={true} />
 
       <div className="flex flex-1 items-center justify-center">
-        <div className="w-full max-w-md p-8 bg-white rounded-2xl">
+        <div className="w-full max-w-md p-8 bg-gray-100 rounded-lg shadow-2xl border border-gray-300">
           <h2 className="text-2xl font-bold mb-6 text-gray-800">Login</h2>
 
           {/* Formulário */}
@@ -57,7 +57,7 @@ const Login: React.FC = () => {
                 placeholder="Digite seu email"
                 value={email}
                 onChange={handleEmailChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-gray-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
                 required
               />
               {/* Sugestões de e-mail */}
@@ -78,12 +78,12 @@ const Login: React.FC = () => {
               <input
                 type="password"
                 placeholder="Digite sua senha"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-gray-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
                 required
               />
             </div>
 
-            <button type="submit" className="w-full bg-purple-700 text-white py-2 px-4 rounded-md hover:bg-purple-800 focus:ring-2 focus:ring-purple-500">
+            <button type="submit" className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all">
               Entrar
             </button>
           </form>
