@@ -12,10 +12,10 @@ const Home = () => {
 
       {/* Seção de Eventos em Destaque */}
       <div className="flex flex-col items-center flex-1 p-8 mt-16">
-        
-        <h3 className="text-2xl font-bold text-gray-800 bg-white/30 backdrop-blur-lg px-6 py-3 rounded-xl shadow-lg mb-6">
-          Eventos em Destaque
-        </h3>
+
+      <h3 className="text-2xl font-bold text-gray-800 bg-gray-200 px-6 py-3 rounded-xl shadow-lg mb-6 border border-gray-300">
+  Eventos em Destaque
+</h3>
 
         {/* Primeira linha de eventos */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl">
