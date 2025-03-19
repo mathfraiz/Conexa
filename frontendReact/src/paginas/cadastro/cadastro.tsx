@@ -84,7 +84,7 @@ const Cadastro: React.FC = () => {
         ? "O telefone deve conter exatamente 11 dígitos."
         : validarTelefone(telefoneFormatado)
         ? ""
-        : "O telefone deve estar no formato (XX) XXXXX-XXXX."
+        : "Digite um número válido."
     );
   };
 
@@ -386,11 +386,12 @@ const Cadastro: React.FC = () => {
 
               {/* Botão de Salvar */}
               <button
-                type="submit"
-                className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700"
-              >
-                Salvar
-              </button>
+              type="submit"
+              className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all"
+            >
+              Salvar
+            </button>
+
             </form>
           </div>
         </div>
