@@ -1,17 +1,47 @@
-import React from "react";
-import { Link } from "react-router-dom"; // Para navegação
+import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
 import Rodape from "../../componentes/Rodape";
 
-const Login: React.FC = () => {
-  return (
-    <main
-      className="h-screen flex flex-col items-center justify-center bg-cover bg-center "
-      style={{ backgroundImage: "url('/logo.jpg')" }}
-    >
-      {/* Lado direito: Formulário de Login */}
+// Sugestões padrão de e-mail
+const emailSugeridos = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com"];
 
-      <Navbar login={true}></Navbar>
+const Login: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [sugestoes, setSugestoes] = useState<string[]>([]);
+  const [mostrarSugestoes, setMostrarSugestoes] = useState(false);
+  const sugestoesRef = useRef<HTMLDivElement>(null);
+
+  // Fecha a lista de sugestões ao clicar fora
+  useEffect(() => {
+    const fecharSugestoes = (e: MouseEvent) => {
+      if (!sugestoesRef.current?.contains(e.target as Node)) setMostrarSugestoes(false);
+    };
+    document.addEventListener("mousedown", fecharSugestoes);
+    return () => document.removeEventListener("mousedown", fecharSugestoes);
+  }, []);
+
+  // Atualiza sugestões de e-mail enquanto o usuário digita
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+    setEmail(value);
+
+    if (!value.includes("@")) return setMostrarSugestoes(false);
+
+    const dominio = value.split("@")[1] || "";
+    setSugestoes(emailSugeridos.filter((s) => s.startsWith(dominio)) || emailSugeridos);
+    setMostrarSugestoes(true);
+  };
+
+  // Preenche o e-mail com a sugestão clicada
+  const selecionarSugestao = (sugestao: string) => {
+    setEmail(email.split("@")[0] + "@" + sugestao);
+    setMostrarSugestoes(false);
+  };
+
+  return (
+    <main className="h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url('/logo.jpg')" }}>
+      <Navbar login={true} />
 
       <div className="flex flex-1 items-center justify-center">
         <div className="w-full max-w-md p-8 bg-white rounded-2xl">
@@ -20,46 +50,40 @@ const Login: React.FC = () => {
           {/* Formulário */}
           <form>
             {/* Campo de Email */}
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
+            <div className="mb-4 relative" ref={sugestoesRef}>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
               <input
                 type="email"
-                id="email"
-                name="email"
                 placeholder="Digite seu email"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={email}
+                onChange={handleEmailChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
                 required
               />
+              {/* Sugestões de e-mail */}
+              {mostrarSugestoes && (
+                <ul className="absolute bg-white border border-gray-300 rounded-md w-full mt-1 shadow-md z-10">
+                  {sugestoes.map((s) => (
+                    <li key={s} className="px-3 py-2 cursor-pointer hover:bg-purple-50" onClick={() => selecionarSugestao(s)}>
+                      {email.split("@")[0]}@{s}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             {/* Campo de Senha */}
             <div className="mb-6">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Senha
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Senha</label>
               <input
                 type="password"
-                id="password"
-                name="password"
                 placeholder="Digite sua senha"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
                 required
               />
             </div>
 
-            {/* Botão de Login */}
-            <button
-              type="submit"
-              className="w-full bg-purple-700 text-white py-2 px-4 rounded-md hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
+            <button type="submit" className="w-full bg-purple-700 text-white py-2 px-4 rounded-md hover:bg-purple-800 focus:ring-2 focus:ring-purple-500">
               Entrar
             </button>
           </form>
@@ -68,17 +92,15 @@ const Login: React.FC = () => {
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
               Não está registrado?{" "}
-              <Link
-                to="/cadastro"
-                className="text-purple-600 hover:text-purple-500"
-              >
+              <Link to="/cadastro" className="text-purple-600 hover:text-purple-500">
                 Crie uma conta
               </Link>
             </p>
           </div>
         </div>
       </div>
-      <Rodape></Rodape>
+
+      <Rodape />
     </main>
   );
 };
