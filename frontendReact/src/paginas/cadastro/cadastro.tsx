@@ -3,13 +3,20 @@ import Rodape from "../../componentes/Rodape";
 import BarraNav from "../../componentes/BarraNav";
 
 const Cadastro: React.FC = () => {
+  const [usuario,setUsuario] = useState();
   // Form states
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
   const [imagemPreview, setImagemPreview] = useState<string | null>(null);
+  const [cep, setCep] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [uf, setUf] = useState("");
 
+  
   // Error states
   const [emailErro, setEmailErro] = useState("");
   const [senhaErro, setSenhaErro] = useState("");
@@ -32,6 +39,40 @@ const Cadastro: React.FC = () => {
     "yahoo.com",
   ];
   const [sugestoesEmail, setSugestoesEmail] = useState<string[]>([]);
+
+  const buscarCep = async () => {
+    if (cep.length === 8) {
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+        if (!data.erro) {
+          setEndereco(data.logradouro || "");
+          setBairro(data.bairro || "");
+          setCidade(data.localidade || "");
+          setUf(data.uf || "");
+
+        }
+      } catch (error) {
+        console.error("Erro ao buscar o CEP:", error);
+      }
+    }
+  };
+  
+  const cadastrar = async () => {
+    const response = await fetch("http://localhost:8080/cadastro", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nome,
+        email,
+        telefone,
+        senha,
+      }),
+    });
+    return response.json();
+  }
 
   // Validation functions
   const validarEmail = (email: string) => {
@@ -198,31 +239,37 @@ const Cadastro: React.FC = () => {
     setMostrarSenha(!mostrarSenha);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (validarEmail(email)) {
       setEmailErro("Email inválido.");
       return;
-    } 
-
+    }
+  
     if (!validarSenha(senha)) {
       setSenhaErro("A senha não atende aos requisitos.");
       return;
     }
-
+  
     if (!validarTelefone(telefone)) {
-      setTelefoneErro(
-        "O telefone deve conter exatamente 11 dígitos numéricos."
-      );
+      setTelefoneErro("O telefone deve conter exatamente 11 dígitos numéricos.");
       return;
     }
-
-    setMostrarModal(true);
-    setTimeout(() => {
-      window.location.href = "/login";
-    }, 3000);
+  
+    try {
+      const resposta = await cadastrar();
+      setUsuario(resposta);
+      setMostrarModal(true);
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 3000);
+    } catch (error) {
+      console.error("Erro ao cadastrar:", error);
+      alert("Ocorreu um erro ao cadastrar. Tente novamente.");
+    }
   };
+  
 
   return (
     <div>
@@ -230,7 +277,7 @@ const Cadastro: React.FC = () => {
         className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat "
         style={{ backgroundImage: "url('/logo2.jpg')" }}
       >
-        <BarraNav cadastro={true}></BarraNav>
+        <BarraNav isLogado={false} ></BarraNav>
         <div className="w-full max-w-md p-8 bg-gray-100 rounded-lg shadow-xl border border-gray-300">
           <div className="w-full max-w">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
@@ -281,6 +328,64 @@ const Cadastro: React.FC = () => {
                   required
                 />
               </div>
+              
+{/* CEP */}
+<div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700">CEP</label>
+  <input
+    type="text"
+    placeholder="Digite seu CEP"
+    value={cep}
+    onChange={(e) => setCep(e.target.value.replace(/\D/g, "").slice(0, 8))}
+    onBlur={buscarCep}
+    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
+    required
+  />
+</div>
+
+{/* Endereço (preenchido automaticamente) */}
+<div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700">Endereço</label>
+  <input
+    type="text"
+    value={endereco}
+    readOnly
+    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
+  />
+</div>
+
+{/* Bairro (preenchido automaticamente) */}
+<div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700">Bairro</label>
+  <input
+    type="text"
+    value={bairro}
+    readOnly
+    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
+  />
+</div>
+{/* Cidade */}
+<div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700">Cidade</label>
+  <input
+    type="text"
+    value={cidade}
+    readOnly
+    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
+  />
+</div>
+
+{/* UF */}
+<div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700">UF</label>
+  <input
+    type="text"
+    value={uf}
+    readOnly
+    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
+  />
+</div>
+
 
               {/* Email */}
               <div className="mb-4 relative">
@@ -384,16 +489,17 @@ const Cadastro: React.FC = () => {
                 )}
               </div>
 
-              {/* Botão de Salvar */}
-              <button
-                type="submit"
-                className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all"
-              >
-                Salvar
-              </button>
-            </form>
-          </div>
-        </div>
+{/* Botão de Salvar */}
+<button
+  type="submit"
+  className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all"
+>
+  Salvar
+</button>
+</form>
+</div>
+</div>
+
 
         {/* Modal de Sucesso */}
         {mostrarModal && (

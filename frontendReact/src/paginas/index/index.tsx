@@ -1,127 +1,77 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
-import MotionContainer from "../../componentes/MotionConteiner";
 import Rodape from "../../componentes/Rodape";
+import MotionContainer from "../../componentes/MotionConteiner";
 
-const Home = () => {
+const Index = () => {
   return (
-    <div className="min-w-screen min-h-screen flex flex-col bg-cover bg-center" style={{ backgroundImage: "url('/logo.jpg')" }}>
-      
-      <Navbar />
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 to-white">
+      <Navbar isLogado={false} />
 
-      {/* Seção de Eventos em Destaque */}
-      <div className="flex flex-col items-center flex-1 p-8 mt-16">
+      <main className="flex-1 pt-28 px-6 md:px-16">
+        {/* Título principal */}
+        <section className="text-center mb-16">
+          <h1 className="text-5xl font-extrabold text-purple-800 mb-4 drop-shadow-sm">
+            Quem Somos
+          </h1>
+          <p className="text-gray-600 text-lg max-w-3xl mx-auto">
+            Criamos conexões humanas por meio da tecnologia, da cultura e da colaboração em eventos únicos e transformadores.
+          </p>
+        </section>
 
-      <h3 className="text-2xl font-bold text-gray-800 bg-gray-200 px-6 py-3 rounded-xl shadow-lg mb-6 border border-gray-300">
-  Eventos em Destaque
-</h3>
-
-        {/* Primeira linha de eventos */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl">
-
-          {/* Criar Evento */}
-          <MotionContainer 
-            height="h-64"
-            animation={{ scale: 1 }} 
+        {/* Seção de Visão / Missão / Valores */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-20">
+          <MotionContainer
+            height="h-full"
+            animation={{ scale: 1 }}
             transition={{ duration: 0.3 }}
-            className="relative bg-white/30 backdrop-blur-lg flex flex-col justify-center items-center rounded-lg shadow-lg hover:scale-105 transition-transform overflow-hidden"
+            className="bg-white rounded-3xl shadow-xl p-8 border border-gray-200 hover:shadow-2xl transition"
           >
-            <h4 className="text-lg font-bold text-gray-800 z-10">Criar Novo Evento</h4>
-            <p className="text-gray-600 text-sm text-center z-10">Clique aqui para criar um evento</p>
-            <Link to="/criar-evento" className="bg-purple-700 text-white font-bold py-2 px-4 mt-4 rounded-lg shadow-md hover:bg-purple-800 transition-all z-10">
-              Criar Evento
-            </Link>
+            <h3 className="text-xl font-semibold text-purple-700 mb-3">Nossa Visão</h3>
+            <p className="text-gray-700 text-sm leading-relaxed">
+              Ser referência nacional em experiências conectadas, criando pontes entre ideias, pessoas e oportunidades através de eventos inovadores.
+            </p>
           </MotionContainer>
 
-          {/* Evento 1 */}
-          <MotionContainer 
-            height="h-64"
-            animation={{ scale: 1 }} 
+          <MotionContainer
+            height="h-full"
+            animation={{ scale: 1 }}
             transition={{ duration: 0.3 }}
-            className="relative bg-gray-100 rounded-lg shadow-md hover:scale-105 transition-transform overflow-hidden flex items-end p-4"
+            className="bg-white rounded-3xl shadow-xl p-8 border border-gray-200 hover:shadow-2xl transition"
           >
-            <img src="/evento1.jpg" alt="Evento 1" className="absolute inset-0 w-full h-full object-cover" />
-            <div className="relative bg-black/50 p-4 rounded-lg w-full text-white">
-              <h4 className="text-lg font-bold">Workshop de Fotografia</h4>
-              <p className="text-sm">Data: 20 de Abril - 14h</p>
-              <Link to="/eventos/1" className="text-purple-700 hover:underline">Saiba mais</Link>
-            </div>
+            <h3 className="text-xl font-semibold text-purple-700 mb-3">Nossa Missão</h3>
+            <p className="text-gray-700 text-sm leading-relaxed">
+              Empoderar indivíduos e organizações a criarem e participarem de eventos que gerem valor real, com praticidade, beleza e impacto.
+            </p>
           </MotionContainer>
 
-          {/* Evento 2 */}
-          <MotionContainer 
-            height="h-64"
-            animation={{ scale: 1 }} 
+          <MotionContainer
+            height="h-full"
+            animation={{ scale: 1 }}
             transition={{ duration: 0.3 }}
-            className="relative bg-gray-100 rounded-lg shadow-md hover:scale-105 transition-transform overflow-hidden flex items-end p-4"
+            className="bg-white rounded-3xl shadow-xl p-8 border border-gray-200 hover:shadow-2xl transition"
           >
-            <img src="/evento2.jpg" alt="Evento 2" className="absolute inset-0 w-full h-full object-cover" />
-            <div className="relative bg-black/50 p-4 rounded-lg w-full text-white">
-              <h4 className="text-lg font-bold">Festival de Música</h4>
-              <p className="text-sm">Data: 25 de Maio - 18h</p>
-              <Link to="/eventos/2" className="text-purple-700 hover:underline">Saiba mais</Link>
-            </div>
+            <h3 className="text-xl font-semibold text-purple-700 mb-3">Nossos Valores</h3>
+            <ul className="text-gray-700 text-sm leading-relaxed list-disc pl-4">
+              <li>Inovação com propósito</li>
+              <li>Respeito e diversidade</li>
+              <li>Transparência e ética</li>
+              <li>Foco em experiência</li>
+            </ul>
           </MotionContainer>
+        </section>
 
-        </div>
+        {/* Frase de impacto */}
+        <section className="bg-purple-100 rounded-2xl py-10 px-6 md:px-20 text-center shadow-inner">
+          <p className="text-purple-800 text-xl font-semibold italic">
+            "Juntos, transformamos eventos em conexões reais, com tecnologia, emoção e propósito."
+          </p>
+        </section>
+      </main>
 
-        {/* Segunda linha de eventos */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mt-6">
-
-          {/* Evento 3 */}
-          <MotionContainer 
-            height="h-64"
-            animation={{ scale: 1 }} 
-            transition={{ duration: 0.3 }}
-            className="relative bg-gray-100 rounded-lg shadow-md hover:scale-105 transition-transform overflow-hidden flex items-end p-4"
-          >
-            <img src="/evento3.jpg" alt="Evento 3" className="absolute inset-0 w-full h-full object-cover" />
-            <div className="relative bg-black/50 p-4 rounded-lg w-full text-white">
-              <h4 className="text-lg font-bold">Palestra sobre Inteligência Artificial</h4>
-              <p className="text-sm">Data: 15 de Agosto - 10h</p>
-              <Link to="/eventos/5" className="text-purple-700 hover:underline">Saiba mais</Link>
-            </div>
-          </MotionContainer>
-
-          {/* Evento 4 */}
-          <MotionContainer 
-            height="h-64"
-            animation={{ scale: 1 }} 
-            transition={{ duration: 0.3 }}
-            className="relative bg-gray-100 rounded-lg shadow-md hover:scale-105 transition-transform overflow-hidden flex items-end p-4"
-          >
-            <img src="/evento4.jpg" alt="Evento 4" className="absolute inset-0 w-full h-full object-cover" />
-            <div className="relative bg-black/50 p-4 rounded-lg w-full text-white">
-              <h4 className="text-lg font-bold">Exposição de Arte Moderna</h4>
-              <p className="text-sm">Data: 5 de Julho - 16h</p>
-              <Link to="/eventos/4" className="text-purple-700 hover:underline">Saiba mais</Link>
-            </div>
-          </MotionContainer>
-
-          {/* Evento 5 */}
-          <MotionContainer 
-            height="h-64"
-            animation={{ scale: 1 }} 
-            transition={{ duration: 0.3 }}
-            className="relative bg-gray-100 rounded-lg shadow-md hover:scale-105 transition-transform overflow-hidden flex items-end p-4"
-          >
-            <img src="/evento5.jpg" alt="Evento 5" className="absolute inset-0 w-full h-full object-cover" />
-            <div className="relative bg-black/50 p-4 rounded-lg w-full text-white">
-              <h4 className="text-lg font-bold">Hackathon de Programação</h4>
-              <p className="text-sm">Data: 10 de Junho - 9h</p>
-              <Link to="/eventos/3" className="text-purple-700 hover:underline">Saiba mais</Link>
-            </div>
-          </MotionContainer>
-
-        </div>
-
-      </div>
-
-      {/* Rodapé */}
       <Rodape />
     </div>
   );
 };
 
-export default Home;
+export default Index;

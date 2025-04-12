@@ -2,15 +2,38 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
 import Rodape from "../../componentes/Rodape";
+import usuarioService from "../../services/apiUsuario";
 
 // Sugestões padrão de e-mail
 const emailSugeridos = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com"];
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
   const [sugestoes, setSugestoes] = useState<string[]>([]);
   const [mostrarSugestoes, setMostrarSugestoes] = useState(false);
   const sugestoesRef = useRef<HTMLDivElement>(null);
+
+  const logar= async (email,senha) => {
+    try {
+      const response = await fetch("http://localhost:8080/usuario/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, senha }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Login bem-sucedido:", data);
+        // Redirecionar ou fazer algo após o login
+      }
+
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      // Exibir mensagem de erro ao usuário
+    }
+  };
 
   // Fecha a lista de sugestões ao clicar fora
   useEffect(() => {
@@ -41,7 +64,7 @@ const Login: React.FC = () => {
 
   return (
     <main className="h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url('/logo2.jpg')" }}>
-      <Navbar login={true} />
+      <Navbar isLogado={false} />
 
       <div className="flex flex-1 items-center justify-center">
         <div className="w-full max-w-md p-8 bg-gray-100 rounded-lg shadow-2xl border border-gray-300">
@@ -83,7 +106,9 @@ const Login: React.FC = () => {
               />
             </div>
 
-            <button type="submit" className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all">
+            <button onClick={()=>{
+              logar(email,senha)
+            }} className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all">
               Entrar
             </button>
           </form>
