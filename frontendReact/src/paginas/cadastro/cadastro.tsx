@@ -1,6 +1,6 @@
 import React, { useState, useRef, KeyboardEvent } from "react";
 import Rodape from "../../componentes/Rodape";
-import BarraNav from "../../componentes/BarraNav"
+import BarraNav from "../../componentes/BarraNav";
 
 const Cadastro: React.FC = () => {
   // Form states
@@ -59,8 +59,8 @@ const Cadastro: React.FC = () => {
 
   const formatarTelefone = (telefone: string) => {
     const numerosApenas = telefone.replace(/\D/g, "");
-    if(numerosApenas.length == 0){
-      return ""
+    if (numerosApenas.length == 0) {
+      return "";
     }
     if (numerosApenas.length <= 2) {
       return `(${numerosApenas}`;
@@ -201,10 +201,10 @@ const Cadastro: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validarEmail(email)) {
+    if (validarEmail(email)) {
       setEmailErro("Email inválido.");
       return;
-    }
+    } 
 
     if (!validarSenha(senha)) {
       setSenhaErro("A senha não atende aos requisitos.");
@@ -386,12 +386,11 @@ const Cadastro: React.FC = () => {
 
               {/* Botão de Salvar */}
               <button
-              type="submit"
-              className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all"
-            >
-              Salvar
-            </button>
-
+                type="submit"
+                className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all"
+              >
+                Salvar
+              </button>
             </form>
           </div>
         </div>
@@ -410,7 +409,7 @@ const Cadastro: React.FC = () => {
           </div>
         )}
       </div>
-      <Rodape/>
+      <Rodape />
     </div>
   );
 };

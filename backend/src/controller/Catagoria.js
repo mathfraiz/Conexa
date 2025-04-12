@@ -1,26 +1,45 @@
-import pool from "../config/bd";
+import pool from "../config/bd.js";
 
 class Categoria {
-
-    static async createEvento(titulo, descricao, data, horario, local, organizador_id, capacidade_maxima, categoria_id) {
-        const sql = `INSERT INTO events (titulo, descricao, data, horario, local, organizador_id, capacidade_maxima, categoria_id) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-        const [result] = await pool.query(sql, [titulo, descricao, data, horario, local, organizador_id, capacidade_maxima, categoria_id]);
-        return result.insertId;
+  static async criarCategoria(nome, descricao) {
+    try {
+      const sql = `INSERT INTO categoria (nome, descricao) VALUES (?, ?)`;
+      const [result] = await pool.query(sql, [nome, descricao]);
+      return { id: result.insertId, nome, descricao };
+    } catch (error) {
+      throw new Error("Erro ao criar categoria: " + error.message);
     }
+  }
 
-    static async findAllEvento() {
-        const sql = `SELECT e.*, u.nome AS organizador, c.nome AS categoria 
-                        FROM events e
-                        JOIN users u ON e.organizador_id = u.id
-                        LEFT JOIN categories c ON e.categoria_id = c.id`;
-        const [rows] = await pool.query(sql);
-        return rows;
+  static async encontrarTodasCategorias() {
+    try {
+      const sql = `SELECT * FROM categoria`;
+      const [rows] = await pool.query(sql);
+      return rows;
+    } catch (error) {
+      throw new Error("Erro ao buscar categorias: " + error.message);
     }
+  }
 
-    static async findEventoById(id) {
-        const sql = `SELECT * FROM events WHERE id = ?`;
-        const [rows] = await pool.query(sql, [id]);
-        return rows[0];
+  static async atualizarCategoria(id, campos) {
+    try {
+      const sql = `UPDATE categoria SET ? WHERE id = ?`;
+      const [result] = await pool.query(sql, [campos, id]);
+      return result.affectedRows;
+    } catch (error) {
+      throw new Error("Erro ao atualizar categoria: " + error.message);
     }
+  }
+
+  static async deletarCategoria(id) {
+    try {
+      const sql = `DELETE FROM categoria WHERE id = ?`;
+      const [result] = await pool.query(sql, [id]);
+      return result.affectedRows;
+    } catch (error) {
+      throw new Error("Erro ao deletar categoria: " + error.message);
+    }
+  }
 }
+
+export default Categoria;
