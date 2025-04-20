@@ -3,14 +3,17 @@ import pool from "../config/bd.js";
 
 class Usuario {
 
-  static async criarUsuario(nome, email, senha, telefone, tipo = "participante") {
+  static async criarUsuario(nome, email, senha, telefone, tipo = "usuario",foto) {
     try {
-      const sql = `INSERT INTO usuario (nome, email, senha, telefone, tipo) VALUES (?, ?, ?, ?, ?)`;
-      const [resultados] = await pool.query(sql, [nome, email, senha, telefone, tipo]);
+      const sql = `INSERT INTO usuario (nome, email, senha, telefone, tipo,imagem_perfil) VALUES (?, ?, ?, ?, ?,?)`;
+      const [resultados] = await pool.query(sql, [nome, email, senha, telefone, tipo,foto]);
+      if(resultados.affectedRows === 0) {
+        return null;
+      }
       return resultados;
     } catch (error) {
-      console.log("erro no controler")
-      throw new Error("Erro ao criar usuário: " + error.message);
+      console.log("erro no controler "+error)
+      return error
     }
   }
   
@@ -27,24 +30,39 @@ class Usuario {
   static async encontrarTodos() {
     try {
       const sql = `SELECT * FROM usuario`;
-      console.log("tentando acessar usuarios")
-      const [rows] = await pool.query(sql)
-      console.log("usuarios encontrados")
-      return rows;
+      console.log("tentando acessar usuarios");
+      const [rows] = await pool.query(sql);
+  
+      // Converte imagem_perfil de Buffer para base64
+      const usuariosConvertidos = rows.map((user) => ({
+        ...user,
+        imagem_perfil: user.imagem_perfil
+          ? user.imagem_perfil.toString("base64")
+          : null,
+      }));
+  
+      console.log("usuarios encontrados");
+      return usuariosConvertidos;
     } catch (error) {
-      throw new Error("Erro ao buscar todos os usuários: " + error.message);
+      console.log("Erro ao buscar todos os usuários: " + error.message);
+      return [];
     }
   }
+  
 
-  static async atualizarUsuario(id, campos) {
+  static async atualizarUsuario(id, nome, email, senha, telefone, tipo, foto) {
     try {
-      const sql = `UPDATE usuario SET ? WHERE id = ?`;
-      const [result] = await pool.query(sql, [campos, id]);
+      const sql = `
+        UPDATE usuario SET nome = ?, email = ?, senha = ?, telefone = ?, tipo = ?, imagem_perfil = ?
+        WHERE id = ?
+      `;
+      const [result] = await pool.query(sql, [nome, email, senha, telefone, tipo, foto, id]);
       return result.affectedRows;
     } catch (error) {
-      throw new Error("Erro ao atualizar usuário: " + error.message);
+      console.log("Erro ao atualizar usuário: " + error.message);
     }
   }
+  
 
   static async deletarUsuario(id) {
     try {
@@ -60,9 +78,11 @@ class Usuario {
     try {
       const sql = `SELECT * FROM usuario WHERE email = ? AND senha = ?`;
       const [rows] = await pool.query(sql, [email, senha]);
+      if(rows.length === 0) {
+        return null; // Usuário não encontrado ou senha incorreta
+      }
       return rows[0];
     } catch (error) {
-      throw new Error("Erro ao fazer login: " + error.message);
     }
   }
 }

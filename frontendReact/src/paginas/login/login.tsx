@@ -2,21 +2,34 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
 import Rodape from "../../componentes/Rodape";
-import usuarioService from "../../services/apiUsuario";
 
 // Sugestões padrão de e-mail
 const emailSugeridos = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com"];
 
 const Login: React.FC = () => {
+  const [modalMensagem, setModalMensagem] = useState("");
+  const [mostrarModal, setMostrarModal] = useState(false);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [sugestoes, setSugestoes] = useState<string[]>([]);
   const [mostrarSugestoes, setMostrarSugestoes] = useState(false);
   const sugestoesRef = useRef<HTMLDivElement>(null);
+  const [usuario, setUsuario] = useState({
+    id: 0,
+    nome: "",
+    email: "",
+    senha: "",
+    telefone: "",
+    tipo: "",
+    imagem_perfil: "",
+  });
 
-  const logar= async (email,senha) => {
+  const logar = async (email, senha) => {
+    if (email === "" || senha === "") {
+      return;
+    }
     try {
-      const response = await fetch("http://localhost:8080/usuario/login", {
+      const response = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,10 +38,29 @@ const Login: React.FC = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log("Login bem-sucedido:", data);
-        // Redirecionar ou fazer algo após o login
-      }
+        setUsuario(data);
 
+        setModalMensagem("login realizado com sucesso");
+        setMostrarModal(true);
+        console.log(usuario["tipo"]);
+
+        if (data["tipo"] == "admin") {
+          setTimeout(() => {
+            location.href = "/Adm";
+          }, 2000);
+        } else if (data["tipo"] == "usuario") {
+          setTimeout(() => {
+            location.href = "/paginaInicialLogin";
+          }, 2000);
+        }
+        sessionStorage.setItem("usuario", JSON.stringify(data));
+
+        // Redirecionar ou fazer algo após o login
+      } else {
+        setModalMensagem("Email ou senha incorretos");
+        setMostrarModal(true);
+        setTimeout(() => {}, 2000);
+      }
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       // Exibir mensagem de erro ao usuário
@@ -36,23 +68,30 @@ const Login: React.FC = () => {
   };
 
   // Fecha a lista de sugestões ao clicar fora
+  const fecharSugestoes = (e: MouseEvent) => {
+    if (!sugestoesRef.current?.contains(e.target as Node))
+      setMostrarSugestoes(false);
+  };
   useEffect(() => {
-    const fecharSugestoes = (e: MouseEvent) => {
-      if (!sugestoesRef.current?.contains(e.target as Node)) setMostrarSugestoes(false);
-    };
     document.addEventListener("mousedown", fecharSugestoes);
     return () => document.removeEventListener("mousedown", fecharSugestoes);
   }, []);
 
   // Atualiza sugestões de e-mail enquanto o usuário digita
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMostrarModal(false);
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const value = e.target.value.trim();
-    setEmail(value);
-
-    if (!value.includes("@")) return setMostrarSugestoes(false);
-
     const dominio = value.split("@")[1] || "";
-    setSugestoes(emailSugeridos.filter((s) => s.startsWith(dominio)) || emailSugeridos);
+    setEmail(value);
+    setSugestoes(
+      emailSugeridos.filter((s) => s.startsWith(dominio)) || emailSugeridos
+    );
+
+    if (!regex.test(e.target.value)) return setMostrarSugestoes(true);
+    if (!value.includes("@")) return setMostrarSugestoes(true);
+    setMostrarSugestoes(false);
+
     setMostrarSugestoes(true);
   };
 
@@ -63,7 +102,10 @@ const Login: React.FC = () => {
   };
 
   return (
-    <main className="h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url('/logo2.jpg')" }}>
+    <main
+      className="h-screen flex flex-col items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: "url('/logo2.jpg')" }}
+    >
       <Navbar isLogado={false} />
 
       <div className="flex flex-1 items-center justify-center">
@@ -72,9 +114,14 @@ const Login: React.FC = () => {
 
           {/* Formulário */}
           <form>
+            <div className="text-red-500 text-center mb-4">
+              {mostrarModal && modalMensagem}
+            </div>
             {/* Campo de Email */}
             <div className="mb-4 relative" ref={sugestoesRef}>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
               <input
                 type="email"
                 placeholder="Digite seu email"
@@ -87,7 +134,11 @@ const Login: React.FC = () => {
               {mostrarSugestoes && (
                 <ul className="absolute bg-white border border-gray-300 rounded-md w-full mt-1 shadow-md z-10">
                   {sugestoes.map((s) => (
-                    <li key={s} className="px-3 py-2 cursor-pointer hover:bg-purple-50" onClick={() => selecionarSugestao(s)}>
+                    <li
+                      key={s}
+                      className="px-3 py-2 cursor-pointer hover:bg-purple-50"
+                      onClick={() => selecionarSugestao(s)}
+                    >
                       {email.split("@")[0]}@{s}
                     </li>
                   ))}
@@ -97,33 +148,45 @@ const Login: React.FC = () => {
 
             {/* Campo de Senha */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700">Senha</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Senha
+              </label>
               <input
                 type="password"
+                onChange={(e) => setSenha(e.target.value)}
                 placeholder="Digite sua senha"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-gray-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
                 required
               />
             </div>
-
-            <button onClick={()=>{
-              logar(email,senha)
-            }} className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all">
-              Entrar
-            </button>
           </form>
+          <button
+            type="button"
+            onClick={() => {
+              logar(email, senha);
+            }}
+            className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all"
+          >
+            Entrar
+          </button>
 
           {/* Link para Cadastro */}
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
               Não está registrado?{" "}
-              <Link to="/cadastro" className="text-purple-600 hover:text-purple-500">
+              <Link
+                to="/cadastro"
+                className="text-purple-600 hover:text-purple-500"
+              >
                 Crie uma conta
               </Link>
             </p>
             <p className="text-sm text-gray-600">
               Esqueceu a senha?{" "}
-              <Link to="/recuperação" className="text-purple-600 hover:text-purple-500">
+              <Link
+                to="/recuperação"
+                className="text-purple-600 hover:text-purple-500"
+              >
                 Recuperar senha
               </Link>
             </p>

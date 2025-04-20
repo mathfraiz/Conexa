@@ -1,81 +1,87 @@
 import pool from "../config/bd.js";
 
-class Evento {
-  static async createEvento({
-    nome,
-    descricao,
-    descricao_completa,
-    data,
-    hora,
-    localizacao,
-    categoria,
-    criado_por,
-  }) {
-    const sql = `
-      INSERT INTO eventos (nome, descricao, descricao_completa, data, hora, localizacao, categoria, criado_por)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+const Evento = {
+  async findAllEvento() {
+    const [rows] = await pool.query("SELECT * FROM eventos");
+  
+    const eventosConvertidos = rows.map((evento) => ({
+      ...evento,
+      imagem_evento: evento.imagem_evento
+        ? `data:image/jpeg;base64,${evento.imagem_evento.toString("base64")}`
+        : null,
+    }));
+  
+    return eventosConvertidos;
+  },
 
-    const [result] = await pool.query(sql, [
-      nome,
-      descricao,
-      descricao_completa,
-      data,
-      hora,
-      localizacao,
-      categoria,
-      criado_por,
-    ]);
-
-    return result.insertId;
-  }
-
-  static async findAllEvento() {
-    const sql = `SELECT * FROM eventos`;
-    const [rows] = await pool.query(sql);
-    return rows;
-  }
-
-  static async findEventoById(id) {
-    const sql = `SELECT * FROM eventos WHERE id = ?`;
-    const [rows] = await pool.query(sql, [id]);
+  async findEventoById(id) {
+    const [rows] = await pool.query("SELECT * FROM eventos WHERE id = ?", [id]);
     return rows[0];
-  }
-  static async deletarEvento(id) {
-    const sql = `DELETE FROM eventos WHERE id = ?`;
-    const [result] = await pool.query(sql, [id]);
-    return result.affectedRows;
-  }
+  },
 
-  static async atualizarEvento(id, campos) {
+  async encontrarTopEventos() {
+    const [rows] = await pool.query(`
+      SELECT * FROM eventos
+      ORDER BY avaliacao_media DESC 
+      LIMIT 5
+    `);
+    return rows;
+  },
+
+  async criarEventoComEndereco(evento, endereco) {
+    const conn = await pool.getConnection(); // se estiver usando pool
+
     try {
-      const keys = Object.keys(campos);
-      const values = Object.values(campos);
+      await conn.beginTransaction();
 
-      if (keys.length === 0) {
-        throw new Error("Nenhum campo fornecido para atualização.");
-      }
+      // 1. Cadastrar endereço
+      const [resEndereco] = await conn.query(
+        `INSERT INTO endereco (logradouro, numero, bairro, cep, cidade, UF)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          endereco.logradouro,
+          endereco.numero,
+          endereco.bairro,
+          endereco.cep,
+          endereco.cidade,
+          endereco.UF,
+        ]
+      );
 
-      const setClause = keys.map((key) => `${key} = ?`).join(", ");
-      const sql = `UPDATE eventos SET ${setClause} WHERE id = ?`;
+      const enderecoId = resEndereco.insertId;
+      console.log(enderecoId);
+      // 2. Cadastrar evento com ID do endereço
+      console.log("no controller ");
+      console.log(evento);
+      const [resEvento] = await conn.query(
+        `INSERT INTO eventos
+          (nome, descricao, descricao_completa, data, hora, imagem_evento ,criado_por, endereco_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          evento.nome,
+          evento.tema,
+          evento.descricao, // você pode mudar se for usar campo diferente para descrição completa
+          evento.data,
+          evento.hora,
+          evento.imagem_evento,
+          evento.criado_por,
+          enderecoId,
+        ]
+      );
 
-      const [result] = await pool.query(sql, [...values, id]);
-      return result.affectedRows;
-    } catch (error) {
-      throw new Error("Erro ao atualizar evento: " + error.message);
+      const eventoId = resEvento.insertId;
+
+      await conn.commit();
+      console.log(eventoId + " log no controller");
+      return eventoId;
+    } catch (err) {
+      console.log("erro no transaction")
+      await conn.rollback();
+      throw err;
+    } finally {
+      conn.release();
     }
-  }
-
-  static async encontrarTopEventos() {
-    try {
-      const sql = `SELECT * FROM eventos ORDER BY avaliacao_media DESC LIMIT 3`;
-      const [rows] = await pool.query(sql);
-      console.log(rows);
-      return rows;
-    } catch (error) {
-      throw new Error("Erro ao buscar top eventos: " + error.message);
-    }
-  }
-}
+  },
+};
 
 export default Evento;

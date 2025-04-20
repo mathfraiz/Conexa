@@ -1,29 +1,30 @@
 import React, { useState, useRef, KeyboardEvent } from "react";
 import Rodape from "../../componentes/Rodape";
-import BarraNav from "../../componentes/BarraNav";
+import Navbar from "../../componentes/BarraNav";
 
 const Cadastro: React.FC = () => {
-  const [usuario,setUsuario] = useState();
+  const [modalMensagem, setModalMensagem] = useState("");
+
+  const [mostrarModal, setMostrarModal] = useState(false);
+
   // Form states
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
-  const [imagemPreview, setImagemPreview] = useState<string | null>(null);
-  const [cep, setCep] = useState("");
-  const [endereco, setEndereco] = useState("");
-  const [bairro, setBairro] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [uf, setUf] = useState("");
+  const [imagemPreview, setImagemPreview] = useState<File | null>(null);
+  // const [cep, setCep] = useState("");
+  // const [endereco, setEndereco] = useState("");
+  // const [bairro, setBairro] = useState("");
+  // const [cidade, setCidade] = useState("");
+  // const [uf, setUf] = useState("");
 
-  
   // Error states
   const [emailErro, setEmailErro] = useState("");
   const [senhaErro, setSenhaErro] = useState("");
   const [telefoneErro, setTelefoneErro] = useState("");
 
   // UI states
-  const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarRequisitosSenha, setMostrarRequisitosSenha] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [mostrarSugestoes, setMostrarSugestoes] = useState(false);
@@ -40,39 +41,58 @@ const Cadastro: React.FC = () => {
   ];
   const [sugestoesEmail, setSugestoesEmail] = useState<string[]>([]);
 
-  const buscarCep = async () => {
-    if (cep.length === 8) {
-      try {
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await response.json();
-        if (!data.erro) {
-          setEndereco(data.logradouro || "");
-          setBairro(data.bairro || "");
-          setCidade(data.localidade || "");
-          setUf(data.uf || "");
+  // const buscarCep = async () => {
+  //   if (cep.length === 8) {
+  //     try {
+  //       const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+  //       const data = await response.json();
+  //       if (!data.erro) {
+  //         setEndereco(data.logradouro || "");
+  //         setBairro(data.bairro || "");
+  //         setCidade(data.localidade || "");
+  //         setUf(data.uf || "");
 
+  //       }
+  //     } catch (error) {
+  //       console.error("Erro ao buscar o CEP:", error);
+  //     }
+  //   }
+  // };
+
+  const cadastrar = async (form: FormData) => {
+    console.log(form.get("nome"));
+    console.log(form.get("email"));
+    console.log(form.get("telefone"));
+    try {
+      const response = await fetch("http://localhost:3000/usuario", {
+        method: "POST",
+        body: form,
+      });
+      const resp = response.json().then((data) => {
+        if (response.ok) {
+          console.log("Cadastro bem-sucedido:", data);
+          setModalMensagem("Cadastro realizado com sucesso!");
+          setMostrarModal(true);
+          setTimeout(() => {
+            setMostrarModal(false);
+            // window.location.href = "/login";
+          }, 2000);
+        } // Redireciona após 2 segundos
+        else {
+          console.error("Erro no cadastro:", data);
+          setModalMensagem("Erro ao cadastrar. Tente novamente.");
+          setMostrarModal(true);
+          setTimeout(() => {
+            setMostrarModal(false);
+          }, 2000); // Fecha o modal após 2 segundos
         }
-      } catch (error) {
-        console.error("Erro ao buscar o CEP:", error);
-      }
+      });
+      return resp;
+    } catch (error) {
+      console.error("Erro ao cadastrar:", error);
+      throw error;
     }
   };
-  
-  const cadastrar = async () => {
-    const response = await fetch("http://localhost:8080/cadastro", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        nome,
-        email,
-        telefone,
-        senha,
-      }),
-    });
-    return response.json();
-  }
 
   // Validation functions
   const validarEmail = (email: string) => {
@@ -205,7 +225,8 @@ const Cadastro: React.FC = () => {
   const handleImagemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setImagemPreview(URL.createObjectURL(file));
+      setImagemPreview(file);
+      console.log(file);
     }
   };
 
@@ -241,35 +262,36 @@ const Cadastro: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
+    const form = new FormData();
+    form.set("nome", nome);
+    form.set("telefone", telefone);
+    form.set("email", email);
+    form.set("senha", senha);
+    form.set("tipo", "usuario");
+    if (imagemPreview) {
+      form.set("imagem_perfil", imagemPreview);
+    }
+
     if (validarEmail(email)) {
       setEmailErro("Email inválido.");
       return;
     }
-  
+
     if (!validarSenha(senha)) {
       setSenhaErro("A senha não atende aos requisitos.");
       return;
     }
-  
+
     if (!validarTelefone(telefone)) {
-      setTelefoneErro("O telefone deve conter exatamente 11 dígitos numéricos.");
+      setTelefoneErro(
+        "O telefone deve conter exatamente 11 dígitos numéricos."
+      );
       return;
     }
-  
-    try {
-      const resposta = await cadastrar();
-      setUsuario(resposta);
-      setMostrarModal(true);
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 3000);
-    } catch (error) {
-      console.error("Erro ao cadastrar:", error);
-      alert("Ocorreu um erro ao cadastrar. Tente novamente.");
-    }
+
+    await cadastrar(form);
   };
-  
 
   return (
     <div>
@@ -277,7 +299,7 @@ const Cadastro: React.FC = () => {
         className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat "
         style={{ backgroundImage: "url('/logo2.jpg')" }}
       >
-        <BarraNav isLogado={false} ></BarraNav>
+        <Navbar isLogado={false} />
         <div className="w-full max-w-md p-8 bg-gray-100 rounded-lg shadow-xl border border-gray-300">
           <div className="w-full max-w">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
@@ -299,7 +321,11 @@ const Cadastro: React.FC = () => {
                 {imagemPreview && (
                   <div className="mt-2 flex flex-col items-start">
                     <img
-                      src={imagemPreview}
+                      src={
+                        imagemPreview
+                          ? URL.createObjectURL(imagemPreview)
+                          : "/placeholder.jpg"
+                      }
                       alt="Preview"
                       className="w-20 h-20 rounded-full object-cover border border-gray-300 shadow"
                     />
@@ -328,64 +354,75 @@ const Cadastro: React.FC = () => {
                   required
                 />
               </div>
-              
-{/* CEP */}
-<div className="mb-4">
-  <label className="block text-sm font-medium text-gray-700">CEP</label>
-  <input
-    type="text"
-    placeholder="Digite seu CEP"
-    value={cep}
-    onChange={(e) => setCep(e.target.value.replace(/\D/g, "").slice(0, 8))}
-    onBlur={buscarCep}
-    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
-    required
-  />
-</div>
 
-{/* Endereço (preenchido automaticamente) */}
-<div className="mb-4">
-  <label className="block text-sm font-medium text-gray-700">Endereço</label>
-  <input
-    type="text"
-    value={endereco}
-    readOnly
-    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
-  />
-</div>
+              {/* CEP */}
+              {/* <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  CEP
+                </label>
+                <input
+                  type="text"
+                  placeholder="Digite seu CEP"
+                  value={cep}
+                  onChange={(e) =>
+                    setCep(e.target.value.replace(/\D/g, "").slice(0, 8))
+                  }
+                  onBlur={buscarCep}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
+                  required
+                />
+              </div> */}
 
-{/* Bairro (preenchido automaticamente) */}
-<div className="mb-4">
-  <label className="block text-sm font-medium text-gray-700">Bairro</label>
-  <input
-    type="text"
-    value={bairro}
-    readOnly
-    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
-  />
-</div>
-{/* Cidade */}
-<div className="mb-4">
-  <label className="block text-sm font-medium text-gray-700">Cidade</label>
-  <input
-    type="text"
-    value={cidade}
-    readOnly
-    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
-  />
-</div>
+              {/* Endereço (preenchido automaticamente) */}
+              {/* <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Endereço
+                </label>
+                <input
+                  type="text"
+                  value={endereco}
+                  readOnly
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
+                />
+              </div> */}
 
-{/* UF */}
-<div className="mb-4">
-  <label className="block text-sm font-medium text-gray-700">UF</label>
-  <input
-    type="text"
-    value={uf}
-    readOnly
-    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
-  />
-</div>
+              {/* Bairro (preenchido automaticamente) */}
+              {/* <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Bairro
+                </label>
+                <input
+                  type="text"
+                  value={bairro}
+                  readOnly
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
+                />
+              </div> */}
+              {/* Cidade */}
+              {/* <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Cidade
+                </label>
+                <input
+                  type="text"
+                  value={cidade}
+                  readOnly
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
+                />
+              </div> */}
 
+              {/* UF */}
+              {/* <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  UF
+                </label>
+                <input
+                  type="text"
+                  value={uf}
+                  readOnly
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 shadow-sm focus:ring-2 focus:ring-purple-500"
+                />
+              </div> */}
 
               {/* Email */}
               <div className="mb-4 relative">
@@ -489,27 +526,34 @@ const Cadastro: React.FC = () => {
                 )}
               </div>
 
-{/* Botão de Salvar */}
-<button
-  type="submit"
-  className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all"
->
-  Salvar
-</button>
-</form>
-</div>
-</div>
-
+              {/* Botão de Salvar */}
+              <button
+                type="submit"
+                className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all"
+              >
+                Salvar
+              </button>
+            </form>
+          </div>
+        </div>
 
         {/* Modal de Sucesso */}
         {mostrarModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-8 rounded-lg shadow-lg text-center">
-              <h3 className="text-2xl font-bold text-green-600 mb-4">
-                Salvo com sucesso!
+              <h3
+                className={`text-2xl font-bold mb-4 ${
+                  modalMensagem.includes("sucesso")
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {modalMensagem}
               </h3>
               <p className="text-gray-700">
-                Você será redirecionado para a tela de login.
+                {modalMensagem.includes("sucesso")
+                  ? "Você será redirecionado para a tela de login."
+                  : "Por favor, verifique os dados e tente novamente."}
               </p>
             </div>
           </div>
