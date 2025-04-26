@@ -17,34 +17,41 @@ routerUsuario.get("/usuario", async (req, res) => {
 
 // POST /usuarios
 
-routerUsuario.post("/usuario", upload.single("imagem_perfil"), async (req, res) => {
-  try {
-    console.log("BODY:", req.body);   // agora deve mostrar os dados corretamente
-    console.log("FILE:", req.file);   // agora deve mostrar a imagem como buffer
+routerUsuario.post(
+  "/usuario",
+  upload.single("imagem_perfil"),
+  async (req, res) => {
+    try {
+      
+      console.log("body:", req.body);
+      console.log("arquivo:", req.file)
 
-    const { nome, email, senha, telefone, tipo } = req.body;
-    const foto = req.file?.buffer || null;
+      const { nome, email, senha, telefone, tipo } = req.body;
+      const foto = req.file?.buffer || null;
 
-    const usuarioCadastrado = await Usuario.criarUsuario(
-      nome,
-      email,
-      senha,
-      telefone,
-      tipo,
-      foto
-    );
+      const usuarioCadastrado = await Usuario.criarUsuario(
+        nome,
+        email,
+        senha,
+        telefone,
+        tipo,
+        foto
+      );
 
-    if (!usuarioCadastrado) {
-      return res.status(400).json({ erro: "Erro ao criar usuário" });
+      if (!usuarioCadastrado) {
+        return res.status(400).json({ erro: "Erro ao criar usuário" });
+      }
+
+      console.log("Usuário cadastrado:", usuarioCadastrado);
+      res.status(200).json(usuarioCadastrado);
+    } catch (err) {
+      console.error("Erro na rota de cadastro:", err);
+      res
+        .status(500)
+        .json({ erro: "Erro ao criar usuário", detalhes: err.message });
     }
-
-    console.log("Usuário cadastrado:", usuarioCadastrado);
-    res.status(200).json(usuarioCadastrado);
-  } catch (err) {
-    console.error("Erro na rota de cadastro:", err);
-    res.status(500).json({ erro: "Erro ao criar usuário", detalhes: err.message });
   }
-});
+);
 
 routerUsuario.post("/login", async (req, res) => {
   const usuario = req.body;

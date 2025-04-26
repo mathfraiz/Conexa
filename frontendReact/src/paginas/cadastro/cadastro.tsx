@@ -75,10 +75,9 @@ const Cadastro: React.FC = () => {
           setMostrarModal(true);
           setTimeout(() => {
             setMostrarModal(false);
-            // window.location.href = "/login";
+            window.location.href = "/login";
           }, 2000);
-        } // Redireciona após 2 segundos
-        else {
+        } else {
           console.error("Erro no cadastro:", data);
           setModalMensagem("Erro ao cadastrar. Tente novamente.");
           setMostrarModal(true);
@@ -269,6 +268,8 @@ const Cadastro: React.FC = () => {
     form.set("email", email);
     form.set("senha", senha);
     form.set("tipo", "usuario");
+    const telefoneLimpo = telefone.replace(/\D/g, ""); // Resultado: "41999991234"
+    form.set("telefone", telefoneLimpo);
     if (imagemPreview) {
       form.set("imagem_perfil", imagemPreview);
     }
