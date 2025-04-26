@@ -97,12 +97,12 @@ const RecuperacaoSenha: React.FC = () => {
     <main className="h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url('/logo2.jpg')" }}>
       <Navbar login={true} />
       <div className="flex flex-1 items-center justify-center">
-        <div className="w-full max-w-md p-8 bg-gray-100 rounded-lg shadow-2xl border border-gray-300">
+        <div className="w-full max-w-md p-8 bg-purple-100 rounded-lg shadow-2xl border border-gray-300">
           <h2 className="text-2xl font-bold mb-6 text-gray-800">Recuperação de Senha</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Escolha um método</label>
-              <select value={metodo} onChange={handleMetodoChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-gray-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500">
+              <select value={metodo} onChange={handleMetodoChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500">
                 <option value="email">Recuperar via E-mail</option>
                 <option value="telefone">Recuperar via Telefone</option>
               </select>
@@ -116,7 +116,7 @@ const RecuperacaoSenha: React.FC = () => {
                 placeholder={metodo === "email" ? "seuemail@exemplo.com" : "(XX) XXXXX-XXXX"}
                 value={contato}
                 onChange={(e) => validarEntrada(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-gray-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500"
                 required
                 autoComplete="new-password"
                 autoCorrect="off"

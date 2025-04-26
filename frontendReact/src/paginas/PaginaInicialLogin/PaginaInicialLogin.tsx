@@ -162,7 +162,7 @@ const PaginaInicialLogin = () => {
                 height="h-64"
                 animation={{ scale: 1 }}
                 transition={{ duration: 0.3 }}
-                className="relative bg-gray-100 rounded-lg shadow-md hover:scale-105 transition-transform overflow-hidden flex items-end p-4"
+                className="relative bg-purple-100 rounded-lg shadow-md hover:scale-105 transition-transform overflow-hidden flex items-end p-4"
               >
                 <img
                   src={evento.imagem_evento || ""}

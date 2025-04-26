@@ -5,7 +5,8 @@ import MotionContainer from "../../componentes/MotionConteiner";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 to-white">
+    <div className="min-h-screen flex flex-col bg-purple-50">
+
       <Navbar isLogado={false} />
 
       <main className="flex-1 pt-28 px-6 md:px-16">

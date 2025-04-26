@@ -8,7 +8,6 @@ const routerUsuario = express.Router();
 routerUsuario.get("/usuario", async (req, res) => {
   try {
     const usuarios = await Usuario.encontrarTodos();
-
     res.json(usuarios);
   } catch {
     res.status(500).json({ erro: "erro ao buscar todos os usuarios" });
@@ -16,17 +15,15 @@ routerUsuario.get("/usuario", async (req, res) => {
 });
 
 // POST /usuarios
-
 routerUsuario.post(
   "/usuario",
   upload.single("imagem_perfil"),
   async (req, res) => {
     try {
-      
-      console.log("body:", req.body);
-      console.log("arquivo:", req.file)
-
       const { nome, email, senha, telefone, tipo } = req.body;
+      console.log("Novo cadastro:", { nome, email, telefone, tipo });
+      console.log("arquivo:", req.file);
+
       const foto = req.file?.buffer || null;
 
       const usuarioCadastrado = await Usuario.criarUsuario(

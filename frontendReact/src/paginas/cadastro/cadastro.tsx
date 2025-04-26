@@ -301,7 +301,7 @@ const Cadastro: React.FC = () => {
         style={{ backgroundImage: "url('/logo2.jpg')" }}
       >
         <Navbar isLogado={false} />
-        <div className="w-full max-w-md p-8 bg-gray-100 rounded-lg shadow-xl border border-gray-300">
+        <div className="w-full max-w-md p-8 bg-purple-100 rounded-lg shadow-xl border border-gray-300">
           <div className="w-full max-w">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
             <form onSubmit={handleSubmit}>

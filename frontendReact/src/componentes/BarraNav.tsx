@@ -3,14 +3,13 @@ import { Link } from "react-router-dom";
 import useSessionStorage from "../../hook/useSessionStorage";
 import Perfil from "../paginas/usuario/perfil/perfil";
 
-interface NavbarProps {
-  isLogado: boolean;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ isLogado }) => {
-  const [usuario, setUsuarioSession] = useSessionStorage<any>("usuario", {});
+const Navbar = () => {
+  const [usuario] = useSessionStorage<any>("usuario", {});
+  const [isLogado, setIsLogado] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [modalPerfilOpen, setModalPerfilOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastColor, setToastColor] = useState("bg-green-500");
 
   let lastScrollY = 0;
 
@@ -28,6 +27,34 @@ const Navbar: React.FC<NavbarProps> = ({ isLogado }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const usuarioSalvo = sessionStorage.getItem("usuario");
+    setIsLogado(!!usuarioSalvo);
+  }, []);
+
+  const handleClosePerfil = (foiSalvo: boolean) => {
+    setModalPerfilOpen(false);
+
+    if (foiSalvo) {
+      const usuarioAtualizado = sessionStorage.getItem("usuario");
+      if (usuarioAtualizado) {
+        const usuarioObj = JSON.parse(usuarioAtualizado);
+
+        if (usuarioObj.analisePendente) {
+          setToastMessage("Alterações enviadas para análise!");
+          setToastColor("bg-yellow-500");
+        } else {
+          setToastMessage("Perfil atualizado com sucesso!");
+          setToastColor("bg-green-500");
+        }
+
+        setTimeout(() => {
+          setToastMessage("");
+        }, 3000);
+      }
+    }
+  };
+
   return (
     <div className="h-16">
       <nav
@@ -36,7 +63,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLogado }) => {
         }`}
       >
         <Link
-          to="/"
+          to={isLogado ? "/PaginaInicialLogin" : "/"}
           className="text-3xl font-extrabold tracking-wide flex items-center gap-2 transition-all"
         >
           <span className="bg-gradient-to-r from-yellow-300 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-gradient">
@@ -65,6 +92,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLogado }) => {
               onClick={() => {
                 setModalPerfilOpen(true);
               }}
+              className="transition-transform duration-300 hover:scale-110"
             >
               <img
                 src={usuario?.imagem_perfil || "/placeholder.jpg"}
@@ -92,8 +120,35 @@ const Navbar: React.FC<NavbarProps> = ({ isLogado }) => {
       </nav>
 
       {modalPerfilOpen && (
-        <Perfil onClosePerfil={() => setModalPerfilOpen(false)} />
+        <div className="fixed top-[4.5rem] right-6 z-50 animate-scale-in">
+          <Perfil onClosePerfil={handleClosePerfil} />
+        </div>
       )}
+
+      {toastMessage && (
+        <div className={`fixed top-[5rem] right-6 ${toastColor} text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in z-[9999]`}>
+          {toastMessage}
+        </div>
+      )}
+
+      <style>
+        {`
+          @keyframes scaleIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+          }
+          .animate-scale-in {
+            animation: scaleIn 0.3s ease-out forwards;
+          }
+          @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          .animate-fade-in {
+            animation: fadeIn 0.5s ease forwards;
+          }
+        `}
+      </style>
     </div>
   );
 };
