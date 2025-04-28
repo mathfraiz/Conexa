@@ -15,6 +15,13 @@ interface Usuario {
 }
 
 const Adm = () => {
+  const [isModalConfirmarOpen, setIsModalConfirmarOpen] = useState(false);
+  const [idUsuarioParaDeletar, setIdUsuarioParaDeletar] = useState<
+    number | null
+  >(null);
+  const [nomeUsuarioParaDeletar, setNomeUsuarioParaDeletar] =
+    useState<string>("");
+
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMensagem, setModalMensagem] = useState("");
   const [sucesso, setSucesso] = useState(true);
@@ -155,7 +162,11 @@ const Adm = () => {
                     </button>
                     <button
                       className="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600"
-                      onClick={() => deletarUsuario(user.id)}
+                      onClick={() => {
+                        setIdUsuarioParaDeletar(user.id);
+                        setNomeUsuarioParaDeletar(user.nome);
+                        setIsModalConfirmarOpen(true);
+                      }}
                     >
                       Deletar
                     </button>
@@ -207,6 +218,38 @@ const Adm = () => {
           }
         `}
       </style>
+      {isModalConfirmarOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-xl shadow-xl w-80 text-center">
+            <h2 className="text-2xl font-bold text-red-600 mb-4">
+              Confirmar Deleção
+            </h2>
+            <p className="mb-6">
+              Tem certeza que deseja deletar{" "}
+              <strong>{nomeUsuarioParaDeletar}</strong>?
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg transition"
+                onClick={() => setIsModalConfirmarOpen(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition"
+                onClick={() => {
+                  if (idUsuarioParaDeletar !== null) {
+                    deletarUsuario(idUsuarioParaDeletar);
+                    setIsModalConfirmarOpen(false);
+                  }
+                }}
+              >
+                Deletar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
