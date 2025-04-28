@@ -21,10 +21,18 @@ const Adm = () => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [isModalNovoUsuarioOpen, setIsModalNovoUsuarioOpen] = useState(false);
   const [isModalEdicaoOpen, setIsModalEdicaoOpen] = useState(false);
-  const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(null);
+  const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(
+    null
+  );
 
   const [usuarioSession] = useSessionStorage<any>("usuario", {
-    id: 0, nome: "", email: "", senha: "", telefone: "", tipo: "", imagem_perfil: ""
+    id: 0,
+    nome: "",
+    email: "",
+    senha: "",
+    telefone: "",
+    tipo: "",
+    imagem_perfil: "",
   });
 
   const carregarUsuarios = async () => {
@@ -45,7 +53,9 @@ const Adm = () => {
 
   const deletarUsuario = async (id: number) => {
     try {
-      const resp = await fetch(`http://localhost:3000/usuario/${id}`, { method: "DELETE" });
+      const resp = await fetch(`http://localhost:3000/usuario/${id}`, {
+        method: "DELETE",
+      });
       if (resp.ok) {
         setUsuarios((prev) => prev.filter((u) => u.id !== id));
         abrirModalMensagem(`Usuário ID ${id} deletado!`, false); // Agora toast vermelho
@@ -80,7 +90,6 @@ const Adm = () => {
       carregarUsuarios();
     }
   };
-  
 
   const handleCloseModalEditarUsuario = (foiSalvo: boolean) => {
     setIsModalEdicaoOpen(false);
@@ -90,14 +99,15 @@ const Adm = () => {
       carregarUsuarios();
     }
   };
-  
 
   return (
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen">
-      <Navbar isLogado={true} />
+      <Navbar />
       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl p-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-extrabold text-purple-700">Gerenciar Usuários</h2>
+          <h2 className="text-3xl font-extrabold text-purple-700">
+            Gerenciar Usuários
+          </h2>
           <button
             className="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent font-extrabold text-lg px-5 py-2 rounded-xl shadow-md hover:scale-105 transition animate-gradient"
             onClick={handleOpenModalNovoUsuario}
@@ -172,12 +182,17 @@ const Adm = () => {
         />
       )}
 
-{modalOpen && (
-  <div className={`fixed bottom-6 right-6 ${sucesso ? "bg-green-100 border-2 border-green-600 text-green-700" : "bg-red-100 border-2 border-red-600 text-red-700"} px-6 py-3 rounded-xl shadow-2xl animate-fade-in text-center font-semibold`}>
-    {modalMensagem}
-  </div>
-)}
-
+      {modalOpen && (
+        <div
+          className={`fixed bottom-6 right-6 ${
+            sucesso
+              ? "bg-green-100 border-2 border-green-600 text-green-700"
+              : "bg-red-100 border-2 border-red-600 text-red-700"
+          } px-6 py-3 rounded-xl shadow-2xl animate-fade-in text-center font-semibold`}
+        >
+          {modalMensagem}
+        </div>
+      )}
 
       <style>
         {`

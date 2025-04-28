@@ -44,7 +44,7 @@ const Login: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setUsuarioSession(data); // <-- Agora salva direto no SessionStorage e no React State
+        console.log(data);
         setVerdeMensagem(true);
         setModalMensagem("Login realizado com sucesso");
         setMostrarModal(true);
@@ -107,7 +107,7 @@ const Login: React.FC = () => {
       className="h-screen flex flex-col items-center justify-center bg-cover bg-center"
       style={{ backgroundImage: "url('/logo2.jpg')" }}
     >
-      <Navbar isLogado={false} />
+      <Navbar />
 
       <div className="flex flex-1 items-center justify-center">
         <div className="w-full max-w-md p-8 bg-purple-100 rounded-lg shadow-2xl border border-gray-300">

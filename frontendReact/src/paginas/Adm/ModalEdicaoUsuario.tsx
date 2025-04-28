@@ -6,7 +6,11 @@ interface ModalEdicaoUsuarioProps {
   onClose: (foiSalvo: boolean, mensagem?: string) => void;
 }
 
-const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({ isModalOpen, usuario, onClose }) => {
+const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
+  isModalOpen,
+  usuario,
+  onClose,
+}) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -17,9 +21,11 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({ isModalOpen, us
 
   useEffect(() => {
     if (usuario) {
+      
       setNome(usuario.nome || "");
       setEmail(usuario.email || "");
       setTelefone(usuario.telefone || "");
+      
       setTipo(usuario.tipo || "usuario");
       setImagemPerfil(usuario.imagem_perfil || null);
     }
@@ -36,7 +42,8 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({ isModalOpen, us
   }, [isModalOpen, onClose]);
 
   const validarNome = (nome: string) => /^[A-Za-zÀ-ÿ\s]+$/.test(nome);
-  const validarTelefone = (telefone: string) => /^\(\d{2}\) \d{4,5}-\d{4}$/.test(telefone);
+  const validarTelefone = (telefone: string) =>
+    /^\(\d{2}\) \d{4,5}-\d{4}$/.test(telefone);
 
   const formatarTelefone = (valor: string) => {
     const numeros = valor.replace(/\D/g, "").slice(0, 11);
@@ -70,10 +77,13 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({ isModalOpen, us
         formData.append("imagem_perfil", imagemPerfil);
       }
 
-      await fetch(`http://localhost:3000/usuario/${usuario.id}`, {
+      const resp = await fetch(`http://localhost:3000/usuario/${usuario.id}`, {
         method: "PUT",
         body: formData,
       });
+      if (resp.status === 200) {
+        console.log("editado com sucesso" + resp);
+      }
 
       // Aqui fecha o modal E manda a mensagem
       onClose(true, "Usuário atualizado com sucesso!");
@@ -83,27 +93,74 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({ isModalOpen, us
     }
   };
 
-  const inputClass = (campo: string) => 
-    `w-full px-4 py-2 border ${erros[campo] ? "border-red-500" : "border-gray-300"} rounded-xl focus:ring-2 focus:ring-purple-500 text-black`;
+  const inputClass = (campo: string) =>
+    `w-full px-4 py-2 border ${
+      erros[campo] ? "border-red-500" : "border-gray-300"
+    } rounded-xl focus:ring-2 focus:ring-purple-500 text-black`;
 
   if (!isModalOpen) return null;
 
   return (
     <div className="fixed top-[5.5rem] right-6 z-50 w-[400px] animate-fade-in">
-      <div ref={modalRef} className="bg-white border border-purple-300 rounded-2xl shadow-2xl p-6 space-y-4">
-        <h2 className="text-2xl font-extrabold text-purple-700 text-center">Editar Usuário</h2>
+      <div
+        ref={modalRef}
+        className="bg-white border border-purple-300 rounded-2xl shadow-2xl p-6 space-y-4"
+      >
+        <h2 className="text-2xl font-extrabold text-purple-700 text-center">
+          Editar Usuário
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input type="text" placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} className={inputClass("nome")} required />
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass("email")} required />
-          <input type="tel" placeholder="Telefone" value={telefone} onChange={handleTelefoneChange} className={inputClass("telefone")} />
-          <select value={tipo} onChange={(e) => setTipo(e.target.value)} className={inputClass("tipo")}>
+          <input
+            type="text"
+            placeholder="Nome"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            className={inputClass("nome")}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={inputClass("email")}
+            required
+          />
+          <input
+            type="tel"
+            placeholder="Telefone"
+            value={telefone}
+            onChange={handleTelefoneChange}
+            className={inputClass("telefone")}
+          />
+          <select
+            value={tipo}
+            onChange={(e) => setTipo(e.target.value)}
+            className={inputClass("tipo")}
+          >
             <option value="usuario">Usuário</option>
             <option value="admin">Admin</option>
           </select>
-          <input type="file" accept="image/*" onChange={(e) => setImagemPerfil(e.target.files?.[0] || null)} className="w-full text-sm text-gray-500" />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImagemPerfil(e.target.files?.[0] || null)}
+            className="w-full text-sm text-gray-500"
+          />
           <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={() => onClose(false)} className="bg-gray-300 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-400">Cancelar</button>
-            <button type="submit" className="bg-purple-700 hover:bg-purple-800 text-white px-6 py-2 rounded-lg transition">Salvar</button>
+            <button
+              type="button"
+              onClick={() => onClose(false)}
+              className="bg-gray-300 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-400"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="bg-purple-700 hover:bg-purple-800 text-white px-6 py-2 rounded-lg transition"
+            >
+              Salvar
+            </button>
           </div>
         </form>
       </div>
