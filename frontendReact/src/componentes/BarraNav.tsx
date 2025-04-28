@@ -4,7 +4,7 @@ import useSessionStorage from "../../hook/useSessionStorage";
 import Perfil from "../paginas/usuario/perfil/perfil";
 
 const Navbar = () => {
-  const [usuario] = useSessionStorage<any>("usuario", {});
+  const [usuario] = useSessionStorage<any>("usuario", {});  
   const [isLogado, setIsLogado] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [modalPerfilOpen, setModalPerfilOpen] = useState(false);

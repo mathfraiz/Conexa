@@ -45,6 +45,7 @@ const Login: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         console.log(data);
+        setUsuarioSession(data);
         setVerdeMensagem(true);
         setModalMensagem("Login realizado com sucesso");
         setMostrarModal(true);
