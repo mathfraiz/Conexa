@@ -31,8 +31,9 @@ const Adm = () => {
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(
     null
   );
+  useEffect(() => verificaTipo());
 
-  const [usuarioSession] = useSessionStorage<any>("usuario", {
+  const [usuarioSession,setUsuarioSessio] = useSessionStorage<any>("usuario", {
     id: 0,
     nome: "",
     email: "",
@@ -104,6 +105,11 @@ const Adm = () => {
     if (foiSalvo) {
       abrirModalMensagem("Usuário editado com sucesso!", true);
       carregarUsuarios();
+    }
+  };
+  const verificaTipo = () => {
+    if (usuarioSession.tipo !== "admin") {
+      location.href = "http://localhost:5173/login";
     }
   };
 

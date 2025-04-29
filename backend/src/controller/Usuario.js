@@ -78,6 +78,7 @@ class Usuario {
           foto,
           id,
         ]);
+        return result.affectedRows;
       } else {
         sql = `
         UPDATE usuario SET nome = ?, email = ?, telefone = ?, tipo = ?, imagem_perfil = ?
@@ -91,9 +92,8 @@ class Usuario {
           foto,
           id,
         ]);
+        return result.affectedRows;
       }
-
-      return result.affectedRows;
     } catch (error) {
       console.log("Erro ao atualizar usuário:", error.message);
       return 0;

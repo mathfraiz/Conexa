@@ -21,11 +21,10 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
 
   useEffect(() => {
     if (usuario) {
-      
       setNome(usuario.nome || "");
       setEmail(usuario.email || "");
       setTelefone(usuario.telefone || "");
-      
+
       setTipo(usuario.tipo || "usuario");
       setImagemPerfil(usuario.imagem_perfil || null);
     }

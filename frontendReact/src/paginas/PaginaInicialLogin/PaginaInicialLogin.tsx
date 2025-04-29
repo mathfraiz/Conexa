@@ -45,7 +45,7 @@ const PaginaInicialLogin = () => {
     if (usuarioSession.id === 0) {
       location.href = "/login";
     }
-  },[]);
+  }, []);
   // const us = sessionStorage.getItem("usuario")
   const [eventosList, setEventoList] = useState<Evento[]>([]);
   const [eventos1, setEventos] = useState<Evento[]>([]);
@@ -93,6 +93,15 @@ const PaginaInicialLogin = () => {
     respEventos();
   }, []);
 
+  useEffect(() => {
+    verificaUsuario();
+  });
+
+  const verificaUsuario = () => {
+    if (usuarioSession.id === 0) {
+      location.href = "http://localhost:5173/login";
+    }
+  };
   const filtrarEventos = (eventos: Evento[], filtro: string) => {
     const eventosFiltrados: Evento[] = [];
 
@@ -107,9 +116,6 @@ const PaginaInicialLogin = () => {
         eventosFiltrados.push(e);
       }
     });
-    if (usuarioSession.id === 0) {
-      location.href = "http://localhost:5173/login";
-    }
 
     return eventosFiltrados;
   };

@@ -4,7 +4,15 @@ import useSessionStorage from "../../hook/useSessionStorage";
 import Perfil from "../paginas/usuario/perfil/perfil";
 
 const Navbar = () => {
-  const [usuario] = useSessionStorage<any>("usuario", {});  
+  const [usuario, setUsuarioSessio] = useSessionStorage<any>("usuario", {
+    id: 0,
+    nome: "",
+    email: "",
+    senha: "",
+    telefone: "",
+    tipo: "",
+    imagem_perfil: "",
+  });
   const [isLogado, setIsLogado] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [modalPerfilOpen, setModalPerfilOpen] = useState(false);
@@ -126,7 +134,9 @@ const Navbar = () => {
       )}
 
       {toastMessage && (
-        <div className={`fixed top-[5rem] right-6 ${toastColor} text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in z-[9999]`}>
+        <div
+          className={`fixed top-[5rem] right-6 ${toastColor} text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in z-[9999]`}
+        >
           {toastMessage}
         </div>
       )}
