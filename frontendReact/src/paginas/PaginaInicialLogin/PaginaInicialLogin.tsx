@@ -99,7 +99,7 @@ const PaginaInicialLogin = () => {
 
   const verificaUsuario = () => {
     if (usuarioSession.id === 0) {
-      location.href = "http://localhost:5173/login";
+      location.href = "http://localhost:3000/login";
     }
   };
   const filtrarEventos = (eventos: Evento[], filtro: string) => {
