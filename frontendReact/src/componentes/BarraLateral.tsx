@@ -35,8 +35,8 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
     >
       {isAdmin ? (
         <>
-          <Link
-            to="/PaginaInicialLogin"
+          <Link 
+            to="/"
             className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
           >
             Página Inicial
@@ -48,7 +48,7 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
             Gerenciar Usuários
           </Link>
           <Link
-            to="#"
+            to=""
             className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
           >
             Eventos

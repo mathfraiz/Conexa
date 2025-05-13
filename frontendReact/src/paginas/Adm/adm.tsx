@@ -5,7 +5,6 @@ import ModalNovoUsuario from "./ModalNovoUsuario";
 import ModalEdicaoUsuario from "./ModalEdicaoUsuario.tsx";
 import BarraLateral from "../../componentes/BarraLateral";
 
-
 interface Usuario {
   email: string;
   id: number;
@@ -117,11 +116,15 @@ const Adm = () => {
   };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen">
+    <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen ">
       <Navbar onToggleSidebar={() => setSidebarAberta(!sidebarAberta)} />
-<BarraLateral isOpen={sidebarAberta} />
+      <BarraLateral isOpen={sidebarAberta} />
 
-      <div className={`max-w-6xl bg-white rounded-3xl shadow-2xl p-8 transition-all duration-300 ${sidebarAberta ? "ml-64" : "ml-0"} mx-auto`}>
+      <div
+        className={` w-90% bg-white rounded-3xl shadow-2xl p-8 transition-all duration-300 ${
+          sidebarAberta ? "ml-64 " : " m-10 ml-0"
+        }`}
+      >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-extrabold text-purple-700">
             Gerenciar Usuários
