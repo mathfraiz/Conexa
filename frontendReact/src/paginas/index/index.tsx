@@ -1,22 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../../componentes/BarraNav";
 import Rodape from "../../componentes/Rodape";
 import MotionContainer from "../../componentes/MotionConteiner";
+import BarraLateral from "../../componentes/BarraLateral";
+import useSessionStorage from "../../../hook/useSessionStorage";
 
 const Index = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
+  const [usuarioSession] = useSessionStorage<any>("usuario", {
+    id: 0,
+    nome: "",
+    email: "",
+    senha: "",
+    telefone: "",
+    tipo: "",
+    imagem_perfil: "",
+  });
+
   return (
-    <div className="min-h-screen flex flex-col bg-purple-50">
+    <div className="flex flex-col min-h-screen bg-purple-50">
+      <Navbar onToggleSidebar={toggleSidebar} />
+      <BarraLateral isOpen={sidebarOpen} />
 
-      <Navbar/>
-
-      <main className="flex-1 pt-28 px-6 md:px-16">
+      <main
+        className={`flex-1 pt-28 px-6 md:px-16 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-0"
+        }`}
+      >
         {/* Título principal */}
         <section className="text-center mb-16">
           <h1 className="text-5xl font-extrabold text-purple-800 mb-4 drop-shadow-sm">
             Quem Somos
           </h1>
           <p className="text-gray-600 text-lg max-w-3xl mx-auto">
-            Criamos conexões humanas por meio da tecnologia, da cultura e da colaboração em eventos únicos e transformadores.
+            Criamos conexões humanas por meio da tecnologia, da cultura e da
+            colaboração em eventos únicos e transformadores.
           </p>
         </section>
 
@@ -28,9 +48,12 @@ const Index = () => {
             transition={{ duration: 0.3 }}
             className="bg-white rounded-3xl shadow-xl p-8 border border-gray-200 hover:shadow-2xl transition"
           >
-            <h3 className="text-xl font-semibold text-purple-700 mb-3">Nossa Visão</h3>
+            <h3 className="text-xl font-semibold text-purple-700 mb-3">
+              Nossa Visão
+            </h3>
             <p className="text-gray-700 text-sm leading-relaxed">
-              Ser referência nacional em experiências conectadas, criando pontes entre ideias, pessoas e oportunidades através de eventos inovadores.
+              Ser referência nacional em experiências conectadas, criando pontes
+              entre ideias, pessoas e oportunidades através de eventos inovadores.
             </p>
           </MotionContainer>
 
@@ -40,9 +63,12 @@ const Index = () => {
             transition={{ duration: 0.3 }}
             className="bg-white rounded-3xl shadow-xl p-8 border border-gray-200 hover:shadow-2xl transition"
           >
-            <h3 className="text-xl font-semibold text-purple-700 mb-3">Nossa Missão</h3>
+            <h3 className="text-xl font-semibold text-purple-700 mb-3">
+              Nossa Missão
+            </h3>
             <p className="text-gray-700 text-sm leading-relaxed">
-              Empoderar indivíduos e organizações a criarem e participarem de eventos que gerem valor real, com praticidade, beleza e impacto.
+              Empoderar indivíduos e organizações a criarem e participarem de
+              eventos que gerem valor real, com praticidade, beleza e impacto.
             </p>
           </MotionContainer>
 
@@ -52,7 +78,9 @@ const Index = () => {
             transition={{ duration: 0.3 }}
             className="bg-white rounded-3xl shadow-xl p-8 border border-gray-200 hover:shadow-2xl transition"
           >
-            <h3 className="text-xl font-semibold text-purple-700 mb-3">Nossos Valores</h3>
+            <h3 className="text-xl font-semibold text-purple-700 mb-3">
+              Nossos Valores
+            </h3>
             <ul className="text-gray-700 text-sm leading-relaxed list-disc pl-4">
               <li>Inovação com propósito</li>
               <li>Respeito e diversidade</li>
@@ -65,7 +93,8 @@ const Index = () => {
         {/* Frase de impacto */}
         <section className="bg-purple-100 rounded-2xl py-10 px-6 md:px-20 text-center shadow-inner">
           <p className="text-purple-800 text-xl font-semibold italic">
-            "Juntos, transformamos eventos em conexões reais, com tecnologia, emoção e propósito."
+            "Juntos, transformamos eventos em conexões reais, com tecnologia,
+            emoção e propósito."
           </p>
         </section>
       </main>

@@ -3,6 +3,8 @@ import useSessionStorage from "../../../hook/useSessionStorage";
 import Navbar from "../../componentes/BarraNav";
 import ModalNovoUsuario from "./ModalNovoUsuario";
 import ModalEdicaoUsuario from "./ModalEdicaoUsuario.tsx";
+import BarraLateral from "../../componentes/BarraLateral";
+
 
 interface Usuario {
   email: string;
@@ -26,6 +28,7 @@ const Adm = () => {
   const [modalMensagem, setModalMensagem] = useState("");
   const [sucesso, setSucesso] = useState(true);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [sidebarAberta, setSidebarAberta] = useState(false);
   const [isModalNovoUsuarioOpen, setIsModalNovoUsuarioOpen] = useState(false);
   const [isModalEdicaoOpen, setIsModalEdicaoOpen] = useState(false);
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(
@@ -115,8 +118,10 @@ const Adm = () => {
 
   return (
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen">
-      <Navbar onToggleSidebar={() => {}} />
-      <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl p-8">
+      <Navbar onToggleSidebar={() => setSidebarAberta(!sidebarAberta)} />
+<BarraLateral isOpen={sidebarAberta} />
+
+      <div className={`max-w-6xl bg-white rounded-3xl shadow-2xl p-8 transition-all duration-300 ${sidebarAberta ? "ml-64" : "ml-0"} mx-auto`}>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-extrabold text-purple-700">
             Gerenciar Usuários
