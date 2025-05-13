@@ -63,7 +63,12 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
       >
         <div className="flex items-center gap-4">
           <button
-            onClick={onToggleSidebar}
+onClick={() => {
+  if (usuario?.tipo === "admin" || usuario?.tipo === "usuario") {
+    onToggleSidebar();
+  }
+}}
+
             className="p-2 rounded hover:bg-purple-600"
           >
             <Menu size={28} />

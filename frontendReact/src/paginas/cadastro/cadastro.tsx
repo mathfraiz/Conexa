@@ -548,7 +548,7 @@ const Cadastro: React.FC = () => {
                     placeholder="Digite sua senha"
                     value={confirmacaosenha}
                     onChange={handleConfirmacaosenhaChange}
-                    className={`mt-1 block w-full px-3 py-2 border ${
+                    className={`mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500 ${
                       confirmacaosenhaErro
                         ? "border-red-500"
                         : "border-gray-300"
