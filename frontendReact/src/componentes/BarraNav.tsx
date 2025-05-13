@@ -71,7 +71,9 @@ const Navbar = () => {
         }`}
       >
         <Link
-          to={isLogado ? "/PaginaInicialLogin" : "/"}
+          to={
+            isLogado && usuario.tipo == "usuario" ? "/PaginaInicialLogin" : "/"
+          }
           className="text-3xl font-extrabold tracking-wide flex items-center gap-2 transition-all"
         >
           <span className="bg-gradient-to-r from-yellow-300 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-gradient">

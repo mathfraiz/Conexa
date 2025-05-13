@@ -180,7 +180,7 @@ const PaginaInicialLogin = () => {
                   name="pesquisa"
                   id="pesquisa"
                   className="w-full text-black"
-                  placeholder="nome do evento"
+                  placeholder="       nome do evento"
                 />
               </div>
 
