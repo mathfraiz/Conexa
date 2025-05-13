@@ -39,6 +39,7 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({ onCl
   };
 
   const handleCloseModal = (foiSalvo: boolean = false) => {
+    
     setMostrarModal(false);
     onClosePerfil(foiSalvo);
   };

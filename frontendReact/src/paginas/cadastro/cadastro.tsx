@@ -363,7 +363,7 @@ const Cadastro: React.FC = () => {
                   placeholder="Digite seu nome"
                   value={nome}
                   onChange={handleNomeChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500"
                   required
                 />
               </div>
@@ -449,9 +449,7 @@ const Cadastro: React.FC = () => {
                   onChange={handleEmailChange}
                   onKeyDown={handleKeyDown}
                   onBlur={sugerirEmail}
-                  className={`mt-1 block w-full px-3 py-2 border ${
-                    emailErro ? "border-red-500" : "border-gray-300"
-                  } rounded-md shadow-sm focus:ring-2 focus:ring-purple-500`}
+                  className={'mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500'}
                   required
                 />
                 {emailErro && (
@@ -488,9 +486,7 @@ const Cadastro: React.FC = () => {
                   placeholder="Digite seu telefone"
                   value={telefone}
                   onChange={handleTelefoneChange}
-                  className={`mt-1 block w-full px-3 py-2 border ${
-                    telefoneErro ? "border-red-500" : "border-gray-300"
-                  } rounded-md shadow-sm focus:ring-2 focus:ring-purple-500`}
+                  className={'mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500'}
                   required
                 />
                 {telefoneErro && (
@@ -511,9 +507,7 @@ const Cadastro: React.FC = () => {
                     onChange={handleSenhaChange}
                     onFocus={() => setMostrarRequisitosSenha(true)}
                     onBlur={() => setMostrarRequisitosSenha(false)}
-                    className={`mt-1 block w-full px-3 py-2 border ${
-                      senhaErro ? "border-red-500" : "border-gray-300"
-                    } rounded-md shadow-sm focus:ring-2 focus:ring-purple-500`}
+                    className={`mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500`}
                     required
                   />
                   <button

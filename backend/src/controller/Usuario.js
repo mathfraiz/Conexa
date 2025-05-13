@@ -2,7 +2,14 @@ import pool from "../config/bd.js";
 import bcrypt from "bcrypt";
 
 class Usuario {
-  static async criarUsuario(nome, email, senha, telefone, tipo = "usuario", foto) {
+  static async criarUsuario(
+    nome,
+    email,
+    senha,
+    telefone,
+    tipo = "usuario",
+    foto
+  ) {
     try {
       const senhaCriptografada = await bcrypt.hash(senha, 10);
       const sql = `INSERT INTO usuario (nome, email, senha, telefone, tipo, imagem_perfil) VALUES (?, ?, ?, ?, ?, ?)`;
@@ -54,21 +61,39 @@ class Usuario {
 
   static async atualizarUsuario(id, nome, email, senha, telefone, tipo, foto) {
     try {
-      const senhaCriptografada = await bcrypt.hash(senha, 10);
-      const sql = `
-        UPDATE usuario SET nome = ?, email = ?, senha = ?, telefone = ?, tipo = ?, imagem_perfil = ?
+      let senhaCriptografada;
+      let sql;
+      if (senha) {
+        senhaCriptografada = await bcrypt.hash(senha, 10);
+        sql = `
+        UPDATE usuario SET nome = ?, email = ?,senha=?, telefone = ?, tipo = ?, imagem_perfil = ?
         WHERE id = ?
       `;
-      const [result] = await pool.query(sql, [
-        nome,
-        email,
-        senhaCriptografada,
-        telefone,
-        tipo,
-        foto,
-        id,
-      ]);
-      return result.affectedRows;
+        const [result] = await pool.query(sql, [
+          nome,
+          email,
+          senhaCriptografada,
+          telefone,
+          tipo,
+          foto,
+          id,
+        ]);
+        return result.affectedRows;
+      } else {
+        sql = `
+        UPDATE usuario SET nome = ?, email = ?, telefone = ?, tipo = ?, imagem_perfil = ?
+        WHERE id = ?
+      `;
+        const [result] = await pool.query(sql, [
+          nome,
+          email,
+          telefone,
+          tipo,
+          foto,
+          id,
+        ]);
+        return result.affectedRows;
+      }
     } catch (error) {
       console.log("Erro ao atualizar usuário:", error.message);
       return 0;

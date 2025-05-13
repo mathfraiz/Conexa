@@ -44,7 +44,8 @@ const Login: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setUsuarioSession(data); // <-- Agora salva direto no SessionStorage e no React State
+        console.log(data);
+        setUsuarioSession(data);
         setVerdeMensagem(true);
         setModalMensagem("Login realizado com sucesso");
         setMostrarModal(true);

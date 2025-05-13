@@ -4,7 +4,15 @@ import useSessionStorage from "../../hook/useSessionStorage";
 import Perfil from "../paginas/usuario/perfil/perfil";
 
 const Navbar = () => {
-  const [usuario] = useSessionStorage<any>("usuario", {});
+  const [usuario, setUsuarioSessio] = useSessionStorage<any>("usuario", {
+    id: 0,
+    nome: "",
+    email: "",
+    senha: "",
+    telefone: "",
+    tipo: "",
+    imagem_perfil: "",
+  });
   const [isLogado, setIsLogado] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [modalPerfilOpen, setModalPerfilOpen] = useState(false);
@@ -63,7 +71,9 @@ const Navbar = () => {
         }`}
       >
         <Link
-          to={isLogado ? "/PaginaInicialLogin" : "/"}
+          to={
+            isLogado && usuario.tipo == "usuario" ? "/PaginaInicialLogin" : "/"
+          }
           className="text-3xl font-extrabold tracking-wide flex items-center gap-2 transition-all"
         >
           <span className="bg-gradient-to-r from-yellow-300 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-gradient">
@@ -126,7 +136,9 @@ const Navbar = () => {
       )}
 
       {toastMessage && (
-        <div className={`fixed top-[5rem] right-6 ${toastColor} text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in z-[9999]`}>
+        <div
+          className={`fixed top-[5rem] right-6 ${toastColor} text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in z-[9999]`}
+        >
           {toastMessage}
         </div>
       )}

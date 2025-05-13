@@ -15,16 +15,32 @@ interface Usuario {
 }
 
 const Adm = () => {
+  const [isModalConfirmarOpen, setIsModalConfirmarOpen] = useState(false);
+  const [idUsuarioParaDeletar, setIdUsuarioParaDeletar] = useState<
+    number | null
+  >(null);
+  const [nomeUsuarioParaDeletar, setNomeUsuarioParaDeletar] =
+    useState<string>("");
+
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMensagem, setModalMensagem] = useState("");
   const [sucesso, setSucesso] = useState(true);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [isModalNovoUsuarioOpen, setIsModalNovoUsuarioOpen] = useState(false);
   const [isModalEdicaoOpen, setIsModalEdicaoOpen] = useState(false);
-  const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(null);
+  const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(
+    null
+  );
+  useEffect(() => verificaTipo());
 
-  const [usuarioSession] = useSessionStorage<any>("usuario", {
-    id: 0, nome: "", email: "", senha: "", telefone: "", tipo: "", imagem_perfil: ""
+  const [usuarioSession,setUsuarioSessio] = useSessionStorage<any>("usuario", {
+    id: 0,
+    nome: "",
+    email: "",
+    senha: "",
+    telefone: "",
+    tipo: "",
+    imagem_perfil: "",
   });
 
   const carregarUsuarios = async () => {
@@ -45,7 +61,9 @@ const Adm = () => {
 
   const deletarUsuario = async (id: number) => {
     try {
-      const resp = await fetch(`http://localhost:3000/usuario/${id}`, { method: "DELETE" });
+      const resp = await fetch(`http://localhost:3000/usuario/${id}`, {
+        method: "DELETE",
+      });
       if (resp.ok) {
         setUsuarios((prev) => prev.filter((u) => u.id !== id));
         abrirModalMensagem(`Usuário ID ${id} deletado!`, false); // Agora toast vermelho
@@ -80,7 +98,6 @@ const Adm = () => {
       carregarUsuarios();
     }
   };
-  
 
   const handleCloseModalEditarUsuario = (foiSalvo: boolean) => {
     setIsModalEdicaoOpen(false);
@@ -90,14 +107,20 @@ const Adm = () => {
       carregarUsuarios();
     }
   };
-  
+  const verificaTipo = () => {
+    if (usuarioSession.tipo !== "admin") {
+      location.href = "http://localhost:3000/login";
+    }
+  };
 
   return (
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen">
       <Navbar/>
       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl p-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-extrabold text-purple-700">Gerenciar Usuários</h2>
+          <h2 className="text-3xl font-extrabold text-purple-700">
+            Gerenciar Usuários
+          </h2>
           <button
             className="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent font-extrabold text-lg px-5 py-2 rounded-xl shadow-md hover:scale-105 transition animate-gradient"
             onClick={handleOpenModalNovoUsuario}
@@ -145,7 +168,11 @@ const Adm = () => {
                     </button>
                     <button
                       className="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600"
-                      onClick={() => deletarUsuario(user.id)}
+                      onClick={() => {
+                        setIdUsuarioParaDeletar(user.id);
+                        setNomeUsuarioParaDeletar(user.nome);
+                        setIsModalConfirmarOpen(true);
+                      }}
                     >
                       Deletar
                     </button>
@@ -172,12 +199,17 @@ const Adm = () => {
         />
       )}
 
-{modalOpen && (
-  <div className={`fixed bottom-6 right-6 ${sucesso ? "bg-green-100 border-2 border-green-600 text-green-700" : "bg-red-100 border-2 border-red-600 text-red-700"} px-6 py-3 rounded-xl shadow-2xl animate-fade-in text-center font-semibold`}>
-    {modalMensagem}
-  </div>
-)}
-
+      {modalOpen && (
+        <div
+          className={`fixed bottom-6 right-6 ${
+            sucesso
+              ? "bg-green-100 border-2 border-green-600 text-green-700"
+              : "bg-red-100 border-2 border-red-600 text-red-700"
+          } px-6 py-3 rounded-xl shadow-2xl animate-fade-in text-center font-semibold`}
+        >
+          {modalMensagem}
+        </div>
+      )}
 
       <style>
         {`
@@ -192,6 +224,38 @@ const Adm = () => {
           }
         `}
       </style>
+      {isModalConfirmarOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-xl shadow-xl w-80 text-center">
+            <h2 className="text-2xl font-bold text-red-600 mb-4">
+              Confirmar Deleção
+            </h2>
+            <p className="mb-6">
+              Tem certeza que deseja deletar{" "}
+              <strong>{nomeUsuarioParaDeletar}</strong>?
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg transition"
+                onClick={() => setIsModalConfirmarOpen(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition"
+                onClick={() => {
+                  if (idUsuarioParaDeletar !== null) {
+                    deletarUsuario(idUsuarioParaDeletar);
+                    setIsModalConfirmarOpen(false);
+                  }
+                }}
+              >
+                Deletar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
