@@ -7,7 +7,7 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-purple-50">
 
-      <Navbar isLogado={false} />
+      <Navbar/>
 
       <main className="flex-1 pt-28 px-6 md:px-16">
         {/* Título principal */}

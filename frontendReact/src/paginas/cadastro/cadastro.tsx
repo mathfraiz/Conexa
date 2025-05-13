@@ -12,6 +12,7 @@ const Cadastro: React.FC = () => {
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
+  const [confirmacaosenha, setConfirmacaosenha] = useState("");
   const [imagemPreview, setImagemPreview] = useState<File | null>(null);
   // const [cep, setCep] = useState("");
   // const [endereco, setEndereco] = useState("");
@@ -23,6 +24,9 @@ const Cadastro: React.FC = () => {
   const [emailErro, setEmailErro] = useState("");
   const [senhaErro, setSenhaErro] = useState("");
   const [telefoneErro, setTelefoneErro] = useState("");
+  const [confirmacaosenhaErro, setConfirmacaosenhaErro] = useState("");
+  const [mostrarSenhaConf, setMostrarSenhaConf] = useState(false);
+
 
   // UI states
   const [mostrarRequisitosSenha, setMostrarRequisitosSenha] = useState(false);
@@ -182,6 +186,13 @@ const Cadastro: React.FC = () => {
       validarSenha(value) ? "" : "A senha não atende aos requisitos."
     );
   };
+  const handleConfirmacaosenhaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setConfirmacaosenha(value);
+    setConfirmacaosenhaErro(
+      validarSenha(value) ? "" : "A senha não atende aos requisitos."
+    );
+  };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (!mostrarSugestoes || sugestoesEmail.length === 0) return;
@@ -267,6 +278,7 @@ const Cadastro: React.FC = () => {
     form.set("telefone", telefone);
     form.set("email", email);
     form.set("senha", senha);
+    form.set("confirmacaodesenha", confirmacaosenha)
     form.set("tipo", "usuario");
     const telefoneLimpo = telefone.replace(/\D/g, ""); // Resultado: "41999991234"
     form.set("telefone", telefoneLimpo);
@@ -300,7 +312,7 @@ const Cadastro: React.FC = () => {
         className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat "
         style={{ backgroundImage: "url('/logo2.jpg')" }}
       >
-        <Navbar isLogado={false} />
+        <Navbar/>
         <div className="w-full max-w-md p-8 bg-purple-100 rounded-lg shadow-xl border border-gray-300">
           <div className="w-full max-w">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
@@ -526,7 +538,32 @@ const Cadastro: React.FC = () => {
                   </div>
                 )}
               </div>
-
+              {/*Confirmação de Senha */}
+              <div className="mb-6 relative">
+                <label className="block text-sm font-medium text-gray-700">
+                  Confirmação de Senha
+                </label>
+                <div className="relative">
+                  <input
+                    type={mostrarSenhaConf ? "text" : "password"}
+                    placeholder="Digite sua senha"
+                    value={confirmacaosenha}
+                    onChange={handleConfirmacaosenhaChange}
+                   className={`mt-1 block w-full px-3 py-2 border ${
+                      confirmacaosenhaErro ? "border-red-500" : "border-gray-300"
+                    } rounded-md shadow-sm focus:ring-2 focus:ring-purple-500`}
+                    required
+                  />
+                   <button
+                    type="button"
+                    onClick={()=>(setMostrarSenhaConf(!mostrarSenhaConf))}
+                    className="absolute inset-y-0 right-2 top-2 flex items-center text-gray-500 hover:text-gray-700"
+                  >
+                    {mostrarSenhaConf ? "🔓" : "🔒"}
+                  </button>
+                </div>
+              </div>
+              
               {/* Botão de Salvar */}
               <button
                 type="submit"

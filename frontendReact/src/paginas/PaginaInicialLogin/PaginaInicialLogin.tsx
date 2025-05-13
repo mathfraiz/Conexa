@@ -95,7 +95,7 @@ const PaginaInicialLogin = () => {
     <div className="flex flex-col h-screen bg-[url(./logo.jpg)] text-white bg-cover bg-center bg-no-repeat">
       {/* Navbar fixa no topo */}
       <div className="flex-shrink-0">
-        <Navbar isLogado={true} />
+        <Navbar/>
       </div>
 
       {/* Container com aside fixo e main scrollável */}

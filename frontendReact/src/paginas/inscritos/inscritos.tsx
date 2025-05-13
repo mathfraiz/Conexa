@@ -22,7 +22,7 @@ const Inscritos = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-white via-purple-50 to-purple-100 text-gray-800">
-      <Navbar isLogado={true} />
+      <Navbar/>
 
       <div className="flex flex-col md:flex-row pt-24 px-6 max-w-7xl mx-auto">
         {/* Sidebar */}

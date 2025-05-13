@@ -94,7 +94,7 @@ const Adm = () => {
 
   return (
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen">
-      <Navbar isLogado={true} />
+      <Navbar/>
       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl p-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-extrabold text-purple-700">Gerenciar Usuários</h2>

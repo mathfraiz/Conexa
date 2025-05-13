@@ -147,7 +147,7 @@ const CriarEvento = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="h-16">
-        <Navbar isLogado={true} />
+        <Navbar/>
       </div>
 
       <div className="bg-[url(./logo.jpg)] min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-200 p-6 bg-cover bg-center bg-no-repeat">
