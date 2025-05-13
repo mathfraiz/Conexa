@@ -45,7 +45,7 @@ const Adm = () => {
 
   const carregarUsuarios = async () => {
     try {
-      const response = await fetch("http://localhost:3000/usuario");
+      const response = await fetch("http://localhost:5173/usuario");
       if (response.ok) {
         const data: Usuario[] = await response.json();
         setUsuarios(data);
@@ -109,7 +109,7 @@ const Adm = () => {
   };
   const verificaTipo = () => {
     if (usuarioSession.tipo !== "admin") {
-      location.href = "http://localhost:3000/login";
+      location.href = "http://localhost:5173/login";
     }
   };
 

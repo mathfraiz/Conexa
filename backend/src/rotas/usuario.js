@@ -20,10 +20,7 @@ routerUsuario.post(
   upload.single("imagem_perfil"),
   async (req, res) => {
     try {
-      const { nome, email, senha, telefone, tipo } = req.body;
-      console.log("Novo cadastro:", { nome, email, telefone, tipo });
-      console.log("arquivo:", req.file);
-
+      const { nome, email, senha, telefone, tipo,time } = req.body;
       const foto = req.file?.buffer || null;
 
       const usuarioCadastrado = await Usuario.criarUsuario(
@@ -32,7 +29,8 @@ routerUsuario.post(
         senha,
         telefone,
         tipo,
-        foto
+        foto,
+        time
       );
 
       if (!usuarioCadastrado) {
