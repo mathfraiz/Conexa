@@ -33,7 +33,7 @@ const Adm = () => {
   );
   useEffect(() => verificaTipo());
 
-  const [usuarioSession,setUsuarioSessio] = useSessionStorage<any>("usuario", {
+  const [usuarioSession, setUsuarioSessio] = useSessionStorage<any>("usuario", {
     id: 0,
     nome: "",
     email: "",
@@ -45,7 +45,7 @@ const Adm = () => {
 
   const carregarUsuarios = async () => {
     try {
-      const response = await fetch("http://localhost:5173/usuario");
+      const response = await fetch("http://localhost:3000/usuario");
       if (response.ok) {
         const data: Usuario[] = await response.json();
         setUsuarios(data);
@@ -109,13 +109,13 @@ const Adm = () => {
   };
   const verificaTipo = () => {
     if (usuarioSession.tipo !== "admin") {
-      location.href = "http://localhost:5173/login";
+      location.href = "http://localhost:3000/login";
     }
   };
 
   return (
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen">
-      <Navbar/>
+      <Navbar onToggleSidebar={() => {}} />
       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl p-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-extrabold text-purple-700">
@@ -151,13 +151,15 @@ const Adm = () => {
                   <td className="px-4 py-2">{user.telefone}</td>
                   <td className="px-4 py-2 capitalize">{user.tipo}</td>
                   <td className="px-4 py-2">
-                    {user.imagem_perfil && (
-                      <img
-                        src={`data:image/jpeg;base64,${user.imagem_perfil}`}
-                        alt="Perfil"
-                        className="w-10 h-10 rounded-full object-cover border-2 border-purple-300"
-                      />
-                    )}
+                    <img
+                      src={
+                        user.imagem_perfil
+                          ? `data:image/jpeg;base64,${user.imagem_perfil}`
+                          : "./imagem_Icon_User.png"
+                      }
+                      alt="Perfil"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-purple-300"
+                    />
                   </td>
                   <td className="px-4 py-2 flex gap-2">
                     <button

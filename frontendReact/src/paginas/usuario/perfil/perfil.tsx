@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ModalEdicaoUsuario from "../../../componentes/ModalEdicaoUsuario";
 
-const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({ onClosePerfil }) => {
+const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
+  onClosePerfil,
+}) => {
   const [usuario, setUsuario] = useState<any | null>(null);
   const [mostrarModal, setMostrarModal] = useState(false);
   const perfilRef = useRef<HTMLDivElement>(null);
@@ -39,7 +41,6 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({ onCl
   };
 
   const handleCloseModal = (foiSalvo: boolean = false) => {
-    
     setMostrarModal(false);
     onClosePerfil(foiSalvo);
   };
@@ -52,14 +53,19 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({ onCl
   return (
     <div className="fixed top-[0rem] right-6 z-50 w-80 animate-fade-in">
       {!mostrarModal && (
-        <div ref={perfilRef} className="bg-white rounded-xl shadow-lg p-6 border border-gray-300 space-y-4">
+        <div
+          ref={perfilRef}
+          className="bg-white rounded-xl shadow-lg p-6 border border-gray-300 space-y-4"
+        >
           <div className="flex flex-col items-center">
             <img
-              src={usuario.imagem_perfil || "/placeholder.jpg"}
+              src={usuario.imagem_perfil || "./imagem_Icon_User.png"}
               alt="Perfil"
               className="w-24 h-24 rounded-full object-cover border-4 border-purple-600 shadow-md"
             />
-            <h2 className="text-xl font-bold text-purple-800 mt-4">{usuario.nome}</h2>
+            <h2 className="text-xl font-bold text-purple-800 mt-4">
+              {usuario.nome}
+            </h2>
             <p className="text-gray-600 text-sm">{usuario.email}</p>
             <p className="text-gray-600 text-sm">{usuario.telefone}</p>
             <span className="mt-2 px-3 py-1 text-sm font-medium text-purple-800 bg-purple-100 rounded-full">

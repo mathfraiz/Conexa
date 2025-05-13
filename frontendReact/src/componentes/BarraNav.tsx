@@ -92,7 +92,7 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
           ) : (
             <button onClick={() => setModalPerfilOpen(true)} className="transition-transform duration-300 hover:scale-110">
               <img
-                src={usuario?.imagem_perfil || "/placeholder.jpg"}
+                src={usuario?.imagem_perfil || "./imagem_Icon_User.png"}
                 alt="Perfil"
                 className="w-10 h-10 rounded-full object-cover"
               />

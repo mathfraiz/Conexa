@@ -27,7 +27,6 @@ const Cadastro: React.FC = () => {
   const [confirmacaosenhaErro, setConfirmacaosenhaErro] = useState("");
   const [mostrarSenhaConf, setMostrarSenhaConf] = useState(false);
 
-
   // UI states
   const [mostrarRequisitosSenha, setMostrarRequisitosSenha] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
@@ -186,7 +185,9 @@ const Cadastro: React.FC = () => {
       validarSenha(value) ? "" : "A senha não atende aos requisitos."
     );
   };
-  const handleConfirmacaosenhaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmacaosenhaChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
     setConfirmacaosenha(value);
     setConfirmacaosenhaErro(
@@ -278,7 +279,7 @@ const Cadastro: React.FC = () => {
     form.set("telefone", telefone);
     form.set("email", email);
     form.set("senha", senha);
-    form.set("confirmacaodesenha", confirmacaosenha)
+    form.set("confirmacaodesenha", confirmacaosenha);
     form.set("tipo", "usuario");
     const telefoneLimpo = telefone.replace(/\D/g, ""); // Resultado: "41999991234"
     form.set("telefone", telefoneLimpo);
@@ -308,11 +309,11 @@ const Cadastro: React.FC = () => {
 
   return (
     <div>
+      <Navbar onToggleSidebar={() => {}} />
       <div
         className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat "
         style={{ backgroundImage: "url('/logo2.jpg')" }}
       >
-        <Navbar />
         <div className="w-full max-w-md p-8 bg-purple-100 rounded-lg shadow-xl border border-gray-300">
           <div className="w-full max-w">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
@@ -449,7 +450,9 @@ const Cadastro: React.FC = () => {
                   onChange={handleEmailChange}
                   onKeyDown={handleKeyDown}
                   onBlur={sugerirEmail}
-                  className={'mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500'}
+                  className={
+                    "mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500"
+                  }
                   required
                 />
                 {emailErro && (
@@ -486,7 +489,9 @@ const Cadastro: React.FC = () => {
                   placeholder="Digite seu telefone"
                   value={telefone}
                   onChange={handleTelefoneChange}
-                  className={'mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500'}
+                  className={
+                    "mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500"
+                  }
                   required
                 />
                 {telefoneErro && (
@@ -543,21 +548,23 @@ const Cadastro: React.FC = () => {
                     placeholder="Digite sua senha"
                     value={confirmacaosenha}
                     onChange={handleConfirmacaosenhaChange}
-                   className={`mt-1 block w-full px-3 py-2 border ${
-                      confirmacaosenhaErro ? "border-red-500" : "border-gray-300"
+                    className={`mt-1 block w-full px-3 py-2 border ${
+                      confirmacaosenhaErro
+                        ? "border-red-500"
+                        : "border-gray-300"
                     } rounded-md shadow-sm focus:ring-2 focus:ring-purple-500`}
                     required
                   />
-                   <button
+                  <button
                     type="button"
-                    onClick={()=>(setMostrarSenhaConf(!mostrarSenhaConf))}
+                    onClick={() => setMostrarSenhaConf(!mostrarSenhaConf)}
                     className="absolute inset-y-0 right-2 top-2 flex items-center text-gray-500 hover:text-gray-700"
                   >
                     {mostrarSenhaConf ? "🔓" : "🔒"}
                   </button>
                 </div>
               </div>
-              
+
               {/* Botão de Salvar */}
               <button
                 type="submit"
