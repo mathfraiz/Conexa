@@ -109,7 +109,7 @@ const Adm = () => {
   };
   const verificaTipo = () => {
     if (usuarioSession.tipo !== "admin") {
-      location.href = "http://localhost:5173/login";
+      location.href = "http://localhost:3000/login";
     }
   };
 

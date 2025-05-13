@@ -21,7 +21,7 @@ function App() {
           <Route path="/recuperação" element={<RecuperacaoSenha />} />
           <Route path="/cadastroEvento" element={<CriarEvento />} />
           <Route path="/PaginaInicialLogin" element={<PaginaIncialLogin />} />
-          <Route path="/index" element={<Index />} /> {/* Página Sobre */}
+          <Route path="/index" element={<Index />} /> 
           <Route path="/adm" element={<Adm />} />
         </Routes>
       </BrowserRouter>
