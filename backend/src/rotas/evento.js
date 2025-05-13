@@ -90,4 +90,20 @@ const endereco = {
   }
 });
 
+routerEvento.delete("/eventos/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const eventoDeletado = await Evento.deletarEvento(id);
+    if (eventoDeletado) {
+      res.status(200).json({ status: 200, mensagem: "Evento deletado com sucesso" });
+    } else {
+      res.status(404).json({ status: 404, mensagem: "Evento não encontrado" });
+    }
+  } catch (err) {
+    res.status(500).json({ erro: "Erro ao deletar evento", detalhes: err.message });
+  }
+});
+
+
+
 export default routerEvento;

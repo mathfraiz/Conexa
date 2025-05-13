@@ -27,6 +27,10 @@ const Evento = {
 
     return evento;
   },
+  async deletarEvento(id) {
+    const [rows] = await pool.query("DELETE FROM eventos WHERE id = ?", [id]);
+    return rows;
+  },
   async encontrarTopEventos() {
     const [rows] = await pool.query(`
       SELECT * FROM eventos

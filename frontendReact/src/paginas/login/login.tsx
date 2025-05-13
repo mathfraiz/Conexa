@@ -54,7 +54,7 @@ const Login: React.FC = () => {
 
         if (data.tipo === "admin") {
           setTimeout(() => {
-            location.href = "/Adm";
+            location.href = "/admusuarios";
           }, 2000);
         } else if (data.tipo === "usuario") {
           setTimeout(() => {
@@ -108,7 +108,7 @@ const Login: React.FC = () => {
       className="h-screen flex flex-col items-center justify-center bg-cover bg-center"
       style={{ backgroundImage: "url('/logo2.jpg')" }}
     >
-      <Navbar/>
+      <Navbar onToggleSidebar={() => {}} />
 
       <div className="flex flex-1 items-center justify-center">
         <div className="w-full max-w-md p-8 bg-purple-100 rounded-lg shadow-2xl border border-gray-300">

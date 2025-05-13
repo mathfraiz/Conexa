@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Navbar from "../../componentes/BarraNav";
-import { href } from "react-router-dom";
 
 const CriarEvento = () => {
   const form = new FormData();
@@ -147,7 +146,7 @@ const CriarEvento = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="h-16">
-        <Navbar/>
+        <Navbar onToggleSidebar={()=>{}}/>
       </div>
 
       <div className="bg-[url(./logo.jpg)] min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-200 p-6 bg-cover bg-center bg-no-repeat">
@@ -199,6 +198,7 @@ const CriarEvento = () => {
               <input
                 type="date"
                 name="data"
+                min={new Date().toISOString().split("T")[0]}
                 value={data}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md p-3"

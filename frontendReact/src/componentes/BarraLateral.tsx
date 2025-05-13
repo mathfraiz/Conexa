@@ -42,16 +42,16 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
             Página Inicial
           </Link>
           <Link
-            to="/adm"
+            to="/admusuarios"
             className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
           >
-            Gerenciar Usuários
+            Gerenciar Usuarios
           </Link>
           <Link
-            to=""
+            to="/admEventos"
             className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
           >
-            Eventos
+            Gerenciar Eventos
           </Link>
           <Link
             to="#"
@@ -69,12 +69,6 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
         </Link>
       ) : null}
 
-      <Link
-        to="/login"
-        className="block bg-red-600 text-white font-semibold px-3 py-2 rounded shadow hover:bg-red-500 mt-4 text-center"
-      >
-        Sair
-      </Link>
     </aside>
   );
 };
