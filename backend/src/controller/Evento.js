@@ -3,22 +3,30 @@ import pool from "../config/bd.js";
 const Evento = {
   async findAllEvento() {
     const [rows] = await pool.query("SELECT * FROM eventos");
-  
+
     const eventosConvertidos = rows.map((evento) => ({
       ...evento,
       imagem_evento: evento.imagem_evento
         ? `data:image/jpeg;base64,${evento.imagem_evento.toString("base64")}`
         : null,
     }));
-  
+
     return eventosConvertidos;
   },
 
   async findEventoById(id) {
     const [rows] = await pool.query("SELECT * FROM eventos WHERE id = ?", [id]);
-    return rows[0];
-  },
 
+    const evento = rows[0];
+
+    if (evento?.imagem_evento) {
+      evento.imagem_evento = `data:image/jpeg;base64,${evento.imagem_evento.toString(
+        "base64"
+      )}`;
+    }
+
+    return evento;
+  },
   async encontrarTopEventos() {
     const [rows] = await pool.query(`
       SELECT * FROM eventos
@@ -75,7 +83,7 @@ const Evento = {
       console.log(eventoId + " log no controller");
       return eventoId;
     } catch (err) {
-      console.log("erro no transaction")
+      console.log("erro no transaction");
       await conn.rollback();
       throw err;
     } finally {

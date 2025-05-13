@@ -28,96 +28,33 @@ interface Evento {
 // }
 
 const PaginaInicialLogin = () => {
-  const [usuarioSession, setUsuarioSession] = useSessionStorage<any>(
-    "usuario",
-    {
-      id: 0,
-      nome: "",
-      email: "",
-      senha: "",
-      telefone: "",
-      tipo: "",
-      imagem_perfil: "",
-    }
-  );
-
-  useEffect(() => {
-    if (usuarioSession.id === 0) {
-      location.href = "/login";
-    }
-  }, []);
-  // const us = sessionStorage.getItem("usuario")
-  const [eventosList, setEventoList] = useState<Evento[]>([]);
-  const [eventos1, setEventos] = useState<Evento[]>([]);
-  // const [user,setUsers] = useState<>
-
-  const respEventos = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/eventos", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setEventoList(data);
-        setEventos(data);
-      } else {
-        console.error("Erro ao buscar eventos:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Erro de rede:", error);
-    }
-  };
-
-  // const criadoresEventos = async ()=>{
-
-  //   try{
-  //     const res = await fetch("http://localhost:3000/usuario",{
-  //       method:"GET",
-  //       headers:{
-  //         "Content-Type": "application/json",
-  //       }
-  //     }
-  //   )
-  //   const users = await res.json()
-
-  //   }
-  //   catch{
-
-  //   }
-
-  // }
-  useEffect(() => {
-    respEventos();
-  }, []);
-
-  useEffect(() => {
-    verificaUsuario();
+  const [usuarioSession] = useSessionStorage<any>("usuario", {
+    id: 0,
+    nome: "",
+    email: "",
+    senha: "",
+    telefone: "",
+    tipo: "",
+    imagem_perfil: "",
   });
 
-  const verificaUsuario = () => {
-    if (usuarioSession.id === 0) {
-      location.href = "http://localhost:3000/login";
-    }
-  };
-  const filtrarEventos = (eventos: Evento[], filtro: string) => {
-    const eventosFiltrados: Evento[] = [];
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
-    if (filtro == "") {
-      console.log(eventosList);
-      return eventosList;
-    }
-    eventos.map((e) => {
-      console.log("letra");
-      if (e.nome.toLowerCase().includes(filtro.toLowerCase())) {
-        console.log(e);
-        eventosFiltrados.push(e);
-      }
-    });
+  const [eventosList, setEventoList] = useState<Evento[]>([]);
+  const [eventos1, setEventos] = useState<Evento[]>([]);
 
-    return eventosFiltrados;
+  useEffect(() => {
+    if (usuarioSession.id === 0) location.href = "/login";
+    else respEventos();
+  }, []);
+
+  const respEventos = async () => {
+    const response = await fetch("http://localhost:3000/eventos");
+    const data = await response.json();
+    console.log(data)
+    setEventoList(data);
+    setEventos(data);
   };
 
   return (
@@ -127,65 +64,45 @@ const PaginaInicialLogin = () => {
         <Navbar/>
       </div>
 
-          {/* Container com aside fixo e main scrollável */}
-          <div className="flex flex-1 overflow-hidden">
-            {/* Sidebar fixa à esquerda */}
-            <aside className="w-60 bg-purple-600 p-4 flex-shrink-0 flex flex-col gap-4">
-              {/* <Link
-            to="/MeusEventos"
-            className="bg-purple-300 font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 transition text-black"
-          >
-            Meus Eventos
-          </Link> */}
+          <div className="flex pt-16 h-full">
+            {/* Sidebar */}
 
-              {/* <Link
-            to="/Inscritos"
-            className="bg-purple-300 font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 transition text-black"
-          >
-            Inscritos
-          </Link> */}
-
+            <aside
+              className={`fixed top-16 left-0 z-40 h-full bg-purple-600 w-60 p-4 transition-transform duration-300 ${
+                sidebarOpen ? "translate-x-0" : "-translate-x-full w-0"
+              }`}
+            >
               <Link
                 to="/cadastroEvento"
-                className="bg-purple-300 font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 transition text-black"
+                className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
               >
                 Criar Evento
               </Link>
-
-              {/* 
-          <Link
-            to="/configuracoes"
-            className="bg-purple-300 font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 transition text-black"
-          >
-            Configurações
-          </Link> */}
+              {/* Adicione mais links se quiser */}
             </aside>
 
-            {/* Conteúdo principal com scroll interno */}
-            <main className="flex-1 overflow-y-auto p-6 relative">
-              {/* Botão no topo direito */}
-
-              {/* Faixa branca ou título */}
+            {/* Conteúdo */}
+            <main
+              className={`flex-1 overflow-y-auto p-6 transition-all duration-300 ${
+                sidebarOpen ? "ml-60" : "ml-0 "
+              }`}
+            >
               <div className="w-1/2 h-6 bg-white rounded-lg mb-8">
                 <input
                   onChange={(e) => {
-                    const eventosFiltrados = filtrarEventos(
-                      eventosList,
-                      e.target.value
+                    const filtro = e.target.value;
+                    const filtrados = eventosList.filter((ev) =>
+                      ev.nome.toLowerCase().includes(filtro.toLowerCase())
                     );
-                    if (eventosFiltrados) setEventos(eventosFiltrados);
+                    setEventos(filtrados);
                   }}
-                  type="text"
-                  name="pesquisa"
-                  id="pesquisa"
                   className="w-full text-black"
                   placeholder="       nome do evento"
                 />
               </div>
 
-              {/* Grid responsivo */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {eventos1?.map((evento) => (
+                {eventos1.map((evento) => (
                   <MotionContainer
                     key={evento.id}
                     height="h-64"
@@ -205,7 +122,7 @@ const PaginaInicialLogin = () => {
                         {evento.hora}
                       </p>
                       <Link
-                        to={`/eventos/${evento.id}`}
+                        to={`/eventos'/${evento.id}`}
                         className="text-purple-300 hover:underline"
                       >
                         Saiba mais

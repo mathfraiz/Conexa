@@ -9,6 +9,7 @@ import PaginaIncialLogin from "./paginas/PaginaInicialLogin/PaginaInicialLogin";
 import CriarEvento from "./paginas/cadastroEvento/cadastroEvento";
 import Index from "./paginas/index";
 import Adm from "./paginas/Adm/adm";
+import Evento from "./paginas/Evento/Evento";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/PaginaInicialLogin" element={<PaginaIncialLogin />} />
           <Route path="/index" element={<Index />} /> 
           <Route path="/adm" element={<Adm />} />
+          <Route path="/eventos/:id" element={<Evento />} />
         </Routes>
       </BrowserRouter>
     </div>
