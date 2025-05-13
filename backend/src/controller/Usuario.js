@@ -8,20 +8,18 @@ class Usuario {
     senha,
     telefone,
     tipo = "usuario",
-    foto,
-    time
+    foto
   ) {
     try {
       const senhaCriptografada = await bcrypt.hash(senha, 10);
-      const sql = `INSERT INTO usuario (nome, email, senha, telefone, tipo, imagem_perfil,time) VALUES (?, ?, ?, ?, ?, ?,?)`;
+      const sql = `INSERT INTO usuario (nome, email, senha, telefone, tipo, imagem_perfil) VALUES (?, ?, ?, ?, ?, ?)`;
       const [resultados] = await pool.query(sql, [
         nome,
         email,
         senhaCriptografada,
         telefone,
         tipo,
-        foto,
-        time
+        foto
       ]);
       if (resultados.affectedRows == 0) {
         return null;

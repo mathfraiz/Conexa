@@ -61,7 +61,7 @@ const PaginaInicialLogin = () => {
     <div className="flex flex-col h-screen bg-[url(./logo.jpg)] text-white bg-cover bg-center bg-no-repeat">
       {/* Navbar fixa no topo */}
       <div className="flex-shrink-0">
-        <Navbar/>
+        <Navbar onToggleSidebar={toggleSidebar} />
       </div>
 
           <div className="flex pt-16 h-full">
