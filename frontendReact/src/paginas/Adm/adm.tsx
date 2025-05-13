@@ -45,7 +45,7 @@ const Adm = () => {
 
   const carregarUsuarios = async () => {
     try {
-      const response = await fetch("http://localhost:5173/usuario");
+      const response = await fetch("http://localhost:3000/usuario");
       if (response.ok) {
         const data: Usuario[] = await response.json();
         setUsuarios(data);
