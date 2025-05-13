@@ -133,24 +133,39 @@ const Adm = () => {
           <table className="w-full text-left border-separate border-spacing-y-2">
             <thead>
               <tr className="text-sm text-purple-800">
-                <th className="px-4 py-2">ID</th>
-                <th className="px-4 py-2">Nome</th>
+                {/* Colunas visíveis apenas em telas médias para cima */}
+                <th className="px-4 py-2 hidden sm:table-cell">ID</th>
+                <th className="px-4 py-2 hidden sm:table-cell">Nome</th>
+
+                {/* Sempre visível */}
                 <th className="px-4 py-2">Email</th>
-                <th className="px-4 py-2">Telefone</th>
-                <th className="px-4 py-2">Tipo</th>
-                <th className="px-4 py-2">Imagem</th>
+
+                {/* Oculto em mobile */}
+                <th className="px-4 py-2 hidden md:table-cell">Telefone</th>
+                <th className="px-4 py-2 hidden md:table-cell">Tipo</th>
+
+                {/* Sempre visível */}
+                <th className="px-4 py-2 hidden sm:table-cell">Imagem</th>
                 <th className="px-4 py-2">Ações</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-sm">
               {usuarios.map((user) => (
                 <tr key={user.id} className="bg-white shadow rounded-xl">
-                  <td className="px-4 py-2 font-medium">{user.id}</td>
-                  <td className="px-4 py-2">{user.nome}</td>
+                  <td className="px-4 py-2 hidden sm:table-cell font-medium">
+                    {user.id}
+                  </td>
+                  <td className="px-4 py-2 hidden sm:table-cell ">
+                    {user.nome}
+                  </td>
                   <td className="px-4 py-2">{user.email}</td>
-                  <td className="px-4 py-2">{user.telefone}</td>
-                  <td className="px-4 py-2 capitalize">{user.tipo}</td>
-                  <td className="px-4 py-2">
+                  <td className="px-4 py-2 hidden md:table-cell">
+                    {user.telefone}
+                  </td>
+                  <td className="px-4 py-2 hidden md:table-cell capitalize">
+                    {user.tipo}
+                  </td>
+                  <td className="px-4 py-2 hidden sm:table-cell">
                     <img
                       src={
                         user.imagem_perfil
@@ -161,7 +176,7 @@ const Adm = () => {
                       className="w-10 h-10 rounded-full object-cover border-2 border-purple-300"
                     />
                   </td>
-                  <td className="px-4 py-2 flex gap-2">
+                  <td className=" py-2 flex gap-2 flex-col">
                     <button
                       className="bg-yellow-400 text-white px-4 py-1 rounded-lg hover:bg-yellow-500"
                       onClick={() => handleOpenModalEditarUsuario(user)}
