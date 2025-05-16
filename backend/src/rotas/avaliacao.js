@@ -9,32 +9,40 @@ routerAvaliacao.get("/avaliacao", async (req, res) => {
     const avaliacoes = await Avaliacao.encontrarTodasAvaliacoes();
     res.json(avaliacoes);
   } catch (err) {
-    res.status(500).json({ erro: "Erro ao buscar avaliações", detalhes: err.message });
+    res
+      .status(500)
+      .json({ erro: "Erro ao buscar avaliações", detalhes: err.message });
   }
 });
 
 // POST criar avaliação
 routerAvaliacao.post("/avaliacao", async (req, res) => {
-  const { usuario_id, evento_id, nota, comentario } = req.body;
+  const { usuario_id, evento_id, nota } = req.body;
   try {
-    const novaAvaliacao = await Avaliacao.criarAvaliacao(usuario_id, evento_id, nota, comentario);
+    const novaAvaliacao = await Avaliacao.criarAtualizarAvaliacao(
+      usuario_id,
+      evento_id,
+      nota
+    );
     res.json(novaAvaliacao);
   } catch (err) {
-    res.status(500).json({ erro: "Erro ao criar avaliação", detalhes: err.message });
+    res
+      .status(500)
+      .json({ erro: "Erro ao criar avaliação", detalhes: err.message });
   }
 });
 
-// PUT atualizar avaliação
-routerAvaliacao.put("/avaliacao/:id", async (req, res) => {
-  const id = req.params.id;
-  const campos = req.body;
-  try {
-    const avaliacaoAtualizada = await Avaliacao.atualizarAvaliacao(id, campos);
-    res.json(avaliacaoAtualizada);
-  } catch (err) {
-    res.status(500).json({ erro: "Erro ao atualizar avaliação", detalhes: err.message });
-  }
-});
+// // PUT atualizar avaliação
+// routerAvaliacao.put("/avaliacao/:id", async (req, res) => {
+//   const id = req.params.id;
+//   const campos = req.body;
+//   try {
+//     const avaliacaoAtualizada = await Avaliacao.atualizarAvaliacao(id, campos);
+//     res.json(avaliacaoAtualizada);
+//   } catch (err) {
+//     res.status(500).json({ erro: "Erro ao atualizar avaliação", detalhes: err.message });
+//   }
+// });
 
 // DELETE remover avaliação
 routerAvaliacao.delete("/avaliacao/:id", async (req, res) => {
@@ -43,7 +51,9 @@ routerAvaliacao.delete("/avaliacao/:id", async (req, res) => {
     const resultado = await Avaliacao.deletarAvaliacao(id);
     res.json(resultado);
   } catch (err) {
-    res.status(500).json({ erro: "Erro ao deletar avaliação", detalhes: err.message });
+    res
+      .status(500)
+      .json({ erro: "Erro ao deletar avaliação", detalhes: err.message });
   }
 });
 

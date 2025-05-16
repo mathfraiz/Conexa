@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
 import Rodape from "../../componentes/Rodape";
-import useSessionStorage from "../../../hook/useSessionStorage"; // <-- importa o hook!
+import { useAuth } from "../../contexts/AuthContext";
 
 const emailSugeridos = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com"];
 
 const Login: React.FC = () => {
+  const { usuario, login } = useAuth();
+
   const [modalMensagem, setModalMensagem] = useState("");
   const [verdeMensagem, setVerdeMensagem] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -16,51 +18,37 @@ const Login: React.FC = () => {
   const [mostrarSugestoes, setMostrarSugestoes] = useState(false);
   const sugestoesRef = useRef<HTMLDivElement>(null);
 
-  const [usuarioSession, setUsuarioSession] = useSessionStorage<any>(
-    "usuario",
-    {
-      id: 0,
-      nome: "",
-      email: "",
-      senha: "",
-      telefone: "",
-      tipo: "",
-      imagem_perfil: "",
+  useEffect(() => {
+    if (usuario) {
+      if (usuario.id > 0) {
+        if (usuario.tipo === "admin") {
+          location.href = "/admusuarios";
+        } else if(usuario.tipo === "usuario"){
+          location.href = "/paginaInicialLogin";
+        }
+      }
     }
-  );
+  }, [usuario]);
 
   const logar = async (email: string, senha: string) => {
-    if (!(email && senha)) {
-      return;
-    }
+    if (!(email && senha)) return;
+
     try {
       const response = await fetch("http://localhost:3000/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json",
+          
+         },
         body: JSON.stringify({ email, senha }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        setUsuarioSession(data);
+        login(data.usuario, data.token); // salva no contexto global
+
         setVerdeMensagem(true);
         setModalMensagem("Login realizado com sucesso");
         setMostrarModal(true);
-
-        console.log(data.tipo);
-
-        if (data.tipo === "admin") {
-          setTimeout(() => {
-            location.href = "/admusuarios";
-          }, 2000);
-        } else if (data.tipo === "usuario") {
-          setTimeout(() => {
-            location.href = "/paginaInicialLogin";
-          }, 2000);
-        }
       } else {
         setVerdeMensagem(false);
         setModalMensagem("Email ou senha incorretos");
@@ -68,6 +56,9 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       console.error("Erro ao fazer login:", error);
+      setVerdeMensagem(false);
+      setModalMensagem("Erro ao conectar com o servidor.");
+      setMostrarModal(true);
     }
   };
 
@@ -195,7 +186,7 @@ const Login: React.FC = () => {
             <p className="text-sm text-gray-600">
               Esqueceu a senha?{" "}
               <Link
-                to="/recuperação"
+                to="/recuperacao"
                 className="text-purple-600 hover:text-purple-500"
               >
                 Recuperar senha

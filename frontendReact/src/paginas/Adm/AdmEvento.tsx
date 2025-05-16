@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../componentes/BarraNav";
 import BarraLateral from "../../componentes/BarraLateral";
 import ModalNovoEvento from "./ModalNovoEvento";
-import ModalEdicaoEvento from "./ModalEdicaoEvento";
+import ModalEdicaoEvento from "../../componentes/ModalEdicaoEvento";
 
 interface Evento {
   id: number;

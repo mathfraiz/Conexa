@@ -1,17 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { use, useEffect, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import useSessionStorage from "../../../hook/useSessionStorage";
+import MapaEndereco from "../../componentes/MapEndereco";
+import Rodape from "../../componentes/Rodape";
+import Navbar from "../../componentes/BarraNav";
+import BarraLateral from "../../componentes/BarraLateral";
 
 interface Evento {
   id: number;
   nome: string;
   descricao: string;
+  descricao_completa: string;
   data: Date;
   hora: string;
+  endereco: string;
   imagem_evento: string | null;
   criado_por: number;
+  endereco_id;
 }
-
+interface Endereco {
+  id: number;
+  logradouro: string;
+  numero: string;
+  bairro: string;
+  cidade: string;
+  UF: string;
+}
 const Evento = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -24,26 +38,94 @@ const Evento = () => {
   const [evento, setEvento] = useState<Evento | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [mensagem, setMensagem] = useState("");
+  const [criador, setCriador] = useState("");
+  const [endereco, setEndereco] = useState<Endereco | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+  const [inscricao, setIncricoes] = useState<any>([]);
+  const [idInscricao, setIdInscricao] = useState(0);
 
-  useEffect(() => {
-    const buscarEvento = async () => {
+  const buscarCriador = async (id) => {
+    if (evento) {
       try {
-        const resp = await fetch(`http://localhost:3000/evento/${id}`);
-        if (resp.ok) {
-            const data = await resp.json();
-            console.log(data)
-          setEvento(data);
-        } else {
-          setMensagem("Evento não encontrado.");
+        const respuser = await fetch(`http://localhost:3000/usuario/${id}`);
+
+        if (respuser.ok) {
+          const data = await respuser.json();
+          setCriador(data.nome);
         }
       } catch (err) {
         console.error(err);
-        setMensagem("Erro ao buscar evento.");
-      } finally {
-        setCarregando(false);
+        setMensagem("Erro ao buscar criador do evento.");
       }
-    };
+    }
+  };
 
+  const buscarIncricoesUsuario = async (id) => {
+    try {
+      const inscricoes = await fetch(
+        `http://localhost:3000/inscricoesUsuario/${id}`
+      );
+      if (inscricoes.ok) {
+        const inscricoesJson = await inscricoes.json();
+        setIncricoes(inscricoesJson);
+        console.log(inscricoesJson);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const buscarEndereco = async (id) => {
+    if (evento) {
+      try {
+        const respEndereco = await fetch(
+          "http://localhost:3000/endereco/" + id
+        );
+        if (respEndereco.ok) {
+          const data = await respEndereco.json();
+          setEndereco(data);
+        }
+      } catch (err) {
+        console.error(err);
+        setMensagem("Erro ao buscar criador do evento.");
+      }
+    }
+  };
+
+  const buscarEvento = async () => {
+    try {
+      const resp = await fetch(`http://localhost:3000/evento/${id}`);
+
+      if (resp.ok) {
+        const data = await resp.json();
+        setEvento(data);
+        buscarCriador(data.criado_por);
+        buscarIncricoesUsuario(usuario.id);
+      } else {
+        setMensagem("Evento não encontrado.");
+        setTimeout(() => {
+          setMensagem("");
+          navigate("/login");
+        }, 3000);
+      }
+    } catch (err) {
+      console.error(err);
+      setMensagem("Erro ao buscar evento.");
+      setTimeout(() => {
+        setMensagem("");
+        navigate("/login");
+      }, 3000);
+    } finally {
+      setCarregando(false);
+    }
+  };
+  useEffect(() => {
+    buscarEndereco(evento?.endereco_id);
+    buscarCriador(evento?.criado_por);
+  }, [evento]);
+
+  useEffect(() => {
     buscarEvento();
   }, [id]);
 
@@ -54,21 +136,30 @@ const Evento = () => {
     }
 
     try {
-      const resp = await fetch("http://localhost:3000/inscricoes", {
+      const token = sessionStorage.getItem("token");
+
+      const resp = await fetch("http://localhost:3000/inscricao", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          usuario_id: usuario.id,
+          usuario_id: usuario?.id,
           evento_id: evento?.id,
         }),
       });
 
       if (resp.ok) {
         setMensagem("Inscrição realizada com sucesso!");
+        setTimeout(() => {
+          setMensagem("");
+        }, 3000);
       } else {
         setMensagem("Você já está inscrito ou ocorreu um erro.");
+        setTimeout(() => {
+          setMensagem("");
+        }, 3000);
       }
     } catch (err) {
       console.error(err);
@@ -76,46 +167,240 @@ const Evento = () => {
     }
   };
 
+  const desinscreverUsuario = async () => {
+    const token = sessionStorage.get("token");
+    if (!usuario) {
+      return;
+    }
+    try {
+      const resp = await fetch("http://localhost:3000/inscricao", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          usuario_id: usuario?.id,
+          evento_id: evento?.id,
+        }),
+      });
+
+      if (resp.ok) {
+        console.log("ok");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const [avaliacao, setAvaliacao] = useState(0);
+  const [hover, setHover] = useState(0);
+
+  const enviarAvaliacao = async (estrela: number) => {
+    if (!evento || usuario.id === 0) {
+      setMensagem("Você precisa estar logado para avaliar.");
+      setTimeout(() => {
+        setMensagem("");
+      }, 3000);
+      return;
+    }
+
+    setAvaliacao(estrela);
+
+    try {
+      const resp = await fetch("http://localhost:3000/avaliacao", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          evento_id: evento.id,
+          usuario_id: usuario.id,
+          nota: estrela,
+        }),
+      });
+
+      if (resp.ok) {
+        setMensagem("Obrigado pela sua avaliação!");
+        setTimeout(() => {
+          setMensagem("");
+        }, 3000);
+      } else {
+        setMensagem("Erro ao registrar sua avaliação.");
+        setTimeout(() => {
+          setMensagem("");
+        }, 3000);
+      }
+    } catch (err) {
+      console.error(err);
+      setMensagem("Erro na conexão ao enviar avaliação.");
+    }
+  };
+
+  const verificaInscricao = (eventoid) => {
+    for (let i = 0; i <= inscricao.length; i++) {
+      if (inscricao[i]?.evento_id === eventoid) {
+        console.log(inscricao[i]?.evento_id == eventoid)
+        return false;
+      }
+    }
+  };
+
   if (carregando) return <p className="p-6">Carregando evento...</p>;
   if (!evento) return <p className="p-6 text-red-500">{mensagem}</p>;
 
   return (
-    <div className="min-h-screen bg-gray-100 text-black p-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-        {evento.imagem_evento && (
-          <img
-            src={evento.imagem_evento}
-            alt={evento.nome}
-            className="w-full h-64 object-cover"
-          />
-        )}
+    <div className="flex flex-col min-h-screen bg-purple-50">
+      <Navbar onToggleSidebar={toggleSidebar} />
+      <aside
+        className={`fixed top-16 left-0 z-40 h-full bg-purple-600 w-60 p-4 transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full w-0"
+        }`}
+      >
+        <Link
+          to="/cadastroEvento"
+          className="block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
+        >
+          Criar Evento
+        </Link>
+        {/* Adicione mais links se quiser */}
+        <Link
+          to={"/eventos/usuario"}
+          className=" block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
+        >
+          Meus Eventos
+        </Link>
+      </aside>
 
-        <div className="p-6">
-          <h1 className="text-3xl font-bold text-purple-700 mb-4">
-            {evento.nome}
-          </h1>
-          <p className="text-gray-700 mb-2">
-            <strong>Data:</strong> {new Date(evento.data).toLocaleDateString()}
-          </p>
-          <p className="text-gray-700 mb-4">
-            <strong>Hora:</strong> {evento.hora}
-          </p>
-          <p className="text-gray-800 mb-6">{evento.descricao}</p>
-
-          <button
-            onClick={inscreverUsuario}
-            className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
+      <div
+        className={`flex-1 overflow-y-auto p-6 transition-all duration-300 ${
+          sidebarOpen ? "ml-60" : "ml-0 "
+        }  bg-cover bg-center bg-no-repeat bg-[url(/logo.jpg)]`}
+      >
+        <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+          <div
+            className="flex flex-col gap-6 p-6 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `
+      linear-gradient(to right, rgba(202,196,202,0.9), rgba(7,7,7,0.7)),
+      url(${evento?.imagem_evento || ""})
+    `,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundBlendMode: "overlay",
+            }}
           >
-            Inscrever-se
-          </button>
+            {/* Dados principais */}
+            <div
+              className="rounded-lg shadow p-6 space-y-4"
+              style={{
+                backgroundImage: `
+      linear-gradient(to right, rgba(202,196,202,0.9), rgba(7,7,7,0.7)),
+      url(${evento?.imagem_evento || ""})
+    `,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundBlendMode: "overlay",
+              }}
+            >
+              <h1 className="text-3xl font-bold text-purple-700">
+                {evento.nome}
 
-          {mensagem && (
-            <p className="mt-4 text-green-600 font-semibold">{mensagem}</p>
-          )}
+              </h1>
+              <h1 className="text-3xl font-bold text-purple-700">
+                {evento.id}
+                
+              </h1>
+              <p className="text-purple-700">
+                <strong>Data:</strong>{" "}
+                {new Date(evento.data).toLocaleDateString()}
+              </p>
+              <p className="text-purple-700">
+                <strong>Hora:</strong> {evento.hora}
+              </p>
+              <p className="text-purple-700">{evento.descricao}</p>
+              <p className="text-purple-700">
+                <strong>Criado por:</strong> {criador}
+              </p>
+              {endereco && (
+                <p className="text-purple-700">
+                  <strong>Local:</strong> {endereco.logradouro},{" "}
+                  {endereco.numero}, {endereco.bairro} - {endereco.cidade}/
+                  {endereco.UF}
+                </p>
+              )}
+              {verificaInscricao(evento.id) ? (
+                <button
+                  onClick={inscreverUsuario}
+                  className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
+                >
+                  Inscrever-se
+                </button>
+              ) : (
+                <button
+                  onClick={desinscreverUsuario}
+                  className="bg-red-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
+                >
+                  desinscrever
+                </button>
+              )}
+
+              {mensagem && (
+                <p className="text-green-300 font-semibold">{mensagem}</p>
+              )}
+            </div>
+
+            {/* Descrição completa */}
+            {evento.descricao_completa && (
+              <div className="bg-white rounded-lg shadow p-6 text-purple-800 text-sm">
+                <h3 className="text-lg font-semibold text-purple-700 mb-2">
+                  Descrição do Evento:
+                </h3>
+                <p className="overflow-y-auto max-h-64">
+                  {evento.descricao_completa}
+                </p>
+              </div>
+            )}
+
+            {/* Avaliação */}
+            <div className="bg-purple-600 text-white rounded-lg shadow p-6 flex flex-col items-center">
+              <p className="font-semibold mb-2">Avalie o evento:</p>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((estrela) => (
+                  <span
+                    key={estrela}
+                    className={`text-2xl cursor-pointer ${
+                      estrela <= (hover || avaliacao)
+                        ? "text-yellow-400"
+                        : "text-white"
+                    }`}
+                    onClick={() => enviarAvaliacao(estrela)}
+                    onMouseEnter={() => setHover(estrela)}
+                    onMouseLeave={() => setHover(0)}
+                  >
+                    {estrela <= (hover || avaliacao) ? "★" : "☆"}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Mapa */}
+            {endereco && (
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <MapaEndereco
+                  enderecoCompleto={`${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade} - ${endereco.UF}, Brasil`}
+                />
+              </div>
+            )}
+          </div>
+
+          <div></div>
         </div>
       </div>
+      <Rodape />
     </div>
   );
 };
-
 export default Evento;

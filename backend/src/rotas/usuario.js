@@ -1,6 +1,8 @@
 import express from "express";
 import Usuario from "../controller/Usuario.js";
 import upload from "../config/multer.js";
+import { generateToken } from "../config/auth.js"; // importa o JWT
+import authenticate from "../middleware/authMiddleware.js";
 
 const routerUsuario = express.Router();
 
@@ -11,6 +13,27 @@ routerUsuario.get("/usuario", async (req, res) => {
     res.json(usuarios);
   } catch {
     res.status(500).json({ erro: "erro ao buscar todos os usuarios" });
+  }
+});
+
+routerUsuario.get("/usuario/me", authenticate, async (req, res) => {
+  try {
+    const usuario = await Usuario.encontrarUsuarioPorId(req.userId);
+    if (!usuario) {
+      return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+
+    if (usuario.imagem_perfil) {
+      usuario.imagem_perfil = `data:image/jpeg;base64,${usuario.imagem_perfil.toString(
+        "base64"
+      )}`;
+    }
+
+    res.status(200).json(usuario);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ erro: "Erro ao buscar dados do usuário", detalhes: err.message });
   }
 });
 
@@ -49,34 +72,48 @@ routerUsuario.post(
 
 routerUsuario.post("/login", async (req, res) => {
   const usuario = req.body;
+
   try {
     const usuarioLogado = await Usuario.login(usuario);
-    if (!!!usuarioLogado) {
-      res.status(401).json({ erro: "Email ou senha inválidos" });
-      return;
-    } else {
-      if (usuarioLogado.imagem_perfil) {
-        usuarioLogado.imagem_perfil = `data:image/jpeg;base64,${usuarioLogado.imagem_perfil.toString(
-          "base64"
-        )}`;
-      }
 
-      res.status(200).json(usuarioLogado);
+    if (!usuarioLogado) {
+      return res.status(401).json({ erro: "Email ou senha inválidos" });
     }
-  } catch {
-    res
-      .status(500)
-      .json({ erro: "Erro ao fazer login", detalhes: err.message });
+
+    if (usuarioLogado.imagem_perfil) {
+      usuarioLogado.imagem_perfil = `data:image/jpeg;base64,${usuarioLogado.imagem_perfil.toString(
+        "base64"
+      )}`;
+    }
+
+    const token = generateToken(usuarioLogado.id);
+
+    res.status(200).json({
+      token,
+      usuario: usuarioLogado,
+    });
+  } catch (err) {
+    res.status(500).json({
+      erro: "Erro ao fazer login",
+      detalhes: err.message,
+    });
   }
 });
 
 // PUT /usuarios/:id
 routerUsuario.put(
   "/usuario/:id",
+  authenticate,
   upload.single("imagem_perfil"),
   async (req, res) => {
+    const id = parseInt(req.params.id);
+
+    // Proteção: apenas o próprio usuário OU um admin pode editar
+    if (req.userTipo !== "admin" && req.userId !== id) {
+      return res.status(403).json({ erro: "Acesso negado" });
+    }
+
     try {
-      const id = req.params.id;
       const { nome, email, senha, telefone, tipo } = req.body;
       const imagem = req.file?.buffer || null;
 
@@ -89,6 +126,7 @@ routerUsuario.put(
         tipo,
         imagem
       );
+
       res.json({ sucesso: true, atualizado: usuarioAtualizado });
     } catch (error) {
       console.log("Erro na rota PUT:", error);
@@ -98,14 +136,35 @@ routerUsuario.put(
 );
 
 // DELETE /usuarios/:id
-routerUsuario.delete("/usuario/:id", async (req, res) => {
+routerUsuario.delete("/usuario/:id", authenticate, async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  if (req.userTipo !== "admin" && req.userId !== id) {
+    return res.status(403).json({ erro: "Acesso negado" });
+  }
+
   try {
-    const idUsuario = req.params.id;
-    const usuarioDeletado = Usuario.deletarUsuario(idUsuario);
-    res.json(usuarioDeletado);
-  } catch {
-    res.status(500).json({ erro: "nao foi possivel deletar o usuario" });
+    const usuarioDeletado = await Usuario.deletarUsuario(id);
+    res.json({ sucesso: true, deletado: usuarioDeletado });
+  } catch (error) {
+    console.log("Erro ao deletar:", error.message);
+    res.status(500).json({ erro: "Não foi possível deletar o usuário" });
   }
 });
 
+routerUsuario.get("/usuario/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const usuario = await Usuario.encontrarUsuarioPorId(id);
+    if (usuario?.imagem_perfil) {
+      usuario.imagem_perfil = `data:image/jpeg;base64,${usuario.imagem_perfil.toString(
+        "base64"
+      )}`;
+    }
+    res.json(usuario);
+  } catch (error) {
+    console.log("Erro ao buscar usuário:", error.message);
+    res.status(500).json({ erro: "Erro ao buscar usuário" });
+  }
+});
 export default routerUsuario;

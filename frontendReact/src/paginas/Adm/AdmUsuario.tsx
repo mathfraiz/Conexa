@@ -15,7 +15,7 @@ interface Usuario {
   tipo: string;
 }
 
-const Adm = () => {
+const AdmUsuario = () => {
   const [isModalConfirmarOpen, setIsModalConfirmarOpen] = useState(false);
   const [idUsuarioParaDeletar, setIdUsuarioParaDeletar] = useState<
     number | null
@@ -44,6 +44,7 @@ const Adm = () => {
     tipo: "",
     imagem_perfil: "",
   });
+  
 
   const carregarUsuarios = async () => {
     try {
@@ -58,6 +59,10 @@ const Adm = () => {
   };
 
   useEffect(() => {
+    if(usuarioSession.tipo !== "admin") {
+      location.href = "http://localhost:5173/login";
+      return
+    }
     carregarUsuarios();
   }, []);
 
@@ -286,4 +291,4 @@ const Adm = () => {
   );
 };
 
-export default Adm;
+export default AdmUsuario;

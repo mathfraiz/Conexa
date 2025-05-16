@@ -6,7 +6,10 @@ interface Evento {
   data: string;
   hora: string;
   descricao: string;
+  descricao_completa: string;
   imagem_evento: string | null;
+  endereco_id: number;
+  criado_por: number;
 }
 
 interface ModalEdicaoEventoProps {
@@ -23,21 +26,29 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
   const [data, setData] = useState(evento.data.split("T")[0]);
   const [hora, setHora] = useState(evento.hora);
   const [descricao, setDescricao] = useState(evento.descricao);
+  const [descricaoCompleta, setDescricaoCompleta] = useState(
+    evento.descricao_completa || ""
+  );
   const [imagem, setImagem] = useState<File | null>(null);
-  console.log(data);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    const token = sessionStorage.getItem("token");
+
     e.preventDefault();
     const formData = new FormData();
     formData.append("nome", nome);
     formData.append("data", data);
     formData.append("hora", hora);
     formData.append("descricao", descricao);
+    formData.append("descricao_completa", descricaoCompleta);
     if (imagem) formData.append("imagem", imagem);
 
     try {
       await fetch(`http://localhost:3000/eventos/${evento.id}`, {
         method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
       onClose(true);
@@ -62,6 +73,7 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-xl"
+            placeholder="Nome do evento"
           />
           <input
             type="date"
@@ -80,13 +92,25 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-xl"
+            placeholder="Descrição curta"
           />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImagem(e.target.files?.[0] || null)}
-            className="w-full text-sm text-gray-500"
+          <textarea
+            value={descricaoCompleta}
+            onChange={(e) => setDescricaoCompleta(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-xl"
+            placeholder="Descrição completa"
           />
+
+          <span>
+            <img src={``} alt="" />
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImagem(e.target.files?.[0] || null)}
+              className="w-full text-sm text-gray-500"
+            />
+          </span>
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
@@ -95,6 +119,7 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
             >
               Cancelar
             </button>
+
             <button
               type="submit"
               className="bg-purple-700 hover:bg-purple-800 text-white px-6 py-2 rounded-lg transition"

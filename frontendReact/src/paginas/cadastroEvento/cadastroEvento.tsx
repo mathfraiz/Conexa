@@ -146,10 +146,10 @@ const CriarEvento = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="h-16">
-        <Navbar onToggleSidebar={()=>{}}/>
+        <Navbar onToggleSidebar={() => {}} />
       </div>
 
-      <div className="bg-[url(./logo.jpg)] min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-200 p-6 bg-cover bg-center bg-no-repeat">
+      <div className="bg-[url(/logo.jpg)] min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-200 p-6 bg-cover bg-center bg-no-repeat">
         <form
           onSubmit={handleSubmit}
           className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-2xl space-y-6 border border-gray-200"
@@ -200,6 +200,7 @@ const CriarEvento = () => {
                 name="data"
                 min={new Date().toISOString().split("T")[0]}
                 value={data}
+                onKeyDown={(e) => e.preventDefault()}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md p-3"
                 required

@@ -2,6 +2,7 @@ import pool from "../config/bd.js";
 
 const Evento = {
   async findAllEvento() {
+    
     const [rows] = await pool.query("SELECT * FROM eventos");
 
     const eventosConvertidos = rows.map((evento) => ({
@@ -27,6 +28,22 @@ const Evento = {
 
     return evento;
   },
+
+  async atualizarEvento(id, nome, tema, descricao, descricao_completa, data, hora, imagem) {
+  try {
+    const [result] = await pool.query(
+      `UPDATE eventos SET nome = ?, tema = ?, descricao = ?, descricao_completa = ?, data = ?, hora = ?, imagem_evento = ?
+       WHERE id = ?`,
+      [nome, tema, descricao, descricao_completa, data, hora, imagem, id]
+    );
+
+    return result.affectedRows > 0;
+  } catch (err) {
+    console.error("Erro no atualizarEvento:", err.message);
+    return false;
+  }
+},
+
   async deletarEvento(id) {
     const [rows] = await pool.query("DELETE FROM eventos WHERE id = ?", [id]);
     return rows;
@@ -41,12 +58,11 @@ const Evento = {
   },
 
   async criarEventoComEndereco(evento, endereco) {
-    const conn = await pool.getConnection(); // se estiver usando pool
+    const conn = await pool.getConnection();
 
     try {
       await conn.beginTransaction();
 
-      // 1. Cadastrar endereço
       const [resEndereco] = await conn.query(
         `INSERT INTO endereco (logradouro, numero, bairro, cep, cidade, UF)
          VALUES (?, ?, ?, ?, ?, ?)`,
@@ -93,6 +109,27 @@ const Evento = {
     } finally {
       conn.release();
     }
+  },
+
+  async buscarEventosPorUsuario(id) {
+    const [rows] = await pool.query(
+      `SELECT e.*
+       FROM eventos e
+       JOIN usuario u ON e.criado_por = u.id
+       WHERE e.criado_por = ?`,
+      [id]
+    );
+
+    const eventosConvertidos = rows.map((evento) => ({
+      ...evento,
+      imagem_evento: evento.imagem_evento
+        ? `data:image/jpeg;base64,${evento.imagem_evento.toString("base64")}`
+        : null,
+    }));
+
+    console.log(eventosConvertidos);
+
+    return eventosConvertidos;
   },
 };
 

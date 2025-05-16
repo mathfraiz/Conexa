@@ -1,11 +1,26 @@
 import React, { useState, useRef, KeyboardEvent } from "react";
 import Rodape from "../../componentes/Rodape";
 import Navbar from "../../componentes/BarraNav";
+import useSessionStorage from "../../../hook/useSessionStorage";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Cadastro: React.FC = () => {
   const [modalMensagem, setModalMensagem] = useState("");
+  const { login } = useAuth();
 
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [usuarioSession, setUsuarioSession] = useSessionStorage<any>(
+    "usuario",
+    {
+      id: 0,
+      nome: "",
+      email: "",
+      senha: "",
+      telefone: "",
+      tipo: "",
+      imagem_perfil: "",
+    }
+  );
 
   // Form states
   const [nome, setNome] = useState("");
@@ -61,38 +76,57 @@ const Cadastro: React.FC = () => {
   //     }
   //   }
   // };
-
   const cadastrar = async (form: FormData) => {
-    console.log(form.get("nome"));
-    console.log(form.get("email"));
-    console.log(form.get("telefone"));
     try {
       const response = await fetch("http://localhost:3000/usuario", {
         method: "POST",
         body: form,
       });
-      const resp = response.json().then((data) => {
-        if (response.ok) {
-          console.log("Cadastro bem-sucedido:", data);
-          setModalMensagem("Cadastro realizado com sucesso!");
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // 🔐 Faz login automático após o cadastro
+        const loginResponse = await fetch("http://localhost:3000/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: form.get("email"),
+            senha: form.get("senha"),
+          }),
+        });
+
+        if (loginResponse.ok) {
+          const loginData = await loginResponse.json();
+
+          login(loginData.usuario, loginData.token); // Usa o contexto global
+
+          setModalMensagem("Cadastro e login realizados com sucesso!");
           setMostrarModal(true);
+
           setTimeout(() => {
             setMostrarModal(false);
-            window.location.href = "/login";
+            if (loginData.usuario.tipo === "admin") {
+              location.href = "/admusuarios";
+            } else {
+              location.href = "/paginaInicialLogin";
+            }
           }, 2000);
         } else {
-          console.error("Erro no cadastro:", data);
-          setModalMensagem("Erro ao cadastrar. Tente novamente.");
+          setModalMensagem("Cadastro feito, mas erro ao fazer login.");
           setMostrarModal(true);
-          setTimeout(() => {
-            setMostrarModal(false);
-          }, 2000); // Fecha o modal após 2 segundos
         }
-      });
-      return resp;
+      } else {
+        console.error("Erro no cadastro:", data);
+        setModalMensagem("Erro ao cadastrar. Tente novamente.");
+        setMostrarModal(true);
+      }
     } catch (error) {
       console.error("Erro ao cadastrar:", error);
-      throw error;
+      setModalMensagem("Erro de conexão. Tente novamente.");
+      setMostrarModal(true);
     }
   };
 
@@ -266,6 +300,13 @@ const Cadastro: React.FC = () => {
       setEmailErro(validarEmail(emailCompleto));
     }
   };
+  if (usuarioSession.id > 0) {
+    if (usuarioSession.tipo === "admin") {
+      location.href = "/admusuarios";
+    } else if (usuarioSession.tipo === "usuario") {
+      location.href = "/paginaInicialLogin";
+    }
+  }
 
   const toggleMostrarSenha = () => {
     setMostrarSenha(!mostrarSenha);
@@ -311,7 +352,7 @@ const Cadastro: React.FC = () => {
     <div>
       <Navbar onToggleSidebar={() => {}} />
       <div
-        className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat "
+        className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat  "
         style={{ backgroundImage: "url('/logo2.jpg')" }}
       >
         <div className="w-full max-w-md p-8 bg-purple-100 rounded-lg shadow-xl border border-gray-300">

@@ -20,6 +20,15 @@ class Inscricao {
       throw new Error("Erro ao buscar inscrições: " + error.message);
     }
   }
+  static async encontrarInscricaoPorUsuario(usuario_id) {
+    try {
+      const sql = `SELECT id, usuario_id, evento_id FROM inscricao WHERE usuario_id = ?`;
+      const [rows] = await pool.query(sql, [usuario_id]);
+      return rows;
+    } catch (error) {
+      throw new Error("Erro ao buscar inscrições do usuário: " + error.message);
+    }
+  }
 
   static async deletarInscricao(id) {
     try {

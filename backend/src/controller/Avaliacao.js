@@ -1,16 +1,12 @@
 import pool from "../config/bd.js";
 
 class Avaliacao {
-  static async criarAvaliacao(usuario_id, evento_id, nota, comentario) {
+  static async criarAtualizarAvaliacao(usuario_id, evento_id, nota) {
     try {
-      const sql = `INSERT INTO avaliacao (usuario_id, evento_id, nota, comentario) VALUES (?, ?, ?, ?)`;
-      const [result] = await pool.query(sql, [
-        usuario_id,
-        evento_id,
-        nota,
-        comentario,
-      ]);
-      return { id: result.insertId, usuario_id, evento_id, nota, comentario };
+      const sql = `CALL inserir_ou_atualizar_avaliacao(?, ?, ?)`;
+
+      const [result] = await pool.query(sql, [usuario_id, evento_id, nota]);
+      return { id: result.insertId, usuario_id, evento_id, nota };
     } catch (error) {
       throw new Error("Erro ao criar avaliação: " + error.message);
     }
@@ -26,20 +22,20 @@ class Avaliacao {
     }
   }
 
-  static async atualizarAvaliacao(id, campos) {
-    try {
-      const sql = `UPDATE avaliacao SET ? WHERE id = ?`;
-      const [result] = await pool.query(sql, [campos, id]);
-      return result.affectedRows;
-    } catch (error) {
-      throw new Error("Erro ao atualizar avaliação: " + error.message);
-    }
-  }
+  // static async atualizarAvaliacao(id, nota) {
+  //   try {
+  //     const sql = `UPDATE avaliacao SET nota = ? WHERE id = ?`;
+  //     const [result] = await pool.query(sql, [nota, id]);
+  //     return result.affectedRows;
+  //   } catch (error) {
+  //     throw new Error("Erro ao atualizar avaliação: " + error.message);
+  //   }
+  // }
 
   static async deletarAvaliacao(id) {
     try {
       const sql = `DELETE FROM avaliacao WHERE id = ?`;
-      const [result] = await pool.query(sql, [id]);
+      const [result] = await pool.query(sql, [id, id_user]);
       return result.affectedRows;
     } catch (error) {
       throw new Error("Erro ao deletar avaliação: " + error.message);

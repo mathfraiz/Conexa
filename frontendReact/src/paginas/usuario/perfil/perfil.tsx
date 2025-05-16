@@ -1,21 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ModalEdicaoUsuario from "../../../componentes/ModalEdicaoUsuario";
+import useSessionStorage from "../../../../hook/useSessionStorage";
 
 const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
   onClosePerfil,
 }) => {
-  const [usuario, setUsuario] = useState<any | null>(null);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [usuario, setUsuario] = useSessionStorage<any>("usuario", {
+    id: 0,
+    nome: "",
+    email: "",
+    senha: "",
+    telefone: "",
+    tipo: "",
+    imagem_perfil: "",
+  });
   const perfilRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const usuarioString = sessionStorage.getItem("usuario");
-    if (usuarioString) {
-      setUsuario(JSON.parse(usuarioString));
-    }
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -46,7 +48,9 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("usuario");
+    setUsuario("");
+    sessionStorage.removeItem("token"); // ← limpa o token JWT
+    setUsuario(null);
     navigate("/login");
   };
 

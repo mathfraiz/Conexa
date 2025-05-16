@@ -15,6 +15,7 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
     tipo: "",
     imagem_perfil: "",
   });
+
   const [isLogado, setIsLogado] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [modalPerfilOpen, setModalPerfilOpen] = useState(false);
@@ -32,7 +33,11 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
   }, []);
 
   useEffect(() => {
-    setIsLogado(!!sessionStorage.getItem("usuario"));
+    if(usuario?.id > 0) {
+      setIsLogado(true);
+    }else if(usuario?.id === 0) {
+      setIsLogado(false);
+    }
   }, []);
 
   const handleClosePerfil = (foiSalvo: boolean) => {
@@ -40,15 +45,8 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
     if (foiSalvo) {
       const usuarioAtualizado = sessionStorage.getItem("usuario");
       if (usuarioAtualizado) {
-        const usuarioObj = JSON.parse(usuarioAtualizado);
-        setToastMessage(
-          usuarioObj.analisePendente
-            ? "Alterações enviadas para análise!"
-            : "Perfil atualizado com sucesso!"
-        );
-        setToastColor(
-          usuarioObj.analisePendente ? "bg-yellow-500" : "bg-green-500"
-        );
+        setToastMessage("Perfil atualizado com sucesso!");
+        setToastColor("bg-green-500");
         setTimeout(() => setToastMessage(""), 3000);
       }
     }
@@ -63,19 +61,22 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
       >
         <div className="flex items-center gap-4">
           <button
-onClick={() => {
-  if (usuario?.tipo === "admin" || usuario?.tipo === "usuario") {
-    onToggleSidebar();
-  }
-}}
-
+            onClick={() => {
+              if (usuario?.tipo === "admin" || usuario?.tipo === "usuario") {
+                onToggleSidebar();
+              }
+            }}
             className="p-2 rounded hover:bg-purple-600"
           >
             <Menu size={28} />
           </button>
 
           <Link
-            to={isLogado && usuario.tipo === "usuario" ? "/PaginaInicialLogin" : "/"}
+            to={
+              isLogado && usuario?.tipo === "usuario"
+                ? "/PaginaInicialLogin"
+                : "/"
+            }
             className="text-3xl font-extrabold tracking-wide flex items-center gap-2 transition-all"
           >
             <span className="bg-gradient-to-r from-yellow-300 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-gradient">
@@ -87,15 +88,24 @@ onClick={() => {
         <div className="flex items-center gap-6">
           {!isLogado ? (
             <>
-              <Link to="/login" className="bg-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-gray-300 transition-all">
+              <Link
+                to="/login"
+                className="bg-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-gray-300 transition-all"
+              >
                 Entrar
               </Link>
-              <Link to="/cadastro" className="border-2 border-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-amber-400 transition-all">
+              <Link
+                to="/cadastro"
+                className="border-2 border-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-amber-400 transition-all"
+              >
                 Criar Conta
               </Link>
             </>
           ) : (
-            <button onClick={() => setModalPerfilOpen(true)} className="transition-transform duration-300 hover:scale-110">
+            <button
+              onClick={() => setModalPerfilOpen(true)}
+              className="transition-transform duration-300 hover:scale-110"
+            >
               <img
                 src={usuario?.imagem_perfil || "./imagem_Icon_User.png"}
                 alt="Perfil"
@@ -113,7 +123,9 @@ onClick={() => {
       )}
 
       {toastMessage && (
-        <div className={`fixed top-[5rem] right-6 ${toastColor} text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in z-[9999]`}>
+        <div
+          className={`fixed top-[5rem] right-6 ${toastColor} text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in z-[9999]`}
+        >
           {toastMessage}
         </div>
       )}

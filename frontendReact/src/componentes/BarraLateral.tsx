@@ -7,7 +7,7 @@ interface Props {
 }
 
 const BarraLateral: React.FC<Props> = ({ isOpen }) => {
-  const [usuario] = useSessionStorage<any>("usuario", {
+  const [usuario,setUsuarioSession] = useSessionStorage<any>("usuario", {
     id: 0,
     nome: "",
     email: "",
@@ -16,7 +16,7 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
     tipo: "",
     imagem_perfil: "",
   });
-
+  
   const [tipo, setTipo] = useState("");
 
   useEffect(() => {

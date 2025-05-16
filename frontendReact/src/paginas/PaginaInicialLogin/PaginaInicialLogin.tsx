@@ -37,6 +37,7 @@ const PaginaInicialLogin = () => {
     tipo: "",
     imagem_perfil: "",
   });
+  const [mensagem, setMensagem] = useState("");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
@@ -45,20 +46,34 @@ const PaginaInicialLogin = () => {
   const [eventos1, setEventos] = useState<Evento[]>([]);
 
   useEffect(() => {
-    if (usuarioSession.id === 0) location.href = "/login";
-    else respEventos();
+    if (usuarioSession.id === 0) {
+      location.href = "/login";
+    } else {
+      respEventos();
+    }
   }, []);
 
   const respEventos = async () => {
-    const response = await fetch("http://localhost:3000/eventos");
-    const data = await response.json();
-    console.log(data)
-    setEventoList(data);
-    setEventos(data);
+    try {
+      const response = await fetch("http://localhost:3000/eventos");
+      if (response.ok) {
+        const data = await response.json();
+        console.log("data", data);
+
+        setEventoList(data);
+        setEventos(data);
+      }
+    } catch (e) {
+      console.log("data", e);
+      if (e) {
+        setMensagem("Nao foi possivel encontrar eventos");
+        return;
+      }
+    }
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[url(./logo.jpg)] text-white bg-cover bg-center bg-no-repeat">
+    <div className="min-h-screen  flex flex-col bg-[url(/logo.jpg)] text-white bg-cover bg-center">
       {/* Navbar fixa no topo */}
       <div className="flex-shrink-0">
         <Navbar onToggleSidebar={toggleSidebar} />
@@ -74,11 +89,17 @@ const PaginaInicialLogin = () => {
         >
           <Link
             to="/cadastroEvento"
-            className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
+            className="block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
           >
             Criar Evento
           </Link>
           {/* Adicione mais links se quiser */}
+          <Link
+            to={"/eventos/usuario"}
+            className=" block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
+          >
+            Meus Eventos
+          </Link>
         </aside>
 
         {/* Conteúdo */}
@@ -87,18 +108,26 @@ const PaginaInicialLogin = () => {
             sidebarOpen ? "ml-60" : "ml-0 "
           }`}
         >
-          <div className="w-1/2 h-6 bg-white rounded-lg mb-8">
-            <input
-              onChange={(e) => {
-                const filtro = e.target.value;
-                const filtrados = eventosList.filter((ev) =>
-                  ev.nome.toLowerCase().includes(filtro.toLowerCase())
-                );
-                setEventos(filtrados);
-              }}
-              className="w-full text-black"
-              placeholder="       nome do evento"
-            />
+          {mensagem && (
+            <span className="bg-yellow-500 text-black text-lg">{mensagem}</span>
+          )}
+
+          <div></div>
+
+          <div className=" fixed inset-0 flex justify-center ">
+            <span className=" h-6 bg-gray-500 rounded-lg mb-8 ">
+              <input
+                onChange={(e) => {
+                  const filtro = e.target.value;
+                  const filtrados = eventosList.filter((ev) =>
+                    ev.nome.toLowerCase().includes(filtro.toLowerCase())
+                  );
+                  setEventos(filtrados);
+                }}
+                className="w-full text-black"
+                placeholder="       nome do evento"
+              />
+            </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -108,7 +137,10 @@ const PaginaInicialLogin = () => {
                 height="h-64"
                 animation={{ scale: 1 }}
                 transition={{ duration: 0.3 }}
-                className="relative bg-purple-100 rounded-lg shadow-md hover:scale-105 transition-transform overflow-hidden flex items-end p-4"
+                className="rounded-2xl shadow-xl bg-white bg-blend-overlay hover:shadow-2xl transition relative duration-700 transform hover:scale-110"
+                onClick={() => {
+                  location.href = `/eventos/${evento.id}`;
+                }}
               >
                 <img
                   src={evento.imagem_evento || ""}
@@ -127,6 +159,25 @@ const PaginaInicialLogin = () => {
                   >
                     Saiba mais
                   </Link>
+                  <div className="flex gap-1 mt-2">
+                    {[1, 2, 3, 4, 5].map((estrela) => {
+                      const notaInteira = Math.floor(
+                        Number(evento.avaliacao_media)
+                      );
+                      return (
+                        <span
+                          key={estrela}
+                          className={`text-2xl ${
+                            estrela <= notaInteira
+                              ? "text-yellow-400"
+                              : "text-white"
+                          }`}
+                        >
+                          {estrela <= notaInteira ? "★" : "☆"}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
               </MotionContainer>
             ))}
