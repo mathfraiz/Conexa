@@ -34,7 +34,6 @@ const AdmUsuario = () => {
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(
     null
   );
-  useEffect(() => verificaTipo());
 
   const { usuario } = useAuth();
 
@@ -51,12 +50,13 @@ const AdmUsuario = () => {
   };
 
   useEffect(() => {
-    if (usuario?.tipo !== "admin") {
-      location.href = "http://localhost:5173/login";
-      return;
-    }
     carregarUsuarios();
   }, []);
+  useEffect(() => {
+    if (usuario) {
+      verificaTipo();
+    }
+  });
 
   const deletarUsuario = async (id: number) => {
     try {
@@ -108,7 +108,7 @@ const AdmUsuario = () => {
   };
   const verificaTipo = () => {
     if (usuario?.tipo !== "admin") {
-      location.href = "http://localhost:3000/login";
+      location.href = "/login";
     }
   };
 
