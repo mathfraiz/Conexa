@@ -47,7 +47,7 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
         }
       }
     }
-  }, []);
+  }, [usuario]);
 
   const handleClosePerfil = (foiSalvo: boolean) => {
     setModalPerfilOpen(false);

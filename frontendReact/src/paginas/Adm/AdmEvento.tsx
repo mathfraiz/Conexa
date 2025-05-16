@@ -1,9 +1,10 @@
 // Arquivo: AdmEvento.tsx
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import Navbar from "../../componentes/BarraNav";
 import BarraLateral from "../../componentes/BarraLateral";
 import ModalNovoEvento from "./ModalNovoEvento";
 import ModalEdicaoEvento from "../../componentes/ModalEdicaoEvento";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface Evento {
   id: number;
@@ -16,6 +17,7 @@ interface Evento {
 }
 
 const AdmEvento = () => {
+  const { usuario } = useAuth();
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [sidebarAberta, setSidebarAberta] = useState(false);
   const [isModalNovoOpen, setIsModalNovoOpen] = useState(false);
@@ -42,6 +44,17 @@ const AdmEvento = () => {
     carregarEventos();
   }, []);
 
+  useEffect(() => {
+    if (usuario) {
+      verificaTipo();
+    }
+  });
+  const verificaTipo = () => {
+    if (usuario?.tipo !== "admin") {
+      location.href = "/login";
+    }
+  };
+
   const deletarEvento = async (id: number) => {
     try {
       const resp = await fetch(`http://localhost:3000/eventos/${id}`, {
@@ -54,7 +67,6 @@ const AdmEvento = () => {
       console.error("Erro ao deletar evento:", err);
     }
   };
-
 
   return (
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen">
@@ -110,10 +122,12 @@ const AdmEvento = () => {
                       src={
                         evento.imagem_evento
                           ? `${evento.imagem_evento}`
-                          : "./photo-video.webp"        
+                          : "./photo-video.webp"
                       }
                       alt="Evento"
-                      className={`w-10 h-10 rounded-full object-cover ${evento.imagem_evento?"border-2 border-purple-300":""} `}
+                      className={`w-10 h-10 rounded-full object-cover ${
+                        evento.imagem_evento ? "border-2 border-purple-300" : ""
+                      } `}
                     />
                   </td>
                   <td className="py-2 flex gap-2 flex-col">

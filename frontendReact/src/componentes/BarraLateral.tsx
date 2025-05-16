@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useSessionStorage from "../../hook/useSessionStorage";
+import { useAuth } from "../contexts/AuthContext";
 
 interface Props {
   isOpen: boolean;
 }
 
 const BarraLateral: React.FC<Props> = ({ isOpen }) => {
-  const [usuario,setUsuarioSession] = useSessionStorage<any>("usuario", {
-    id: 0,
-    nome: "",
-    email: "",
-    senha: "",
-    telefone: "",
-    tipo: "",
-    imagem_perfil: "",
-  });
+  const {usuario} = useAuth()
+  // const [usuario,setUsuarioSession] = useSessionStorage<any>("usuario", {
+  //   id: 0,
+  //   nome: "",
+  //   email: "",
+  //   senha: "",
+  //   telefone: "",
+  //   tipo: "",
+  //   imagem_perfil: "",
+  // });
   
   const [tipo, setTipo] = useState("");
 
