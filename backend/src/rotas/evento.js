@@ -58,7 +58,7 @@ routerEvento.post(
         hora: req.body.hora,
         descricao: req.body.descricao,
         imagem_evento: req.file?.buffer || null,
-        criado_por: req.userId, // ← direto do token JWT!
+        criado_por: req.userId,
       };
 
       const endereco = {
@@ -70,8 +70,6 @@ routerEvento.post(
         UF: req.body.UF,
       };
       // console.log(req.body)
-      console.log(evento);
-      console.log(endereco);
 
       // const evento = {
       //   nome: dados.nome,
@@ -94,7 +92,6 @@ routerEvento.post(
       // };
 
       const idEvento = await Evento.criarEventoComEndereco(evento, endereco);
-      console.log(idEvento + " log na rota");
 
       res.status(200).json({ status: 200, idEvento });
     } catch (err) {
@@ -137,8 +134,6 @@ routerEvento.delete("/eventos/:id", authenticate, async (req, res) => {
 routerEvento.get("/eventos/usuario/:id", authenticate, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    console.log(id);
-    console.log(req.userId);
 
     // Proteção: só o próprio usuário ou um admin pode ver os eventos
     if (req.userId !== id) {

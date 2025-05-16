@@ -3,9 +3,19 @@ import pool from "../config/bd.js";
 class Inscricao {
   static async criarInscricao(usuario_id, evento_id) {
     try {
-      const sql = `INSERT INTO inscricao (usuario_id, evento_id) VALUES (?, ?)`;
-      const [result] = await pool.query(sql, [usuario_id, evento_id]);
-      return { id: result.insertId, usuario_id, evento_id };
+      const sql = "CALL InserirInscricao(?, ?)";
+      console.log("entrou no criarInscricao");
+
+      const [rows] = await pool.query(sql, [usuario_id, evento_id]);
+      const resultado = rows[0][0]; // Pega a primeira linha do SELECT
+      console.log("resultado", resultado);
+      // console.log("rows", rows);
+      // console.log(rows[0]);
+      return {
+        id: resultado.id,
+        usuario_id: resultado.usuario_id,
+        evento_id: resultado.evento_id,
+      };
     } catch (error) {
       throw new Error("Erro ao criar inscrição: " + error.message);
     }
@@ -22,7 +32,7 @@ class Inscricao {
   }
   static async encontrarInscricaoPorUsuario(usuario_id) {
     try {
-      const sql = `SELECT id, usuario_id, evento_id FROM inscricao WHERE usuario_id = ?`;
+      const sql = `SELECT * FROM inscricao WHERE usuario_id = ?`;
       const [rows] = await pool.query(sql, [usuario_id]);
       return rows;
     } catch (error) {
@@ -42,5 +52,3 @@ class Inscricao {
 }
 
 export default Inscricao;
-
-

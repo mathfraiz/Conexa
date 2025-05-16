@@ -22,6 +22,17 @@ class Avaliacao {
     }
   }
 
+  static async encontrarAvaliacoesEventoUsuario(idEvento, idUsuario) {
+    try {
+      const sql = `SELECT * FROM avaliacao WHERE evento_id = ? AND usuario_id = ?`;
+      const [rows] = await pool.query(sql, [idEvento, idUsuario]);
+      console.log(rows);
+      return rows;
+    } catch (error) {
+      throw new Error("Erro ao buscar avaliação: " + error.message);
+    }
+  }
+
   // static async atualizarAvaliacao(id, nota) {
   //   try {
   //     const sql = `UPDATE avaliacao SET nota = ? WHERE id = ?`;

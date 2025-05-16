@@ -4,7 +4,7 @@ import useSessionStorage from "../../../hook/useSessionStorage";
 import MapaEndereco from "../../componentes/MapEndereco";
 import Rodape from "../../componentes/Rodape";
 import Navbar from "../../componentes/BarraNav";
-import BarraLateral from "../../componentes/BarraLateral";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface Evento {
   id: number;
@@ -29,12 +29,13 @@ interface Endereco {
 const Evento = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [usuario] = useSessionStorage<any>("usuario", {
-    id: 0,
-    nome: "",
-    email: "",
-    tipo: "",
-  });
+  // const [usuario] = useSessionStorage<any>("usuario", {
+  //   id: 0,
+  //   nome: "",
+  //   email: "",
+  //   tipo: "",
+  // });
+  const { usuario, login } = useAuth();
   const [evento, setEvento] = useState<Evento | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [mensagem, setMensagem] = useState("");
@@ -69,12 +70,20 @@ const Evento = () => {
       if (inscricoes.ok) {
         const inscricoesJson = await inscricoes.json();
         setIncricoes(inscricoesJson);
-        console.log(inscricoesJson);
       }
     } catch (e) {
       console.error(e);
     }
   };
+
+  //   const buscarUsuarioInscrito = async (idEvento,idUsuario)=>{
+  //     try{
+  //       const usuarioInscrito = await fetch(`http://localhost:3000/avaliacaoEventoUsuario/${idEvento}/${idUsuario}`)
+
+  //     }catch(e){
+  // console.log(e)
+  //     }
+  //   }
 
   const buscarEndereco = async (id) => {
     if (evento) {
@@ -101,7 +110,7 @@ const Evento = () => {
         const data = await resp.json();
         setEvento(data);
         buscarCriador(data.criado_por);
-        buscarIncricoesUsuario(usuario.id);
+        // buscarIncricoesUsuario(usuario.id);
       } else {
         setMensagem("Evento não encontrado.");
         setTimeout(() => {
@@ -123,17 +132,24 @@ const Evento = () => {
   useEffect(() => {
     buscarEndereco(evento?.endereco_id);
     buscarCriador(evento?.criado_por);
+    buscarIncricoesUsuario(usuario?.id);
   }, [evento]);
 
   useEffect(() => {
     buscarEvento();
+    verificaInscricao(evento?.id);
   }, [id]);
 
+  useEffect(() => {
+    verificaInscricao(evento?.id);
+  }, [evento, inscricao,]);
+
   const inscreverUsuario = async () => {
-    if (usuario.id === 0) {
+    if (usuario?.id === 0) {
       navigate("/login");
       return;
     }
+    console.log(usuario?.id, evento?.id);
 
     try {
       const token = sessionStorage.getItem("token");
@@ -145,16 +161,19 @@ const Evento = () => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          usuario_id: usuario?.id,
           evento_id: evento?.id,
+          usuario_id: usuario?.id,
         }),
       });
 
       if (resp.ok) {
+        const isncr = await resp.json();
         setMensagem("Inscrição realizada com sucesso!");
         setTimeout(() => {
           setMensagem("");
         }, 3000);
+        console.log(isncr);
+        setIdInscricao(isncr.id);
       } else {
         setMensagem("Você já está inscrito ou ocorreu um erro.");
         setTimeout(() => {
@@ -167,26 +186,23 @@ const Evento = () => {
     }
   };
 
-  const desinscreverUsuario = async () => {
-    const token = sessionStorage.get("token");
+  const desinscreverUsuario = async (id: number) => {
+    const token = sessionStorage.getItem("token");
     if (!usuario) {
       return;
     }
     try {
-      const resp = await fetch("http://localhost:3000/inscricao", {
+      const resp = await fetch(`http://localhost:3000/inscricao/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          usuario_id: usuario?.id,
-          evento_id: evento?.id,
-        }),
       });
 
       if (resp.ok) {
         console.log("ok");
+        setIdInscricao(0);
       }
     } catch (e) {
       console.log(e);
@@ -197,7 +213,7 @@ const Evento = () => {
   const [hover, setHover] = useState(0);
 
   const enviarAvaliacao = async (estrela: number) => {
-    if (!evento || usuario.id === 0) {
+    if (!evento || usuario?.id === 0) {
       setMensagem("Você precisa estar logado para avaliar.");
       setTimeout(() => {
         setMensagem("");
@@ -215,7 +231,7 @@ const Evento = () => {
         },
         body: JSON.stringify({
           evento_id: evento.id,
-          usuario_id: usuario.id,
+          usuario_id: usuario?.id,
           nota: estrela,
         }),
       });
@@ -237,11 +253,11 @@ const Evento = () => {
     }
   };
 
-  const verificaInscricao = (eventoid) => {
+  const verificaInscricao = async (eventoid) => {
     for (let i = 0; i <= inscricao.length; i++) {
       if (inscricao[i]?.evento_id === eventoid) {
-        console.log(inscricao[i]?.evento_id == eventoid)
-        return false;
+        setIdInscricao(inscricao[i]?.id);
+        return true;
       }
     }
   };
@@ -307,11 +323,9 @@ const Evento = () => {
             >
               <h1 className="text-3xl font-bold text-purple-700">
                 {evento.nome}
-
               </h1>
               <h1 className="text-3xl font-bold text-purple-700">
                 {evento.id}
-                
               </h1>
               <p className="text-purple-700">
                 <strong>Data:</strong>{" "}
@@ -331,22 +345,25 @@ const Evento = () => {
                   {endereco.UF}
                 </p>
               )}
-              {verificaInscricao(evento.id) ? (
+              {idInscricao && (
+                <button
+                  onClick={() => {
+                    desinscreverUsuario(idInscricao);
+                  }}
+                  className="bg-red-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
+                >
+                  desinscrever
+                </button>
+              )}
+              ''{" "}
+              {!idInscricao && (
                 <button
                   onClick={inscreverUsuario}
                   className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
                 >
                   Inscrever-se
                 </button>
-              ) : (
-                <button
-                  onClick={desinscreverUsuario}
-                  className="bg-red-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
-                >
-                  desinscrever
-                </button>
               )}
-
               {mensagem && (
                 <p className="text-green-300 font-semibold">{mensagem}</p>
               )}

@@ -46,7 +46,7 @@ const PaginaInicialLogin = () => {
   const [eventos1, setEventos] = useState<Evento[]>([]);
 
   useEffect(() => {
-    if (usuarioSession.id === 0) {
+    if (usuarioSession?.id === 0) {
       location.href = "/login";
     } else {
       respEventos();

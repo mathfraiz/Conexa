@@ -23,9 +23,6 @@ export default async function authenticate(req, res, next) {
 
     req.userId = usuario.id;
     req.userTipo = usuario.tipo;
-    console.log("Token decodificado:", decoded);
-    console.log("userId",req.userId)
-    console.log("usuario",usuario)
 
     next();
   } catch (err) {

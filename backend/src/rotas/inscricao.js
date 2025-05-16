@@ -1,5 +1,5 @@
 import express from "express";
-import Inscricao from "../controller/inscricao.js";
+import Inscricao from "../controller/Inscricao.js";
 import authenticate from "../middleware/authMiddleware.js";
 
 const routerInscricao = express.Router();
@@ -18,13 +18,18 @@ routerInscricao.get("/inscricao", async (req, res) => {
 
 // POST criar inscrição
 routerInscricao.post("/inscricao", authenticate, async (req, res) => {
-  const { usuario_id, evento_id } = req.body;
+  const { evento_id, usuario_id } = req.body;
   if (req.userId !== usuario_id) {
     return res.status(403).json({ erro: "Acesso negado." });
   }
+
   try {
     const novaInscricao = await Inscricao.criarInscricao(usuario_id, evento_id);
-    res.json(novaInscricao);
+    if (novaInscricao.linhas == 0) {
+      res.ok(false).json(novaInscricao);
+    }
+    console.log("novas incricao", novaInscricao);
+    res.json(novaInscricao);  
   } catch (err) {
     res
       .status(500)
@@ -49,7 +54,6 @@ routerInscricao.get("/inscricoesUsuario/:id", async (req, res) => {
   const userId = req.params.id;
   try {
     const inscricoes = await Inscricao.encontrarInscricaoPorUsuario(userId);
-    console.log(inscricoes);
     res.json(inscricoes);
   } catch (err) {
     res.status(500).json({

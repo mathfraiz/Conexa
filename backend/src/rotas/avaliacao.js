@@ -57,4 +57,25 @@ routerAvaliacao.delete("/avaliacao/:id", async (req, res) => {
   }
 });
 
+// GET avaliação por ID
+routerAvaliacao.get(
+  "/avaliacaoEventoUsuario/:idEvento/:idUsuario",
+  async (req, res) => {
+    const { idEvento, idUsuario } = req.params;
+    try {
+      const avaliacao = await Avaliacao.encontrarAvaliacoesEventoUsuario(
+        idEvento,
+        idUsuario
+      );
+      if (!avaliacao) {
+        return res.status(404).json({ erro: "Avaliação não encontrada" });
+      }
+      res.json(avaliacao);
+    } catch (err) {
+      res
+        .status(500)
+        .json({ erro: "Erro ao buscar avaliação", detalhes: err.message });
+    }
+  }
+);
 export default routerAvaliacao;
