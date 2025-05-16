@@ -4,6 +4,7 @@ import Navbar from "../../componentes/BarraNav.tsx";
 import ModalNovoUsuario from "./ModalNovoUsuario.tsx";
 import ModalEdicaoUsuario from "./ModalEdicaoUsuario.tsx";
 import BarraLateral from "../../componentes/BarraLateral.tsx";
+import { useAuth } from "../../contexts/AuthContext.tsx";
 
 interface Usuario {
   email: string;
@@ -35,16 +36,7 @@ const AdmUsuario = () => {
   );
   useEffect(() => verificaTipo());
 
-  const [usuarioSession, setUsuarioSessio] = useSessionStorage<any>("usuario", {
-    id: 0,
-    nome: "",
-    email: "",
-    senha: "",
-    telefone: "",
-    tipo: "",
-    imagem_perfil: "",
-  });
-  
+  const { usuario } = useAuth();
 
   const carregarUsuarios = async () => {
     try {
@@ -59,9 +51,9 @@ const AdmUsuario = () => {
   };
 
   useEffect(() => {
-    if(usuarioSession.tipo !== "admin") {
+    if (usuario?.tipo !== "admin") {
       location.href = "http://localhost:5173/login";
-      return
+      return;
     }
     carregarUsuarios();
   }, []);
@@ -115,7 +107,7 @@ const AdmUsuario = () => {
     }
   };
   const verificaTipo = () => {
-    if (usuarioSession.tipo !== "admin") {
+    if (usuario?.tipo !== "admin") {
       location.href = "http://localhost:3000/login";
     }
   };

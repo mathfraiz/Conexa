@@ -1,17 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface ModalEdicaoUsuarioProps {
   isModalOpen: boolean;
-  usuario: any;
   onClose: (foiSalvo: boolean, mensagem?: string) => void;
 }
 
 const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
   isModalOpen,
-  usuario,
   onClose,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const { usuario, token, login } = useAuth();
+
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
@@ -24,7 +25,6 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       setNome(usuario.nome || "");
       setEmail(usuario.email || "");
       setTelefone(usuario.telefone || "");
-
       setTipo(usuario.tipo || "usuario");
       setImagemPerfil(usuario.imagem_perfil || null);
     }
@@ -76,16 +76,31 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
         formData.append("imagem_perfil", imagemPerfil);
       }
 
-      const resp = await fetch(`http://localhost:3000/usuario/${usuario.id}`, {
+      const resp = await fetch(`http://localhost:3000/usuario/${usuario?.id}`, {
         method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
-      if (resp.status === 200) {
-        console.log("editado com sucesso" + resp);
-      }
 
-      // Aqui fecha o modal E manda a mensagem
-      onClose(true, "Usuário atualizado com sucesso!");
+      if (resp.ok) {
+        const novoUsuario = {
+          ...usuario!,
+          nome,
+          email,
+          telefone,
+          tipo,
+          imagem_perfil:
+            typeof imagemPerfil === "string"
+              ? imagemPerfil
+              : usuario?.imagem_perfil,
+        };
+        login(novoUsuario, token!);
+        onClose(true, "Usuário atualizado com sucesso!");
+      } else {
+        throw new Error("Falha na atualização");
+      }
     } catch (error) {
       console.error("Erro ao atualizar usuário", error);
       onClose(false);
@@ -97,7 +112,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       erros[campo] ? "border-red-500" : "border-gray-300"
     } rounded-xl focus:ring-2 focus:ring-purple-500 text-black`;
 
-  if (!isModalOpen) return null;
+  if (!isModalOpen || !usuario) return null;
 
   return (
     <div className="fixed top-[5.5rem] right-6 z-50 w-[400px] animate-fade-in">

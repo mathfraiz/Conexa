@@ -71,7 +71,7 @@ const PaginaInicialLogin = () => {
         <Navbar onToggleSidebar={toggleSidebar} />
       </div>
 
-      <div className="flex pt-16 h-full">
+      <div className="flex pt-8 h-full">
         {/* Sidebar */}
 
         <aside
@@ -96,7 +96,7 @@ const PaginaInicialLogin = () => {
 
         {/* Conteúdo */}
         <main
-          className={`flex-1 overflow-y-auto p-6 transition-all duration-300 ${
+          className={`flex-1 overflow-y-auto pl-6 transition-all duration-300 ${
             sidebarOpen ? "ml-60" : "ml-0 "
           }`}
         >
@@ -104,9 +104,7 @@ const PaginaInicialLogin = () => {
             <span className="bg-yellow-500 text-black text-lg">{mensagem}</span>
           )}
 
-          <div></div>
-
-          <div className=" fixed inset-0 flex justify-center ">
+          <div className=" flex justify-center ">
             <span className=" h-6 bg-gray-500 rounded-lg mb-8 ">
               <input
                 onChange={(e) => {
@@ -116,8 +114,8 @@ const PaginaInicialLogin = () => {
                   );
                   setEventos(filtrados);
                 }}
-                className="w-full text-black"
-                placeholder="       nome do evento"
+                className="w-full text-black text-center"
+                placeholder="nome do evento"
               />
             </span>
           </div>

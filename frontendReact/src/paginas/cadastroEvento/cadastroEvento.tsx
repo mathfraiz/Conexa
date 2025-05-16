@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const CriarEvento = () => {
   const form = new FormData();
-  const { usuario } = useAuth();
+  const { usuario, token } = useAuth();
+  const navigate = useNavigate();
 
   const [nome, setNome] = useState("");
   const [tema, setTema] = useState("");
@@ -12,16 +14,7 @@ const CriarEvento = () => {
   const [hora, setHora] = useState("");
   const [descricao, setDescricao] = useState("");
   const [imagemArquivo, setImagemArquivo] = useState<File | null>(null);
-  const [criadoPor, setCriadoPor] = useState(1); // fixo por enquanto
-
-  // const [endereco, setEndereco] = useState({
-  //   cep: "",
-  //   logradouro: "",
-  //   bairro: "",
-  //   numero: "",
-  //   cidade: "",
-  //   UF: "",
-  // });
+  const [criadoPor, setCriadoPor] = useState(1);
 
   const [cep, setCep] = useState("");
   const [logradouro, setLogradouro] = useState("");
@@ -117,10 +110,7 @@ const CriarEvento = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // console.log(bod);
-    // console.log(JSON.stringify(bod));
 
-    // const form = new FormData();
     if (imagemArquivo) {
       form.set("imagem", imagemArquivo);
     }
@@ -128,6 +118,9 @@ const CriarEvento = () => {
     try {
       const response = await fetch("http://localhost:3000/evento", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: form,
       });
 
@@ -136,9 +129,12 @@ const CriarEvento = () => {
       if (response.ok && data.status === 200) {
         location.href = "/PaginaInicialLogin";
         setCadastroSucesso(true);
+      } else if (response.status === 401) {
+        navigate("/login");
       } else {
         setCadastroSucesso(false);
       }
+
       setShowModal(true);
     } catch (error) {
       console.error("Erro ao cadastrar evento:", error);

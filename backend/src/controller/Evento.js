@@ -2,7 +2,6 @@ import pool from "../config/bd.js";
 
 const Evento = {
   async findAllEvento() {
-    
     const [rows] = await pool.query("SELECT * FROM eventos");
 
     const eventosConvertidos = rows.map((evento) => ({
@@ -29,20 +28,29 @@ const Evento = {
     return evento;
   },
 
-  async atualizarEvento(id, nome, tema, descricao, descricao_completa, data, hora, imagem) {
-  try {
-    const [result] = await pool.query(
-      `UPDATE eventos SET nome = ?, tema = ?, descricao = ?, descricao_completa = ?, data = ?, hora = ?, imagem_evento = ?
+  async atualizarEvento(
+    id,
+    nome,
+    tema,
+    descricao,
+    descricao_completa,
+    data,
+    hora,
+    imagem
+  ) {
+    try {
+      const [result] = await pool.query(
+        `UPDATE eventos SET nome = ?, tema = ?, descricao = ?, descricao_completa = ?, data = ?, hora = ?, imagem_evento = ?
        WHERE id = ?`,
-      [nome, tema, descricao, descricao_completa, data, hora, imagem, id]
-    );
+        [nome, tema, descricao, descricao_completa, data, hora, imagem, id]
+      );
 
-    return result.affectedRows > 0;
-  } catch (err) {
-    console.error("Erro no atualizarEvento:", err.message);
-    return false;
-  }
-},
+      return result.affectedRows > 0;
+    } catch (err) {
+      console.error("Erro no atualizarEvento:", err.message);
+      return false;
+    }
+  },
 
   async deletarEvento(id) {
     const [rows] = await pool.query("DELETE FROM eventos WHERE id = ?", [id]);
@@ -88,7 +96,7 @@ const Evento = {
         [
           evento.nome,
           evento.tema,
-          evento.descricao, // você pode mudar se for usar campo diferente para descrição completa
+          evento.descricao,
           evento.data,
           evento.hora,
           evento.imagem_evento,

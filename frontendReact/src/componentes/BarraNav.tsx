@@ -1,7 +1,6 @@
 // Navbar.tsx
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import useSessionStorage from "../../hook/useSessionStorage";
+import { Link, useNavigate } from "react-router-dom";
 import Perfil from "../paginas/usuario/perfil/perfil";
 import { Menu } from "lucide-react"; // ou qualquer ícone
 import { useAuth } from "../contexts/AuthContext";
@@ -16,7 +15,8 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
   //   tipo: "",
   //   imagem_perfil: "",
   // });
-  const { usuario, login, logout } = useAuth();
+  const { usuario } = useAuth();
+  const navigate = useNavigate();
 
   const [isLogado, setIsLogado] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -38,12 +38,14 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
     if (!usuario) {
       setIsLogado(false);
       return;
-    }
-
-    if (usuario?.id > 0) {
-      setIsLogado(true);
-    } else if (usuario?.id === 0) {
-      setIsLogado(false);
+    } else {
+      if (usuario) {
+        if (usuario?.id > 0) {
+          setIsLogado(true);
+        } else if (usuario?.id === 0) {
+          setIsLogado(false);
+        }
+      }
     }
   }, []);
 
@@ -77,35 +79,39 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
             <Menu size={28} />
           </button>
 
-          <Link
-            to={
-              isLogado && usuario?.tipo === "usuario"
-                ? "/PaginaInicialLogin"
-                : "/"
-            }
-            className="text-3xl font-extrabold tracking-wide flex items-center gap-2 transition-all"
+          <button
+            onClick={() => {
+              if (isLogado && usuario?.tipo === "usuario") {
+                navigate("/PaginaInicialLogin");
+              } else {
+                navigate("/");
+              }
+            }}
+            className="text-3xl font-extrabold tracking-wide text-amber-400 flex items-center gap-2 transition-all"
           >
-            <span className="bg-gradient-to-r from-yellow-300 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-gradient">
-              CONEXA+
-            </span>
-          </Link>
+            CONEXA+
+          </button>
         </div>
 
         <div className="flex items-center gap-6">
           {!isLogado ? (
             <>
-              <Link
-                to="/login"
-                className="bg-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-gray-300 transition-all"
-              >
-                Entrar
-              </Link>
-              <Link
-                to="/cadastro"
-                className="border-2 border-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-amber-400 transition-all"
-              >
-                Criar Conta
-              </Link>
+              {location.href != "http://localhost:5173/login" && (
+                <Link
+                  to="/login"
+                  className="bg-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-gray-300 transition-all"
+                >
+                  Entrar
+                </Link>
+              )}
+              {location.href !== "http://localhost:5173/cadastro" && (
+                <Link
+                  to="/cadastro"
+                  className="border-2 border-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-amber-400 transition-all"
+                >
+                  Criar Conta
+                </Link>
+              )}
             </>
           ) : (
             <button

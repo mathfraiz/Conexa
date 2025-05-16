@@ -141,7 +141,7 @@ const Evento = () => {
 
   useEffect(() => {
     verificaInscricao(evento?.id);
-  }, [evento, inscricao,]);
+  }, [evento, inscricao]);
 
   const inscreverUsuario = async () => {
     if (usuario?.id === 0) {
@@ -173,6 +173,8 @@ const Evento = () => {
         }, 3000);
         console.log(isncr);
         setIdInscricao(isncr.id);
+      } else if (resp.status == 401) {
+        navigate("/login");
       } else {
         setMensagem("Você já está inscrito ou ocorreu um erro.");
         setTimeout(() => {
@@ -202,6 +204,8 @@ const Evento = () => {
       if (resp.ok) {
         console.log("ok");
         setIdInscricao(0);
+      } else if (resp.status === 401) {
+        navigate("/login");
       }
     } catch (e) {
       console.log(e);
