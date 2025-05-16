@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import MotionContainer from "../../componentes/MotionConteiner";
 import { Link } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
-import useSessionStorage from "../../../hook/useSessionStorage";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface Evento {
   id: number;
@@ -28,15 +28,7 @@ interface Evento {
 // }
 
 const PaginaInicialLogin = () => {
-  const [usuarioSession] = useSessionStorage<any>("usuario", {
-    id: 0,
-    nome: "",
-    email: "",
-    senha: "",
-    telefone: "",
-    tipo: "",
-    imagem_perfil: "",
-  });
+  const { usuario } = useAuth();
   const [mensagem, setMensagem] = useState("");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -46,7 +38,7 @@ const PaginaInicialLogin = () => {
   const [eventos1, setEventos] = useState<Evento[]>([]);
 
   useEffect(() => {
-    if (usuarioSession?.id === 0) {
+    if (usuario?.id === 0) {
       location.href = "/login";
     } else {
       respEventos();

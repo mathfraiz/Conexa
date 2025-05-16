@@ -1,4 +1,3 @@
-
 import React from "react";
 import MotionContainer from "../../componentes/MotionConteiner";
 import { Link } from "react-router-dom";
@@ -22,20 +21,31 @@ const Inscritos = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-white via-purple-50 to-purple-100 text-gray-800">
-      <Navbar/>
+      <Navbar onToggleSidebar={() => {}} />
 
       <div className="flex flex-col md:flex-row pt-24 px-6 max-w-7xl mx-auto">
         {/* Sidebar */}
         <aside className="md:w-64 bg-white border border-purple-200 p-6 rounded-2xl shadow-md mb-8 md:mb-0 md:mr-10">
-          <h2 className="text-2xl font-bold text-purple-800 mb-6 border-b pb-2 border-purple-100">Painel</h2>
+          <h2 className="text-2xl font-bold text-purple-800 mb-6 border-b pb-2 border-purple-100">
+            Painel
+          </h2>
           <nav className="flex flex-col gap-4">
-            <Link to="/MeusEventos" className="hover:bg-purple-50 text-purple-700 font-medium py-2 px-4 rounded-lg transition border border-purple-100">
+            <Link
+              to="/MeusEventos"
+              className="hover:bg-purple-50 text-purple-700 font-medium py-2 px-4 rounded-lg transition border border-purple-100"
+            >
               Meus Eventos
             </Link>
-            <Link to="/inscritos" className="bg-purple-200 text-purple-900 font-semibold py-2 px-4 rounded-lg shadow-inner transition">
+            <Link
+              to="/inscritos"
+              className="bg-purple-200 text-purple-900 font-semibold py-2 px-4 rounded-lg shadow-inner transition"
+            >
               Inscritos
             </Link>
-            <Link to="/configuracoes" className="hover:bg-purple-50 text-purple-700 font-medium py-2 px-4 rounded-lg transition border border-purple-100">
+            <Link
+              to="/configuracoes"
+              className="hover:bg-purple-50 text-purple-700 font-medium py-2 px-4 rounded-lg transition border border-purple-100"
+            >
               Configurações
             </Link>
           </nav>
@@ -44,8 +54,12 @@ const Inscritos = () => {
         {/* Conteúdo principal */}
         <main className="flex-1">
           <header className="mb-10">
-            <h1 className="text-4xl font-extrabold text-purple-800 mb-2">Eventos Inscritos</h1>
-            <p className="text-gray-500 text-lg">Confira abaixo os eventos que você escolheu participar:</p>
+            <h1 className="text-4xl font-extrabold text-purple-800 mb-2">
+              Eventos Inscritos
+            </h1>
+            <p className="text-gray-500 text-lg">
+              Confira abaixo os eventos que você escolheu participar:
+            </p>
           </header>
 
           {eventosInscritos.length === 0 ? (

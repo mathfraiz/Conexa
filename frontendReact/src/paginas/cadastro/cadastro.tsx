@@ -1,26 +1,13 @@
-import React, { useState, useRef, KeyboardEvent } from "react";
+import React, { useState, useEffect, useRef, KeyboardEvent } from "react";
 import Rodape from "../../componentes/Rodape";
 import Navbar from "../../componentes/BarraNav";
-import useSessionStorage from "../../../hook/useSessionStorage";
 import { useAuth } from "../../contexts/AuthContext";
 
 const Cadastro: React.FC = () => {
   const [modalMensagem, setModalMensagem] = useState("");
-  const { login } = useAuth();
+  const { usuario, login } = useAuth();
 
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [usuarioSession, setUsuarioSession] = useSessionStorage<any>(
-    "usuario",
-    {
-      id: 0,
-      nome: "",
-      email: "",
-      senha: "",
-      telefone: "",
-      tipo: "",
-      imagem_perfil: "",
-    }
-  );
 
   // Form states
   const [nome, setNome] = useState("");
@@ -300,13 +287,19 @@ const Cadastro: React.FC = () => {
       setEmailErro(validarEmail(emailCompleto));
     }
   };
-  if (usuarioSession.id > 0) {
-    if (usuarioSession.tipo === "admin") {
-      location.href = "/admusuarios";
-    } else if (usuarioSession.tipo === "usuario") {
-      location.href = "/paginaInicialLogin";
+
+  useEffect(() => {
+    if (!usuario) {
+      return;
     }
-  }
+    if (usuario.id > 0) {
+      if (usuario?.tipo === "admin") {
+        location.href = "/admusuarios";
+      } else if (usuario?.tipo === "usuario") {
+        location.href = "/paginaInicialLogin";
+      }
+    }
+  }, [usuario]);
 
   const toggleMostrarSenha = () => {
     setMostrarSenha(!mostrarSenha);

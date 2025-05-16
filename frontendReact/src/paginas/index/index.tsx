@@ -3,21 +3,10 @@ import Navbar from "../../componentes/BarraNav";
 import Rodape from "../../componentes/Rodape";
 import MotionContainer from "../../componentes/MotionConteiner";
 import BarraLateral from "../../componentes/BarraLateral";
-import useSessionStorage from "../../../hook/useSessionStorage";
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-
-  const [usuarioSession] = useSessionStorage<any>("usuario", {
-    id: 0,
-    nome: "",
-    email: "",
-    senha: "",
-    telefone: "",
-    tipo: "",
-    imagem_perfil: "",
-  });
 
   return (
     <div className="flex flex-col min-h-screen bg-purple-50">
@@ -53,7 +42,8 @@ const Index = () => {
             </h3>
             <p className="text-gray-700 text-sm leading-relaxed">
               Ser referência nacional em experiências conectadas, criando pontes
-              entre ideias, pessoas e oportunidades através de eventos inovadores.
+              entre ideias, pessoas e oportunidades através de eventos
+              inovadores.
             </p>
           </MotionContainer>
 

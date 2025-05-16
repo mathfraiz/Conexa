@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Navbar from "../../componentes/BarraNav";
+import { useAuth } from "../../contexts/AuthContext";
 
 const CriarEvento = () => {
   const form = new FormData();
+  const { usuario } = useAuth();
 
   const [nome, setNome] = useState("");
   const [tema, setTema] = useState("");
@@ -53,8 +55,6 @@ const CriarEvento = () => {
     >
   ) => {
     const { name, value } = e.target;
-    const usuario = sessionStorage.getItem("usuario");
-    const usuarioId = usuario ? Number(JSON.parse(usuario).id) : 0;
 
     if (name === "nome" && value.length > 50) return;
     if (name === "numero" && !/^\d{0,5}$/.test(value)) return;
@@ -68,7 +68,11 @@ const CriarEvento = () => {
     if (name === "descricao") setDescricao(value);
     // if(name==="imagem") setImagemArquivo(value)
 
-    setCriadoPor(usuarioId);
+    if (usuario) {
+      setCriadoPor(usuario.id);
+    } else {
+      return;
+    }
 
     form.set(name, value);
     console.log(form.get(name));

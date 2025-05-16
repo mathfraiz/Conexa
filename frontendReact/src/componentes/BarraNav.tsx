@@ -4,17 +4,19 @@ import { Link } from "react-router-dom";
 import useSessionStorage from "../../hook/useSessionStorage";
 import Perfil from "../paginas/usuario/perfil/perfil";
 import { Menu } from "lucide-react"; // ou qualquer ícone
+import { useAuth } from "../contexts/AuthContext";
 
 const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
-  const [usuario, setUsuarioSessio] = useSessionStorage<any>("usuario", {
-    id: 0,
-    nome: "",
-    email: "",
-    senha: "",
-    telefone: "",
-    tipo: "",
-    imagem_perfil: "",
-  });
+  // const [usuario, setUsuarioSessio] = useSessionStorage<any>("usuario", {
+  //   id: 0,
+  //   nome: "",
+  //   email: "",
+  //   senha: "",
+  //   telefone: "",
+  //   tipo: "",
+  //   imagem_perfil: "",
+  // });
+  const { usuario, login, logout } = useAuth();
 
   const [isLogado, setIsLogado] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -33,9 +35,14 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
   }, []);
 
   useEffect(() => {
-    if(usuario?.id > 0) {
+    if (!usuario) {
+      setIsLogado(false);
+      return;
+    }
+
+    if (usuario?.id > 0) {
       setIsLogado(true);
-    }else if(usuario?.id === 0) {
+    } else if (usuario?.id === 0) {
       setIsLogado(false);
     }
   }, []);
@@ -43,8 +50,7 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
   const handleClosePerfil = (foiSalvo: boolean) => {
     setModalPerfilOpen(false);
     if (foiSalvo) {
-      const usuarioAtualizado = sessionStorage.getItem("usuario");
-      if (usuarioAtualizado) {
+      if (usuario) {
         setToastMessage("Perfil atualizado com sucesso!");
         setToastColor("bg-green-500");
         setTimeout(() => setToastMessage(""), 3000);

@@ -1,6 +1,5 @@
 import React, { use, useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import useSessionStorage from "../../../hook/useSessionStorage";
 import MapaEndereco from "../../componentes/MapEndereco";
 import Rodape from "../../componentes/Rodape";
 import Navbar from "../../componentes/BarraNav";
@@ -35,7 +34,7 @@ const Evento = () => {
   //   email: "",
   //   tipo: "",
   // });
-  const { usuario, login } = useAuth();
+  const { usuario } = useAuth();
   const [evento, setEvento] = useState<Evento | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [mensagem, setMensagem] = useState("");

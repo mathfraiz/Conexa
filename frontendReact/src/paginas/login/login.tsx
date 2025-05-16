@@ -23,7 +23,7 @@ const Login: React.FC = () => {
       if (usuario.id > 0) {
         if (usuario.tipo === "admin") {
           location.href = "/admusuarios";
-        } else if(usuario.tipo === "usuario"){
+        } else if (usuario.tipo === "usuario") {
           location.href = "/paginaInicialLogin";
         }
       }
@@ -36,9 +36,7 @@ const Login: React.FC = () => {
     try {
       const response = await fetch("http://localhost:3000/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json",
-          
-         },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, senha }),
       });
 

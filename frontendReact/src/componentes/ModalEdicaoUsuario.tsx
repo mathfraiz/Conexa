@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 interface ModalEdicaoUsuarioProps {
   isModalOpen: boolean;
@@ -18,34 +19,26 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
   isModalOpen,
   onClose,
 }) => {
-  const usuarioString = sessionStorage.getItem("usuario");
-  const usuario = usuarioString ? JSON.parse(usuarioString) : null;
+  const { usuario, token, login } = useAuth();
+  const modalRef = useRef<HTMLDivElement>(null);
 
-  const [id, setId] = useState(usuario ? usuario.id : "");
-  const [nome, setNome] = useState(usuario ? usuario.nome : "");
-  const [email, setEmail] = useState(usuario ? usuario.email : "");
-  const [telefone, setTelefone] = useState(
-    usuario ? formatarTelefone(usuario.telefone) : ""
-  );
-  const [imagemPerfil, setImagemPerfil] = useState<File | string | null>(
-    usuario ? usuario.imagem_perfil : null
-  );
-  const [tipo] = useState(usuario ? usuario.tipo : "usuario");
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [imagemPerfil, setImagemPerfil] = useState<File | string | null>(null);
   const [alterarSenha, setAlterarSenha] = useState(false);
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const [erros, setErros] = useState<{ [key: string]: boolean }>({});
-  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (usuario) {
-      setId(usuario.id);
       setNome(usuario.nome);
       setEmail(usuario.email);
-      setTelefone(formatarTelefone(usuario.telefone));
-      setImagemPerfil(usuario.imagem_perfil);
+      setTelefone(formatarTelefone(usuario.telefone || ""));
+      setImagemPerfil(usuario.imagem_perfil || null);
     }
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -61,9 +54,9 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onClose]);
+  }, [onClose, usuario]);
 
-  if (!isModalOpen) return null;
+  if (!isModalOpen || !usuario) return null;
 
   const validarNome = (nome: string) => /^[A-Za-zÀ-ÿ\s]+$/.test(nome);
   const validarEmail = (email: string) =>
@@ -99,31 +92,35 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       form.append("email", email);
       form.append("telefone", telefone);
       form.append("senha", alterarSenha ? novaSenha : senhaAtual);
-      form.append("tipo", tipo);
+      form.append("tipo", usuario.tipo);
       if (imagemPerfil && typeof imagemPerfil !== "string") {
         form.append("imagem_perfil", imagemPerfil);
       }
 
-      const response = await fetch(`http://localhost:3000/usuario/${id}`, {
-        method: "PUT",
-        body: form,
-      });
+      const response = await fetch(
+        `http://localhost:3000/usuario/${usuario.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: form,
+        }
+      );
 
       if (response.ok) {
-        sessionStorage.setItem(
-          "usuario",
-          JSON.stringify({
-            ...usuario,
-            nome,
-            email,
-            telefone,
-            imagem_perfil: typeof imagemPerfil === "string" ? imagemPerfil : "",
-          })
-        );
+        const dadosAtualizados = {
+          ...usuario,
+          nome,
+          email,
+          telefone,
+          imagem_perfil: typeof imagemPerfil === "string" ? imagemPerfil : "", // ou você pode tratar preview de imagem
+        };
+        login(dadosAtualizados, token!);
         onClose(true);
       }
-    } catch {
-      console.log("");
+    } catch (err) {
+      console.error("Erro ao atualizar perfil:", err);
     } finally {
       setLoading(false);
     }
@@ -147,43 +144,34 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
           Editar Perfil
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <input
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              placeholder="Nome"
-              className={inputClass("nome")}
-              required
-            />
-            {renderErro(
-              "nome",
-              "Nome inválido. Apenas letras e espaços são permitidos."
-            )}
-          </div>
+          <input
+            type="text"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            placeholder="Nome"
+            className={inputClass("nome")}
+            required
+          />
+          {renderErro("nome", "Nome inválido. Apenas letras e espaços.")}
 
-          <div>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              className={inputClass("email")}
-              required
-            />
-            {renderErro("email", "Email inválido.")}
-          </div>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className={inputClass("email")}
+            required
+          />
+          {renderErro("email", "Email inválido.")}
 
-          <div>
-            <input
-              type="tel"
-              value={telefone}
-              onChange={handleTelefoneChange}
-              placeholder="Telefone"
-              className={inputClass("telefone")}
-            />
-            {renderErro("telefone", "Telefone inválido. Ex: (41) 99999-9999")}
-          </div>
+          <input
+            type="tel"
+            value={telefone}
+            onChange={handleTelefoneChange}
+            placeholder="Telefone"
+            className={inputClass("telefone")}
+          />
+          {renderErro("telefone", "Telefone inválido. Ex: (41) 99999-9999")}
 
           <div className="flex items-center justify-between">
             <span className="text-sm text-purple-700 font-semibold">
@@ -200,39 +188,35 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
 
           {alterarSenha && (
             <>
-              <div>
-                <input
-                  type="password"
-                  value={senhaAtual}
-                  onChange={(e) => setSenhaAtual(e.target.value)}
-                  placeholder="Senha Atual"
-                  className={inputClass("senhaAtual")}
-                />
-                {renderErro("senhaAtual", "Informe sua senha atual.")}
-              </div>
-              <div>
-                <input
-                  type="password"
-                  value={novaSenha}
-                  onChange={(e) => setNovaSenha(e.target.value)}
-                  placeholder="Nova Senha"
-                  className={inputClass("novaSenha")}
-                />
-                {renderErro(
-                  "novaSenha",
-                  "A nova senha deve ter no mínimo 6 caracteres, 1 letra maiúscula e 1 número."
-                )}
-              </div>
-              <div>
-                <input
-                  type="password"
-                  value={confirmarSenha}
-                  onChange={(e) => setConfirmarSenha(e.target.value)}
-                  placeholder="Confirmar Nova Senha"
-                  className={inputClass("confirmarSenha")}
-                />
-                {renderErro("confirmarSenha", "As senhas não coincidem.")}
-              </div>
+              <input
+                type="password"
+                value={senhaAtual}
+                onChange={(e) => setSenhaAtual(e.target.value)}
+                placeholder="Senha Atual"
+                className={inputClass("senhaAtual")}
+              />
+              {renderErro("senhaAtual", "Informe sua senha atual.")}
+
+              <input
+                type="password"
+                value={novaSenha}
+                onChange={(e) => setNovaSenha(e.target.value)}
+                placeholder="Nova Senha"
+                className={inputClass("novaSenha")}
+              />
+              {renderErro(
+                "novaSenha",
+                "A nova senha deve ter 6+ caracteres, 1 letra maiúscula e 1 número."
+              )}
+
+              <input
+                type="password"
+                value={confirmarSenha}
+                onChange={(e) => setConfirmarSenha(e.target.value)}
+                placeholder="Confirmar Nova Senha"
+                className={inputClass("confirmarSenha")}
+              />
+              {renderErro("confirmarSenha", "As senhas não coincidem.")}
             </>
           )}
 
@@ -245,6 +229,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
             className="w-full text-sm text-gray-500"
             accept="image/*"
           />
+
           {imagemPerfil && (
             <div className="flex flex-col items-center">
               <img
