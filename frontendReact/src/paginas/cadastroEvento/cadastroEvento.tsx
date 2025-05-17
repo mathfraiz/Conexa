@@ -130,7 +130,7 @@ const CriarEvento = () => {
         location.href = "/PaginaInicialLogin";
         setCadastroSucesso(true);
       } else if (response.status === 401) {
-        navigate("/login");
+        console.log("erro");
       } else {
         setCadastroSucesso(false);
       }

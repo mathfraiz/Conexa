@@ -11,7 +11,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
   onClose,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const { usuario, token, login } = useAuth();
+  const { usuario, login } = useAuth();
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -67,6 +67,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
     if (Object.values(novosErros).some(Boolean)) return;
 
     try {
+      const token = sessionStorage.getItem("token");
       const formData = new FormData();
       formData.append("nome", nome);
       formData.append("email", email);

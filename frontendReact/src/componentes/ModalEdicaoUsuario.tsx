@@ -96,13 +96,14 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       if (imagemPerfil && typeof imagemPerfil !== "string") {
         form.append("imagem_perfil", imagemPerfil);
       }
+      console.log(token)
 
       const response = await fetch(
         `http://localhost:3000/usuario/${usuario.id}`,
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${token}`,
+            authorization: `Bearer ${token}`,
           },
           body: form,
         }

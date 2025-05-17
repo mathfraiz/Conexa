@@ -107,6 +107,8 @@ routerUsuario.put(
   upload.single("imagem_perfil"),
   async (req, res) => {
     const id = parseInt(req.params.id);
+    console.log(id);
+    console.log(req.userId);
 
     // Proteção: apenas o próprio usuário OU um admin pode editar
     if (req.userTipo !== "admin" && req.userId !== id) {
@@ -114,14 +116,13 @@ routerUsuario.put(
     }
 
     try {
-      const { nome, email, senha, telefone, tipo } = req.body;
+      const { nome, email, telefone, tipo } = req.body;
       const imagem = req.file?.buffer || null;
 
       const usuarioAtualizado = await Usuario.atualizarUsuario(
         id,
         nome,
         email,
-        senha,
         telefone,
         tipo,
         imagem

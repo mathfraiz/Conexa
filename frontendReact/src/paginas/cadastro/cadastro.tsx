@@ -73,7 +73,6 @@ const Cadastro: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // 🔐 Faz login automático após o cadastro
         const loginResponse = await fetch("http://localhost:3000/login", {
           method: "POST",
           headers: {
@@ -372,7 +371,7 @@ const Cadastro: React.FC = () => {
                       src={
                         imagemPreview
                           ? URL.createObjectURL(imagemPreview)
-                          : "/placeholder.jpg"
+                          : "/imagem_Icon_User.png"
                       }
                       alt="Preview"
                       className="w-20 h-20 rounded-full object-cover border border-gray-300 shadow"

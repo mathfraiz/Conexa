@@ -1,5 +1,11 @@
 // src/contexts/AuthContext.tsx
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface Usuario {
   id: number;
@@ -39,6 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     sessionStorage.setItem("token", token);
     setUsuario(usuario);
     setToken(token);
+    console.log(token);
   };
 
   const logout = () => {
@@ -49,7 +56,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ usuario, token, isAutenticado: !!usuario, login, logout }}>
+    <AuthContext.Provider
+      value={{ usuario, token, isAutenticado: !!usuario, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -57,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth deve ser usado dentro de um AuthProvider");
+  if (!context)
+    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
   return context;
 }
