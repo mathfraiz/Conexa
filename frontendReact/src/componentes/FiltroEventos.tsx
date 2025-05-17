@@ -36,7 +36,7 @@ const FiltroEventos = ({ eventosList, setEventos }) => {
 
   return (
     <div className="flex flex-col gap-4 mb-8 items-center">
-      <div className="flex gap-4 flex-wrap justify-center">
+      <div className="flex gap-4 flex-wrap justify-center bg-amber-300 rounded">
         <select
           className="text-black px-2 py-1 rounded"
           value={campoSelecionado}
@@ -64,7 +64,7 @@ const FiltroEventos = ({ eventosList, setEventos }) => {
           <input
             type="text"
             placeholder={`Filtrar por ${campoSelecionado}`}
-            className="text-black px-2 py-1 rounded"
+            className="text-black  px-2 py-1 rounded"
             value={valorFiltro}
             onChange={(e) => handleFiltroChange(e.target.value)}
             onClick={(e) => {

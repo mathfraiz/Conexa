@@ -24,7 +24,6 @@ function App() {
           <Route path="/recuperação" element={<RecuperacaoSenha />} />
           <Route path="/cadastroEvento" element={<CriarEvento />} />
           <Route path="/PaginaInicialLogin" element={<PaginaIncialLogin />} />
-          <Route path="/index" element={<Index />} /> 
           <Route path="/admusuarios" element={<AdmUsuario />} />
           <Route path="/eventos/:id" element={<Evento />} />
           <Route path="/admEventos" element={<AdmEvento />} />

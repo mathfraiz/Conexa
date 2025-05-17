@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const CriarEvento = () => {
   const form = new FormData();
   const { usuario, token } = useAuth();
   const navigate = useNavigate();
+  const [sidebarOpen, setSideBarOpen] = useState(false);
 
   const [nome, setNome] = useState("");
   const [tema, setTema] = useState("");
@@ -38,6 +39,12 @@ const CriarEvento = () => {
   if (imagemArquivo) {
     form.append("imagem", imagemArquivo);
   }
+
+  useEffect(() => {
+    if (usuario?.id === 0 || !usuario) {
+      location.href = "/login";
+    }
+  }, [usuario]);
 
   const [showModal, setShowModal] = useState(false);
   const [cadastroSucesso, setCadastroSucesso] = useState(false);
@@ -146,8 +153,32 @@ const CriarEvento = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="h-16">
-        <Navbar onToggleSidebar={() => {}} />
+        <Navbar
+          onToggleSidebar={() => {
+            setSideBarOpen(!sidebarOpen);
+          }}
+        />
       </div>
+
+      <aside
+        className={`fixed top-16 left-0 z-40 h-full bg-purple-600 w-60 p-4 transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full w-0"
+        }`}
+      >
+        <Link
+          to="/cadastroEvento"
+          className="block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
+        >
+          Criar Evento
+        </Link>
+        {/* Adicione mais links se quiser */}
+        <Link
+          to={"/eventos/usuario"}
+          className=" block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
+        >
+          Meus Eventos
+        </Link>
+      </aside>
 
       <div className="bg-[url(/logo.jpg)] min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-200 p-6 bg-cover bg-center bg-no-repeat">
         <form

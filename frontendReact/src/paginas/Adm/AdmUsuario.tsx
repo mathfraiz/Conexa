@@ -4,6 +4,7 @@ import ModalNovoUsuario from "./ModalNovoUsuario.tsx";
 import ModalEdicaoUsuario from "./ModalEdicaoUsuario.tsx";
 import BarraLateral from "../../componentes/BarraLateral.tsx";
 import { useAuth } from "../../contexts/AuthContext.tsx";
+import { useNavigate } from "react-router-dom";
 
 interface Usuario {
   email: string;
@@ -24,6 +25,7 @@ const AdmUsuario = () => {
     useState<string>("");
 
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
   const [modalMensagem, setModalMensagem] = useState("");
   const [sucesso, setSucesso] = useState(true);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
@@ -34,7 +36,7 @@ const AdmUsuario = () => {
     null
   );
 
-  const { usuario,token } = useAuth();
+  const { usuario, token } = useAuth();
 
   const carregarUsuarios = async () => {
     try {
@@ -51,13 +53,12 @@ const AdmUsuario = () => {
   useEffect(() => {
     console.log("teste");
     console.log(usuario);
+    if (!usuario) {
+      navigate("/login");
+    }
     if (usuario) {
       if (usuario?.tipo === "usuario") {
-        location.href = "/PaginaInicialLogin";
-      }
-      if (usuario?.id) {
-        verificaTipo();
-        return;
+        navigate("/PaginaInicialLogin");
       }
     }
     carregarUsuarios();
@@ -112,12 +113,6 @@ const AdmUsuario = () => {
       carregarUsuarios();
     }
   };
-  const verificaTipo = () => {
-    if (usuario?.tipo !== "admin") {
-      location.href = "/";
-    }
-  };
-
   return (
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen ">
       <Navbar onToggleSidebar={() => setSidebarAberta(!sidebarAberta)} />

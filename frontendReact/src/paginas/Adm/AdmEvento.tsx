@@ -6,6 +6,7 @@ import ModalNovoEvento from "./ModalNovoEvento";
 import ModalEdicaoEvento from "../../componentes/ModalEdicaoEvento";
 import { useAuth } from "../../contexts/AuthContext";
 import FiltroEventos from "../../componentes/FiltroEventos";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface Evento {
   id: number;
@@ -25,6 +26,7 @@ interface Evento {
 }
 
 const AdmEvento = () => {
+  const navigate = useNavigate()
   const [EventoList, setEventoList] = useState<Evento[]>([]);
   const { usuario } = useAuth();
   const [eventos, setEventos] = useState<Evento[]>([]);
@@ -52,17 +54,23 @@ const AdmEvento = () => {
   };
 
   useEffect(() => {
-    carregarEventos();
-  }, []);
-
-  useEffect(() => {
-    if (usuario) {
-      verificaTipo();
+    if (!usuario) {
+      navigate("/login");
     }
-  });
+    if (usuario) {
+      if (usuario?.tipo === "usuario") {
+      navigate("/PaginaInicialLogin");
+      }
+      if (usuario?.id) {
+        verificaTipo();
+      }
+    }
+    carregarEventos();
+  }, [usuario]);
+
   const verificaTipo = () => {
     if (usuario?.tipo !== "admin") {
-      location.href = "/login";
+      navigate("/login");
     }
   };
 

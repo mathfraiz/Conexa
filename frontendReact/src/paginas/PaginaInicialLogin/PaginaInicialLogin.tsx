@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MotionContainer from "../../componentes/MotionConteiner";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
 import FiltroEventos from "../../componentes/FiltroEventos";
@@ -29,10 +29,9 @@ interface Evento {
 // }
 
 const PaginaInicialLogin = () => {
-  
+  const navigate = useNavigate()
   const { usuario } = useAuth();
   const [mensagem, setMensagem] = useState("");
-  const [usuarioCriador,setusuarioCriador] = useState("")
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
@@ -41,13 +40,12 @@ const PaginaInicialLogin = () => {
   const [eventos1, setEventos] = useState<Evento[]>([]);
 
   useEffect(() => {
-    if (usuario?.id === 0) {
-      location.href = "/login";
+    if (!usuario) {
+      navigate("/login");
     } else {
       respEventos();
-
     }
-  }, []);
+  }, [usuario]);
 
   const respEventos = async () => {
     try {
@@ -55,7 +53,6 @@ const PaginaInicialLogin = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("data", data);
-        
 
         setEventoList(data);
         setEventos(data);
@@ -68,7 +65,6 @@ const PaginaInicialLogin = () => {
       }
     }
   };
-  
 
   return (
     <div className="min-h-screen  flex flex-col bg-[url(/logo.jpg)] text-white bg-cover bg-center">
@@ -110,7 +106,10 @@ const PaginaInicialLogin = () => {
             <span className="bg-yellow-500 text-black text-lg">{mensagem}</span>
           )}
 
-          <FiltroEventos eventosList={eventosList} setEventos={setEventos} ></FiltroEventos>
+          <FiltroEventos
+            eventosList={eventosList}
+            setEventos={setEventos}
+          ></FiltroEventos>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {eventos1.map((evento) => (

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
 import Rodape from "../../componentes/Rodape";
 import { useAuth } from "../../contexts/AuthContext";
@@ -17,14 +17,15 @@ const Login: React.FC = () => {
   const [sugestoes, setSugestoes] = useState<string[]>([]);
   const [mostrarSugestoes, setMostrarSugestoes] = useState(false);
   const sugestoesRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (usuario) {
       if (usuario.id > 0) {
         if (usuario.tipo === "admin") {
-          location.href = "/admusuarios";
+          navigate("/admusuarios");
         } else if (usuario.tipo === "usuario") {
-          location.href = "/paginaInicialLogin";
+          navigate("/paginaInicialLogin");
         }
       }
     }
@@ -42,7 +43,7 @@ const Login: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data.usuario)
+        console.log(data.usuario);
         login(data.usuario, data.token); // salva no contexto global
 
         setVerdeMensagem(true);
