@@ -3,6 +3,7 @@ import MotionContainer from "../../componentes/MotionConteiner";
 import { Link } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
+import FiltroEventos from "../../componentes/FiltroEventos";
 
 interface Evento {
   id: number;
@@ -54,6 +55,7 @@ const PaginaInicialLogin = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("data", data);
+        
 
         setEventoList(data);
         setEventos(data);
@@ -108,21 +110,7 @@ const PaginaInicialLogin = () => {
             <span className="bg-yellow-500 text-black text-lg">{mensagem}</span>
           )}
 
-          <div className=" flex justify-center ">
-            <span className=" h-6 bg-gray-500 rounded-lg mb-8 ">
-              <input
-                onChange={(e) => {
-                  const filtro = e.target.value;
-                  const filtrados = eventosList.filter((ev) =>
-                    ev.nome.toLowerCase().includes(filtro.toLowerCase())
-                  );
-                  setEventos(filtrados);
-                }}
-                className="w-full text-black text-center"
-                placeholder="nome do evento"
-              />
-            </span>
-          </div>
+          <FiltroEventos eventosList={eventosList} setEventos={setEventos} ></FiltroEventos>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {eventos1.map((evento) => (

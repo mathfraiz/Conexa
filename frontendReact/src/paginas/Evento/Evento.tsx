@@ -310,9 +310,6 @@ const Evento = () => {
               <h1 className="text-3xl font-bold text-purple-700">
                 {evento.nome}
               </h1>
-              <h1 className="text-3xl font-bold text-purple-700">
-                {evento.id}
-              </h1>
               <p className="text-purple-700">
                 <strong>Data:</strong>{" "}
                 {new Date(evento.data).toLocaleDateString()}
