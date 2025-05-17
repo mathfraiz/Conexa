@@ -129,6 +129,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
           nome,
           email,
           telefone,
+          
           imagem_perfil: imagemBase64 ? imagemBase64 : "",
         };
 

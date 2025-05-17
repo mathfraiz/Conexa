@@ -62,39 +62,35 @@ class Usuario {
   static async atualizarUsuario(id, nome, email, senha, telefone, tipo, foto) {
     console.log("controller");
     try {
-      let senhaCriptografada;
-      let sql;
-      if (senha) {
-        senhaCriptografada = await bcrypt.hash(senha, 10);
-        sql = `
-          UPDATE usuario SET nome = ?, email = ?, telefone = ?, tipo = ?, imagem_perfil = ?
-          WHERE id = ?
-        `;
-        const [result] = await pool.query(sql, [
-          nome,
-          email,
-          telefone,
-          tipo,
-          foto,
-          id,
-        ]);
-        return result.affectedRows;
-      } else {
-        sql = `
-          UPDATE usuario SET nome = ?, email = ?, telefone = ?,senha = ?, tipo = ?, imagem_perfil = ?
-          WHERE id = ?
-        `;
-        const [result] = await pool.query(sql, [
-          nome,
-          email,
-          telefone,
-          senha,
-          tipo,
-          foto,
-          id,
-        ]);
-        return result.affectedRows;
+      let campos = [];
+      let valores = [];
+
+      // Campos obrigatórios
+      campos.push("nome = ?", "email = ?", "telefone = ?", "tipo = ?");
+      valores.push(nome, email, telefone, tipo);
+
+      // Se foi fornecida uma nova senha, criptografa e adiciona ao update
+      if (senha && senha.trim() !== "") {
+        const senhaCriptografada = await bcrypt.hash(senha, 10);
+        campos.push("senha = ?");
+        valores.push(senhaCriptografada);
       }
+
+      // Se foi fornecida uma nova imagem de perfil
+      if (foto) {
+        campos.push("imagem_perfil = ?");
+        valores.push(foto);
+      }
+
+      // Monta a SQL dinamicamente
+      const sql = `
+      UPDATE usuario SET ${campos.join(", ")}
+      WHERE id = ?
+    `;
+      valores.push(id);
+
+      const [result] = await pool.query(sql, valores);
+      return result.affectedRows;
     } catch (error) {
       console.log("Erro ao atualizar usuário:", error.message);
       return 0;

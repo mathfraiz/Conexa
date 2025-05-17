@@ -16,6 +16,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
+  const [senha, setSenha] = useState(""); // 🔒 Novo estado da senha
   const [tipo, setTipo] = useState("usuario");
   const [imagemPerfil, setImagemPerfil] = useState<File | string | null>(null);
   const [erros, setErros] = useState<{ [key: string]: boolean }>({});
@@ -59,6 +60,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const novosErros = {
       nome: !validarNome(nome),
       telefone: !validarTelefone(telefone),
@@ -69,11 +71,17 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
     try {
       const token = sessionStorage.getItem("token");
       const formData = new FormData();
+
       formData.append("nome", nome);
       formData.append("email", email);
       formData.append("telefone", telefone);
       formData.append("tipo", tipo);
-      if (imagemPerfil && typeof imagemPerfil !== "string") {
+
+      if (senha.trim() !== "") {
+        formData.append("senha", senha);
+      }
+
+      if (imagemPerfil instanceof File) {
         formData.append("imagem_perfil", imagemPerfil);
       }
 
@@ -93,8 +101,8 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
           telefone,
           tipo,
           imagem_perfil:
-            typeof imagemPerfil === "string"
-              ? imagemPerfil
+            imagemPerfil instanceof File
+              ? URL.createObjectURL(imagemPerfil)
               : usuario?.imagem_perfil,
         };
         login(novoUsuario, token!);
@@ -104,7 +112,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       }
     } catch (error) {
       console.error("Erro ao atualizar usuário", error);
-      onClose(false);
+      onClose(false, "Erro ao atualizar usuário");
     }
   };
 
@@ -147,6 +155,13 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
             value={telefone}
             onChange={handleTelefoneChange}
             className={inputClass("telefone")}
+          />
+          <input
+            type="password"
+            placeholder="Nova senha (deixe em branco se não for mudar)"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            className={inputClass("senha")}
           />
           <select
             value={tipo}

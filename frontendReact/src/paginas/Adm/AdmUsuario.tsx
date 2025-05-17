@@ -51,15 +51,17 @@ const AdmUsuario = () => {
   useEffect(() => {
     console.log("teste");
     console.log(usuario);
-    if (!usuario) {
-      location.href = "/login";
-    }
-    if (usuario?.id) {
-      verificaTipo();
-      return;
+    if (usuario) {
+      if (usuario?.tipo === "usuario") {
+        location.href = "/PaginaInicialLogin";
+      }
+      if (usuario?.id) {
+        verificaTipo();
+        return;
+      }
     }
     carregarUsuarios();
-  }, []);
+  }, [usuario]);
 
   const deletarUsuario = async (id: number) => {
     try {
