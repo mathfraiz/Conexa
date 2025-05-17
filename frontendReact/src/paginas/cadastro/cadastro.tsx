@@ -23,6 +23,7 @@ const Cadastro: React.FC = () => {
   // const [uf, setUf] = useState("");
 
   // Error states
+  const [nomeErro, setNomeErro] = useState("");
   const [emailErro, setEmailErro] = useState("");
   const [senhaErro, setSenhaErro] = useState("");
   const [telefoneErro, setTelefoneErro] = useState("");
@@ -134,11 +135,24 @@ const Cadastro: React.FC = () => {
     const regexTelefone = /^\(\d{2}\) \d{5}-\d{4}$/;
     return regexTelefone.test(telefone);
   };
+  const validarNome = (nome: string) => {
+  const nomeLimpo = nome.trim();
+  const regex = /^[A-Za-zÀ-ÿ\s]{4,}$/; 
+  return regex.test(nomeLimpo);
+};
 
-  // Handler functions
   const handleNomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNome(e.target.value.replace(/\d/g, ""));
-  };
+  const valorLimpo = e.target.value.replace(/[^A-Za-zÀ-ÿ\s]/g, "");
+  setNome(valorLimpo);
+
+  if (!validarNome(valorLimpo)) {
+    setNomeErro("Digite seu nome completo.");
+  } else {
+    setNomeErro("");
+  }
+};
+
+
 
   const formatarTelefone = (telefone: string) => {
     const numerosApenas = telefone.replace(/\D/g, "");
@@ -318,6 +332,10 @@ const Cadastro: React.FC = () => {
     form.set("telefone", telefoneLimpo);
     if (imagemPreview) {
       form.set("imagem_perfil", imagemPreview);
+    }
+    if (!validarNome(nome)) {
+      setNomeErro("Preencha este campo com seu nome completo (mínimo 4 letras).");
+      return; 
     }
 
     if (validarEmail(email)) {
