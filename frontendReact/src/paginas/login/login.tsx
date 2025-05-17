@@ -44,11 +44,14 @@ const Login: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         console.log(data.usuario);
-        login(data.usuario, data.token); // salva no contexto global
-
         setVerdeMensagem(true);
         setModalMensagem("Login realizado com sucesso");
         setMostrarModal(true);
+        setTimeout(()=>{
+        login(data.usuario, data.token); // salva no contexto global
+
+        },3000)
+
       } else {
         setVerdeMensagem(false);
         setModalMensagem("Email ou senha incorretos");
