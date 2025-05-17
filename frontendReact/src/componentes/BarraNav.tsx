@@ -79,19 +79,19 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
             <Menu size={28} />
           </button>
 
-<button
-  onClick={() => {
-    if (isLogado && usuario?.tipo === "usuario") {
-      navigate("/PaginaInicialLogin");
-    } else {
-      navigate("/");
-    }
-  }}
-  className="text-3xl font-extrabold tracking-wide bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent animate-gradient transition duration-200 active:scale-95 active:translate-y-[1px] active:drop-shadow-md"
->
-  CONEXA+
-</button>
-          </div>
+          <button
+            onClick={() => {
+              if (isLogado && usuario?.tipo === "usuario") {
+                navigate("/PaginaInicialLogin");
+              } else {
+                navigate("/");
+              }
+            }}
+            className="text-3xl font-extrabold tracking-wide bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent animate-gradient transition duration-200 active:scale-95 active:translate-y-[1px] active:drop-shadow-md"
+          >
+            CONEXA+
+          </button>
+        </div>
 
         <div className="flex items-center gap-6">
           {!isLogado ? (

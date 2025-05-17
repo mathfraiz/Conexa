@@ -8,7 +8,7 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
   onClosePerfil,
 }) => {
   const [mostrarModal, setMostrarModal] = useState(false);
-  const { usuario,  logout } = useAuth();
+  const { usuario, logout } = useAuth();
   const perfilRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 

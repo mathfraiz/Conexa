@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import useSessionStorage from "../../../hook/useSessionStorage.tsx";
 import Navbar from "../../componentes/BarraNav.tsx";
 import ModalNovoUsuario from "./ModalNovoUsuario.tsx";
 import ModalEdicaoUsuario from "./ModalEdicaoUsuario.tsx";
@@ -50,13 +49,17 @@ const AdmUsuario = () => {
   };
 
   useEffect(() => {
+    console.log("teste");
+    console.log(usuario);
+    if (!usuario) {
+      location.href = "/login";
+    }
+    if (usuario?.id) {
+      verificaTipo();
+      return;
+    }
     carregarUsuarios();
   }, []);
-  useEffect(() => {
-    if (usuario) {
-      verificaTipo();
-    }
-  });
 
   const deletarUsuario = async (id: number) => {
     try {
@@ -108,7 +111,7 @@ const AdmUsuario = () => {
   };
   const verificaTipo = () => {
     if (usuario?.tipo !== "admin") {
-      location.href = "/login";
+      location.href = "/";
     }
   };
 

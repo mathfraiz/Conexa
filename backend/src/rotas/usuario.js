@@ -116,7 +116,7 @@ routerUsuario.put(
     }
 
     try {
-      const { nome, email, telefone, tipo } = req.body;
+      const { nome, email, telefone,senha, tipo } = req.body;
       const imagem = req.file?.buffer || null;
 
       const usuarioAtualizado = await Usuario.atualizarUsuario(
@@ -124,6 +124,7 @@ routerUsuario.put(
         nome,
         email,
         telefone,
+        senha,
         tipo,
         imagem
       );

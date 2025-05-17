@@ -93,10 +93,10 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       form.append("telefone", telefone);
       form.append("senha", alterarSenha ? novaSenha : senhaAtual);
       form.append("tipo", usuario.tipo);
-      if (imagemPerfil && typeof imagemPerfil !== "string") {
+      if (imagemPerfil) {
         form.append("imagem_perfil", imagemPerfil);
       }
-      console.log(token)
+      console.log(token);
 
       const response = await fetch(
         `http://localhost:3000/usuario/${usuario.id}`,
@@ -110,13 +110,29 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       );
 
       if (response.ok) {
+        let imagemBase64 = "";
+
+        if (imagemPerfil instanceof File) {
+          imagemBase64 = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              resolve(reader.result as string);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(imagemPerfil);
+          });
+        } else if (typeof imagemPerfil === "string") {
+          imagemBase64 = imagemPerfil;
+        }
         const dadosAtualizados = {
           ...usuario,
           nome,
           email,
           telefone,
-          imagem_perfil: typeof imagemPerfil === "string" ? imagemPerfil : "", // ou você pode tratar preview de imagem
+          imagem_perfil: imagemBase64 ? imagemBase64 : "",
         };
+
+        console.log(dadosAtualizados);
         login(dadosAtualizados, token!);
         onClose(true);
       }

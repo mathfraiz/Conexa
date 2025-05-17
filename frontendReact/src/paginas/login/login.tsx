@@ -42,6 +42,7 @@ const Login: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data.usuario)
         login(data.usuario, data.token); // salva no contexto global
 
         setVerdeMensagem(true);

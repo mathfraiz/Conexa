@@ -59,8 +59,8 @@ class Usuario {
     }
   }
 
-  static async atualizarUsuario(id, nome, email, telefone, tipo, foto) {
-    console.log("controller")
+  static async atualizarUsuario(id, nome, email, senha, telefone, tipo, foto) {
+    console.log("controller");
     try {
       let senhaCriptografada;
       let sql;
@@ -81,13 +81,14 @@ class Usuario {
         return result.affectedRows;
       } else {
         sql = `
-          UPDATE usuario SET nome = ?, email = ?, telefone = ?, tipo = ?, imagem_perfil = ?
+          UPDATE usuario SET nome = ?, email = ?, telefone = ?,senha = ?, tipo = ?, imagem_perfil = ?
           WHERE id = ?
         `;
         const [result] = await pool.query(sql, [
           nome,
           email,
           telefone,
+          senha,
           tipo,
           foto,
           id,
