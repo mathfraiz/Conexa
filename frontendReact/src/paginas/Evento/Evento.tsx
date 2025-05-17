@@ -15,6 +15,8 @@ interface Evento {
   endereco: string;
   imagem_evento: string | null;
   criado_por: number;
+  nome_usuario: string;
+  email_usuario: string;
   endereco_id;
 }
 interface Endereco {
@@ -38,28 +40,11 @@ const Evento = () => {
   const [evento, setEvento] = useState<Evento | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [mensagem, setMensagem] = useState("");
-  const [criador, setCriador] = useState("");
   const [endereco, setEndereco] = useState<Endereco | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const [inscricao, setIncricoes] = useState<any>([]);
   const [idInscricao, setIdInscricao] = useState(0);
-
-  const buscarCriador = async (id) => {
-    if (evento) {
-      try {
-        const respuser = await fetch(`http://localhost:3000/usuario/${id}`);
-
-        if (respuser.ok) {
-          const data = await respuser.json();
-          setCriador(data.nome);
-        }
-      } catch (err) {
-        console.error(err);
-        setMensagem("Erro ao buscar criador do evento.");
-      }
-    }
-  };
 
   const buscarIncricoesUsuario = async (id) => {
     try {
@@ -108,7 +93,6 @@ const Evento = () => {
       if (resp.ok) {
         const data = await resp.json();
         setEvento(data);
-        buscarCriador(data.criado_por);
         // buscarIncricoesUsuario(usuario.id);
       } else {
         setMensagem("Evento não encontrado.");
@@ -130,7 +114,6 @@ const Evento = () => {
   };
   useEffect(() => {
     buscarEndereco(evento?.endereco_id);
-    buscarCriador(evento?.criado_por);
     buscarIncricoesUsuario(usuario?.id);
   }, [evento]);
 
@@ -339,7 +322,7 @@ const Evento = () => {
               </p>
               <p className="text-purple-700">{evento.descricao}</p>
               <p className="text-purple-700">
-                <strong>Criado por:</strong> {criador}
+                <strong>Criado por:</strong> {evento.nome_usuario}
               </p>
               {endereco && (
                 <p className="text-purple-700">
