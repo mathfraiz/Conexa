@@ -5,18 +5,27 @@ import BarraLateral from "../../componentes/BarraLateral";
 import ModalNovoEvento from "./ModalNovoEvento";
 import ModalEdicaoEvento from "../../componentes/ModalEdicaoEvento";
 import { useAuth } from "../../contexts/AuthContext";
+import FiltroEventos from "../../componentes/FiltroEventos";
 
 interface Evento {
   id: number;
-  nome: string;
   descricao: string;
-  data: string;
+  descricao_completa: string;
+  data: Date;
   hora: string;
+  categoria: number;
   imagem_evento: string | null;
+  endereco_id: number;
   avaliacao_media: string;
+  nome: string;
+  criado_em: Date;
+  criado_por: number;
+  nome_usuario: string;
+  email_usuario: string;
 }
 
 const AdmEvento = () => {
+  const [EventoList, setEventoList] = useState<Evento[]>([]);
   const { usuario } = useAuth();
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [sidebarAberta, setSidebarAberta] = useState(false);
@@ -25,6 +34,7 @@ const AdmEvento = () => {
   const [eventoSelecionado, setEventoSelecionado] = useState<Evento | null>(
     null
   );
+
   const [isModalConfirmarOpen, setIsModalConfirmarOpen] = useState(false);
   const [eventoParaDeletar, setEventoParaDeletar] = useState<Evento | null>(
     null
@@ -35,6 +45,7 @@ const AdmEvento = () => {
       const res = await fetch("http://localhost:3000/eventos");
       const data = await res.json();
       setEventos(data);
+      setEventoList(data)
     } catch (err) {
       console.error("Erro ao buscar eventos:", err);
     }
@@ -73,6 +84,8 @@ const AdmEvento = () => {
       <Navbar onToggleSidebar={() => setSidebarAberta(!sidebarAberta)} />
       <BarraLateral isOpen={sidebarAberta} />
 
+      <FiltroEventos eventosList={EventoList} setEventos={setEventos} />
+
       <div
         className={`bg-white rounded-3xl shadow-2xl p-8 transition-all duration-300 ${
           sidebarAberta ? "ml-64" : "ml-0"
@@ -91,11 +104,13 @@ const AdmEvento = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-separate border-spacing-y-2">
+          <table className="w-full text-left border-separate border-spacing-y-2 table-fixed">
             <thead>
               <tr className="text-sm text-purple-800">
                 <th className="px-4 py-2">ID</th>
                 <th className="px-4 py-2">Nome</th>
+                <th className="px-4 py-2 hidden sm:table-cell">Descricao</th>
+                <th className="px-4 py-2 hidden sm:table-cell">usuario</th>
                 <th className="px-4 py-2 hidden sm:table-cell">Data</th>
                 <th className="px-4 py-2 hidden sm:table-cell">Hora</th>
                 <th className="px-4 py-2 hidden md:table-cell">Avaliação</th>
@@ -103,11 +118,17 @@ const AdmEvento = () => {
                 <th className="px-4 py-2">Ações</th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-sm ">
               {eventos.map((evento) => (
                 <tr key={evento.id} className="bg-white shadow rounded-xl">
                   <td className="px-4 py-2 font-medium">{evento.id}</td>
                   <td className="px-4 py-2">{evento.nome}</td>
+                  <td className="px-4 py-2 hidden sm:table-cell">
+                    {evento.descricao_completa}
+                  </td>
+                  <td className="px-4 py-2 hidden sm:table-cell">
+                    {evento.nome_usuario}
+                  </td>
                   <td className="px-4 py-2 hidden sm:table-cell">
                     {new Date(evento.data).toLocaleDateString()}
                   </td>

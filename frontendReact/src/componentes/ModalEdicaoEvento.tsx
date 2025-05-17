@@ -2,13 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 
 interface Evento {
   id: number;
-  nome: string;
-  data: string;
-  hora: string;
   descricao: string;
   descricao_completa: string;
+  data: Date;
+  hora: string;
+  categoria: number;
   imagem_evento: string | null;
   endereco_id: number;
+  avaliacao_media: string;
+  nome: string;
+  criado_em: Date;
   criado_por: number;
 }
 

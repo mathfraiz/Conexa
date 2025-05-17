@@ -2,7 +2,9 @@ import pool from "../config/bd.js";
 
 const Evento = {
   async findAllEvento() {
-    const [rows] = await pool.query("SELECT * FROM eventos");
+    const [rows] = await pool.query(
+      "SELECT eventos.*, usuario.nome AS nome_usuario, usuario.email AS email_usuario,usuario.telefone AS telefone_usuario FROM eventos JOIN usuario ON eventos.criado_por = usuario.id"
+    );
 
     const eventosConvertidos = rows.map((evento) => ({
       ...evento,
@@ -15,7 +17,10 @@ const Evento = {
   },
 
   async findEventoById(id) {
-    const [rows] = await pool.query("SELECT * FROM eventos WHERE id = ?", [id]);
+    const [rows] = await pool.query(
+      `SELECT eventos.*, usuario.nome AS nome_usuario, usuario.email AS email_usuario FROM eventos JOIN usuario ON eventos.criado_por = usuario.id WHERE eventos.id = ?`,
+      [id]
+    );
 
     const evento = rows[0];
 

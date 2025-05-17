@@ -28,8 +28,10 @@ interface Evento {
 // }
 
 const PaginaInicialLogin = () => {
+  
   const { usuario } = useAuth();
   const [mensagem, setMensagem] = useState("");
+  const [usuarioCriador,setusuarioCriador] = useState("")
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
@@ -42,6 +44,7 @@ const PaginaInicialLogin = () => {
       location.href = "/login";
     } else {
       respEventos();
+
     }
   }, []);
 
@@ -63,6 +66,7 @@ const PaginaInicialLogin = () => {
       }
     }
   };
+  
 
   return (
     <div className="min-h-screen  flex flex-col bg-[url(/logo.jpg)] text-white bg-cover bg-center">

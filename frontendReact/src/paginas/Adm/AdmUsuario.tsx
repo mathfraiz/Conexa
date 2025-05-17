@@ -34,7 +34,7 @@ const AdmUsuario = () => {
     null
   );
 
-  const { usuario } = useAuth();
+  const { usuario,token } = useAuth();
 
   const carregarUsuarios = async () => {
     try {
@@ -66,6 +66,7 @@ const AdmUsuario = () => {
   const deletarUsuario = async (id: number) => {
     try {
       const resp = await fetch(`http://localhost:3000/usuario/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
         method: "DELETE",
       });
       if (resp.ok) {
