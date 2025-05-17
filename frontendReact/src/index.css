@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -8,4 +9,9 @@
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradientShift 5s ease infinite;
+}
+
+.active-feedback {
+  transform: scale(0.97) translateY(1px);
+  filter: drop-shadow(0 0 6px #f9a8d4);
 }
