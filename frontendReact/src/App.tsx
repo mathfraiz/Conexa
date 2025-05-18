@@ -10,10 +10,10 @@ import CriarEvento from "./paginas/cadastroEvento/cadastroEvento";
 import Index from "./paginas/index";
 import AdmUsuario from "./paginas/Adm/admUsuario";
 import Evento from "./paginas/Evento/Evento";
-import AdmEvento from "./paginas/Adm/admEvento";
+import AdmEvento from "./paginas/Adm/AdmEvento";
 import UsuarioEventos from "./paginas/usuario/usuarioEventos/UsuarioEventos";
 import ConfiguracoesAdm from "./paginas/Adm/ConfiguracoesAdm";
-
+import PaginaInicialAdmin from "./paginas/Adm/PaginaInicialAdm";
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/admin" element={<PaginaInicialAdmin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/recuperação" element={<RecuperacaoSenha />} />

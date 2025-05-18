@@ -6,6 +6,8 @@ import BarraLateral from "../../componentes/BarraLateral.tsx";
 import { useAuth } from "../../contexts/AuthContext.tsx";
 import { useNavigate } from "react-router-dom";
 import FiltroUsuario from "../../componentes/FiltroUsuario.tsx";
+import Rodape from "../../componentes/Rodape";
+
 
 interface Usuario {
   email: string;
@@ -283,6 +285,7 @@ const AdmUsuario = () => {
         </div>
       )}
     </div>
+    
   );
 };
 

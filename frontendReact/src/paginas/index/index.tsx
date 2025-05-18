@@ -14,7 +14,7 @@ const Index = () => {
       <BarraLateral isOpen={sidebarOpen} />
 
       <main
-        className={`flex-1 pt-28 px-6 md:px-16 transition-all duration-300 ${
+        className={`flex-1 pt-16 px-6 md:px-16 transition-all duration-300 ${
           sidebarOpen ? "ml-64" : "ml-0"
         }`}
       >
