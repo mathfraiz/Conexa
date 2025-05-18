@@ -195,5 +195,21 @@ routerEvento.put(
     }
   }
 );
+// EXPORTAR EVENTOS
+routerEvento.get("/evento/exportar", authenticate, async (req, res) => {
+  try {
+    if (req.userTipo !== "admin") {
+      return res.status(403).json({ erro: "Acesso negado" });
+    }
+
+    const eventos = await Evento.findAllEvento(); // ou Evento.encontrarTodos() se você tiver esse nome
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Content-Disposition", "attachment; filename=eventos.json");
+    res.status(200).send(JSON.stringify(eventos, null, 2));
+  } catch (err) {
+    res.status(500).json({ erro: "Erro ao exportar eventos", detalhes: err.message });
+  }
+});
+
 
 export default routerEvento;

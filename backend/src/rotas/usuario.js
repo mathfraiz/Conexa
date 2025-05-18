@@ -116,7 +116,7 @@ routerUsuario.put(
     }
 
     try {
-      const { nome, email, telefone,senha, tipo } = req.body;
+      const { nome, email, telefone, senha, tipo } = req.body;
       const imagem = req.file?.buffer || null;
 
       const usuarioAtualizado = await Usuario.atualizarUsuario(
@@ -169,4 +169,22 @@ routerUsuario.get("/usuario/:id", async (req, res) => {
     res.status(500).json({ erro: "Erro ao buscar usuário" });
   }
 });
+// EXPORTAR USUÁRIOS
+routerUsuario.get("/usuario/exportar", authenticate, async (req, res) => {
+  try {
+    if (req.userTipo !== "admin") {
+      return res.status(403).json({ erro: "Acesso negado" });
+    }
+
+    const usuarios = await Usuario.encontrarTodos();
+    const json = JSON.stringify(usuarios, null, 2);
+
+    res.setHeader("Content-Disposition", "attachment; filename=usuarios.json");
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.status(200).send(json);
+  } catch (err) {
+    res.status(500).json({ erro: "Erro ao exportar usuários", detalhes: err.message });
+  }
+});
+
 export default routerUsuario;

@@ -55,12 +55,13 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
           >
             Gerenciar Eventos
           </Link>
-          <Link
-            to="#"
-            className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
-          >
-            Configurações
-          </Link>
+<Link
+  to="/configuracoes"
+  className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
+>
+  Configurações
+</Link>
+
         </>
       ) : tipo === "usuario" ? (
         <Link

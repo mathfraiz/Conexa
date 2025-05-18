@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -8,4 +9,56 @@
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradientShift 5s ease infinite;
+}
+
+.modo-escuro {
+  background-color: #9333ea;
+  color: #f5f5f5;
+}
+
+/* ---------- BLOQUINHOS E CAMPOS ----------- */
+.modo-escuro .bg-white {
+  background-color: #7e22ce !important;
+}
+.modo-escuro .bg-purple-100 {
+  background-color: #a855f7 !important;
+}
+.modo-escuro input,
+.modo-escuro select,
+.modo-escuro textarea {
+  background-color: #7e22ce;
+  color: white;
+  border-color: #c084fc;
+}
+
+/* ---------- TEXTOS ESCUROS EM GERAL ---------- */
+.modo-escuro .text-gray-700,
+.modo-escuro .text-gray-600 {
+  color: #e9d5ff !important;
+}
+.modo-escuro .text-purple-700 {
+  color: #f5e8ff !important;
+}
+.modo-escuro h1,
+.modo-escuro h2,
+.modo-escuro h3 {
+  color: #ffffff !important;
+}
+.modo-escuro p,
+.modo-escuro label,
+.modo-escuro span,
+.modo-escuro li {
+  color: #f3e8ff !important;
+}
+
+.modo-escuro .frase-impacto {
+  background-color: #6b21a8 !important;
+  color: #f5f5f5 !important;
+}
+
+.modo-escuro .preservar-cor {
+  color: #4c1d95 !important; 
+}
+.modo-escuro .preservar-cor-gray {
+  color: #4b5563 !important; 
 }
