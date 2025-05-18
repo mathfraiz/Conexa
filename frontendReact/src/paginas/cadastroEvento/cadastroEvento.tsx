@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-
+import BarraLateral from "../../componentes/BarraLateral";
 const CriarEvento = () => {
   const form = new FormData();
   const { usuario, token } = useAuth();
@@ -160,25 +160,7 @@ const CriarEvento = () => {
         />
       </div>
 
-      <aside
-        className={`fixed top-16 left-0 z-40 h-full bg-purple-600 w-60 p-4 transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full w-0"
-        }`}
-      >
-        <Link
-          to="/cadastroEvento"
-          className="block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
-        >
-          Criar Evento
-        </Link>
-        {/* Adicione mais links se quiser */}
-        <Link
-          to={"/eventos/usuario"}
-          className=" block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
-        >
-          Meus Eventos
-        </Link>
-      </aside>
+<BarraLateral isOpen={sidebarOpen} />
 
       <div
         className={`bg-[url(/logo.jpg)] min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-200 p-6 bg-cover bg-center bg-no-repeat transition-all duration-300 ${
