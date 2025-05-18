@@ -180,11 +180,12 @@ routerUsuario.get("/usuario/exportar", authenticate, async (req, res) => {
     const json = JSON.stringify(usuarios, null, 2);
 
     res.setHeader("Content-Disposition", "attachment; filename=usuarios.json");
-    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader("Content-Type", "application/json");
     res.status(200).send(json);
   } catch (err) {
     res.status(500).json({ erro: "Erro ao exportar usuários", detalhes: err.message });
   }
 });
+
 
 export default routerUsuario;
