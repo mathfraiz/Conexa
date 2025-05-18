@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useSessionStorage from "../../hook/useSessionStorage";
 import { useAuth } from "../contexts/AuthContext";
 
 interface Props {
@@ -9,17 +8,8 @@ interface Props {
 
 const BarraLateral: React.FC<Props> = ({ isOpen }) => {
   const { usuario } = useAuth();
-  // const [usuario,setUsuarioSession] = useSessionStorage<any>("usuario", {
-  //   id: 0,
-  //   nome: "",
-  //   email: "",
-  //   senha: "",
-  //   telefone: "",
-  //   tipo: "",
-  //   imagem_perfil: "",
-  // });
-
   const [tipo, setTipo] = useState("");
+  const [modoEscuro, setModoEscuro] = useState(false);
 
   useEffect(() => {
     if (usuario && usuario.tipo) {
@@ -27,50 +17,92 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
     }
   }, [usuario]);
 
+  useEffect(() => {
+    const isAtivado = localStorage.getItem("modoEscuro") === "true";
+    setModoEscuro(isAtivado);
+    if (isAtivado) {
+      document.documentElement.classList.add("modo-escuro");
+    }
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (modoEscuro) {
+      root.classList.add("modo-escuro");
+    } else {
+      root.classList.remove("modo-escuro");
+    }
+    localStorage.setItem("modoEscuro", JSON.stringify(modoEscuro));
+  }, [modoEscuro]);
+
   const isAdmin = tipo === "admin";
 
   return (
     <aside
-      className={`fixed top-16 left-0 z-40 h-full bg-purple-600 w-60 p-4 transition-transform duration-300 ${
+      className={`fixed top-16 left-0 z-40 h-full w-60 p-6 bg-white shadow-xl transition-transform duration-300 border-r-2 border-purple-300 flex flex-col justify-between ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      {isAdmin ? (
-        <>
-          <Link
-            to="/"
-            className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
-          >
-            Página Inicial
-          </Link>
-          <Link
-            to="/admusuarios"
-            className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
-          >
-            Gerenciar Usuarios
-          </Link>
-          <Link
-            to="/admEventos"
-            className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
-          >
-            Gerenciar Eventos
-          </Link>
-<Link
-  to="/configuracoes"
-  className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
->
-  Configurações
-</Link>
+      <div className="flex flex-col gap-4">
+        {isAdmin ? (
+          <>
+            <Link
+              to="/"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Página Inicial
+            </Link>
+            <Link
+              to="/admusuarios"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Gerenciar Usuários
+            </Link>
+            <Link
+              to="/admeventos"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Gerenciar Eventos
+            </Link>
+            <Link
+              to="/configuracoes"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Configurações
+            </Link>
+          </>
+        ) : tipo === "usuario" ? (
+          <>
+            <Link
+              to="/cadastroEvento"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Criar Evento
+            </Link>
+            <Link
+              to="/eventos/usuario"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Meus Eventos
+            </Link>
+          </>
+        ) : null}
+      </div>
 
-        </>
-      ) : tipo === "usuario" ? (
-        <Link
-          to="/cadastroEvento"
-          className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
+      {/* Botão Modo Escuro */}
+      <div className="pt-6 mt-2 mb-16 border-t border-purple-200">
+        <span className="text-sm font-semibold text-purple-700 mb-2 block">
+          Modo Escuro
+        </span>
+        <div
+          onClick={() => setModoEscuro(!modoEscuro)}
+          className={`w-12 h-6 flex items-center rounded-full cursor-pointer p-1 transition duration-300 ${
+            modoEscuro ? "bg-purple-700 justify-end" : "bg-purple-300 justify-start"
+          }`}
         >
-          Criar Evento
-        </Link>
-      ) : null}
+          <div className="w-4 h-4 bg-white rounded-full shadow-md transition-all duration-300" />
+        </div>
+      </div>
     </aside>
   );
 };

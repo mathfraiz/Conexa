@@ -1,10 +1,23 @@
 import React, { useState } from "react";
+import { Evento } from "../types/Evento";
 
-const FiltroEventos = ({ eventosList, setEventos }) => {
+interface Props {
+  eventosList: Evento[];
+  setEventos: React.Dispatch<React.SetStateAction<Evento[]>>;
+  sidebarAberta: boolean;
+}
+
+interface Props {
+  eventosList: Evento[];
+  setEventos: React.Dispatch<React.SetStateAction<Evento[]>>;
+  sidebarAberta: boolean;
+}
+
+const FiltroEventos: React.FC<Props> = ({ eventosList, setEventos, sidebarAberta }) => {
   const [campoSelecionado, setCampoSelecionado] = useState("nome");
   const [valorFiltro, setValorFiltro] = useState("");
 
-  const handleFiltroChange = (valor) => {
+  const handleFiltroChange = (valor: string) => {
     setValorFiltro(valor);
 
     if (valor.trim() === "") {
@@ -12,9 +25,9 @@ const FiltroEventos = ({ eventosList, setEventos }) => {
       return;
     }
 
-    const filtrados = eventosList.filter((ev) => {
-      const valorLower = valor.toLowerCase();
+    const valorLower = valor.toLowerCase();
 
+    const filtrados = eventosList.filter((ev) => {
       switch (campoSelecionado) {
         case "id":
           return ev.id.toString().includes(valorLower);
@@ -35,15 +48,15 @@ const FiltroEventos = ({ eventosList, setEventos }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 mb-8 items-center">
-      <div className="flex gap-4 flex-wrap justify-center bg-amber-300 rounded">
+    <div className={`transition-all duration-300 mb-4 ${sidebarAberta ? "ml-64" : "ml-0"}`}>
+      <div className="flex flex-col md:flex-row justify-center items-center gap-4 p-4 bg-white shadow-md rounded-2xl mx-4 md:mx-16">
         <select
-          className="text-black px-2 py-1 rounded"
+          className="w-32 px-4 py-2 rounded-lg border border-purple-700 text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 transition"
           value={campoSelecionado}
           onChange={(e) => {
             setCampoSelecionado(e.target.value);
-            setValorFiltro(""); // limpa valor ao trocar campo
-            setEventos(eventosList); // reseta lista
+            setValorFiltro("");
+            setEventos(eventosList);
           }}
         >
           <option value="id">ID</option>
@@ -56,7 +69,7 @@ const FiltroEventos = ({ eventosList, setEventos }) => {
         {campoSelecionado === "data" ? (
           <input
             type="date"
-            className="text-black px-2 py-1 rounded"
+            className="px-4 py-2 rounded-lg border border-purple-700 text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 transition"
             value={valorFiltro}
             onChange={(e) => handleFiltroChange(e.target.value)}
           />
@@ -64,14 +77,22 @@ const FiltroEventos = ({ eventosList, setEventos }) => {
           <input
             type="text"
             placeholder={`Filtrar por ${campoSelecionado}`}
-            className="text-black  px-2 py-1 rounded"
+            className="px-4 py-2 rounded-lg border border-purple-700 text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 transition w-64"
             value={valorFiltro}
             onChange={(e) => handleFiltroChange(e.target.value)}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
+            onClick={(e) => e.stopPropagation()}
           />
         )}
+
+        <button
+          onClick={() => {
+            setValorFiltro("");
+            setEventos(eventosList);
+          }}
+          className="bg-purple-700 hover:bg-purple-800 text-white px-6 py-2 rounded-lg transition"
+        >
+          Limpar Filtro
+        </button>
       </div>
     </div>
   );

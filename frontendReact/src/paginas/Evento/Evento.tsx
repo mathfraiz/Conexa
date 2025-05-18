@@ -4,6 +4,8 @@ import MapaEndereco from "../../componentes/MapEndereco";
 import Rodape from "../../componentes/Rodape";
 import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
+import BarraLateral from "../../componentes/BarraLateral";
+
 
 interface Evento {
   id: number;
@@ -254,25 +256,8 @@ const Evento = () => {
   return (
     <div className="flex flex-col min-h-screen bg-purple-50">
       <Navbar onToggleSidebar={toggleSidebar} />
-      <aside
-        className={`fixed top-16 left-0 z-40 h-full bg-purple-600 w-60 p-4 transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full w-0"
-        }`}
-      >
-        <Link
-          to="/cadastroEvento"
-          className="block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
-        >
-          Criar Evento
-        </Link>
-        {/* Adicione mais links se quiser */}
-        <Link
-          to={"/eventos/usuario"}
-          className=" block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
-        >
-          Meus Eventos
-        </Link>
-      </aside>
+<BarraLateral isOpen={sidebarOpen} />
+
 
       <div
         className={`flex-1 overflow-y-auto p-6 transition-all duration-300 ${

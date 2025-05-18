@@ -92,7 +92,8 @@ const AdmEvento = () => {
       <Navbar onToggleSidebar={() => setSidebarAberta(!sidebarAberta)} />
       <BarraLateral isOpen={sidebarAberta} />
 
-      <FiltroEventos eventosList={EventoList} setEventos={setEventos} />
+<FiltroEventos eventosList={EventoList} setEventos={setEventos} sidebarAberta={sidebarAberta} />
+
 
       <div
         className={`bg-white rounded-3xl shadow-2xl p-8 transition-all duration-300 ${

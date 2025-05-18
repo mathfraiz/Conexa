@@ -5,6 +5,7 @@ import ModalEdicaoUsuario from "./ModalEdicaoUsuario.tsx";
 import BarraLateral from "../../componentes/BarraLateral.tsx";
 import { useAuth } from "../../contexts/AuthContext.tsx";
 import { useNavigate } from "react-router-dom";
+import FiltroUsuario from "../../componentes/FiltroUsuario.tsx";
 
 interface Usuario {
   email: string;
@@ -117,6 +118,7 @@ const AdmUsuario = () => {
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen ">
       <Navbar onToggleSidebar={() => setSidebarAberta(!sidebarAberta)} />
       <BarraLateral isOpen={sidebarAberta} />
+<FiltroUsuario usuariosList={usuarios} setUsuarios={setUsuarios} sidebarAberta={sidebarAberta} />
 
       <div
         className={` w-90% bg-white rounded-3xl shadow-2xl p-8 transition-all duration-300 ${

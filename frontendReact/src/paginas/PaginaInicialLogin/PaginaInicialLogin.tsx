@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
 import FiltroEventos from "../../componentes/FiltroEventos";
+import BarraLateral from "../../componentes/BarraLateral";
 
 interface Evento {
   id: number;
@@ -75,26 +76,7 @@ const PaginaInicialLogin = () => {
 
       <div className="flex pt-8 h-full">
         {/* Sidebar */}
-
-        <aside
-          className={`fixed top-16 left-0 z-40 h-full bg-purple-600 w-60 p-4 transition-transform duration-300 ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full w-0"
-          }`}
-        >
-          <Link
-            to="/cadastroEvento"
-            className="block bg-purple-700 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
-          >
-            Criar Evento
-          </Link>
-          {/* Adicione mais links se quiser */}
-          <Link
-            to={"/eventos/usuario"}
-            className=" block bg-purple-700 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
-          >
-            Meus Eventos
-          </Link>
-        </aside>
+<BarraLateral isOpen={sidebarOpen} />
 
         {/* Conteúdo */}
         <main
@@ -105,11 +87,11 @@ const PaginaInicialLogin = () => {
           {mensagem && (
             <span className="bg-yellow-500 text-white text-lg">{mensagem}</span>
           )}
-
-          <FiltroEventos
-            eventosList={eventosList}
-            setEventos={setEventos}
-          ></FiltroEventos>
+<FiltroEventos
+  eventosList={eventosList}
+  setEventos={setEventos}
+  sidebarAberta={sidebarOpen}
+/>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {eventos1.map((evento) => (

@@ -17,11 +17,10 @@ interface Evento {
   endereco_id: number;
   criado_por: number;
 }
+
 export default function UsuarioEventos() {
   const [eventos, setEventos] = useState<Evento[]>([]);
-  const [eventoParaDeletar, setEventoParaDeletar] = useState<Evento | null>(
-    null
-  );
+  const [eventoParaDeletar, setEventoParaDeletar] = useState<Evento | null>(null);
   const [eventoParaEditar, setEventoParaEditar] = useState<Evento | null>(null);
   const navigate = useNavigate();
   const [usuario, setUsuarioSession] = useSessionStorage<any>("usuario", {
@@ -33,140 +32,102 @@ export default function UsuarioEventos() {
     tipo: "",
     imagem_perfil: "",
   });
-  useEffect(() => {
-    if (usuario.id === 0 || usuario.tipo !== "usuario") {
-      navigate("/login");
-    }
-  }, [usuario]);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
+  useEffect(() => {
+    if (usuario.id === 0 || usuario.tipo !== "usuario") {
+      navigate("/login");
+    } else {
+      buscarEventos();
+    }
+  }, [usuario]);
+
   const buscarEventos = async () => {
     try {
       const token = sessionStorage.getItem("token");
-      console.log(usuario);
-      const resposta = await fetch(
-        `http://localhost:3000/eventos/usuario/${usuario.id}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const resposta = await fetch(`http://localhost:3000/eventos/usuario/${usuario.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (resposta.ok) {
         const dados = await resposta.json();
         setEventos(dados);
-        console.log(dados);
       }
     } catch (erro) {
-      console.error("Erro ao buscar eeeeeeeeeeeee:", erro);
+      console.error("Erro ao buscar eventos:", erro);
     }
   };
 
   const confirmarDelecao = async () => {
     if (eventoParaDeletar) {
       const token = sessionStorage.getItem("token");
-
-      const resposta = await fetch(
-        `http://localhost:3000/evento/${eventoParaDeletar.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      const resposta = await fetch(`http://localhost:3000/evento/${eventoParaDeletar.id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (resposta.ok) {
         setEventoParaDeletar(null);
         buscarEventos();
-      } else {
-        console.error("Erro ao deletar evento");
       }
     }
   };
 
-  useEffect(() => {
-    buscarEventos();
-  }, []);
-
   return (
-    <div
-      className={`p-6 bg-[url(/logo.jpg)] bg-cover bg-center bg-no-repeat h-screen `}
-    >
-      <div>
-        <Navbar onToggleSidebar={toggleSidebar} />
-      </div>
+    <div className="min-h-screen bg-[url(/logo.jpg)] bg-cover bg-center bg-no-repeat flex flex-col">
+      <Navbar onToggleSidebar={toggleSidebar} />
 
-      <aside
-        className={`fixed top-16 left-0 z-40 h-full bg-purple-600 w-60 p-4 transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full w-0"
-        }`}
-      >
-        <Link
-          to="/cadastroEvento"
-          className="block bg-purple-300 text-black font-semibold  py-2 rounded shadow hover:bg-purple-200 mb-4"
-        >
-          Criar Evento
-        </Link>
-        {/* Adicione mais links se quiser */}
+      <aside className={`fixed top-16 left-0 z-40 h-full w-60 p-6 bg-white shadow-xl transition-transform duration-300 border-r-2 border-purple-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="flex flex-col gap-4">
+          <Link to="/cadastroEvento" className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition">
+            Criar Evento
+          </Link>
+          <Link to="/eventos/usuario" className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition">
+            Meus Eventos
+          </Link>
+        </div>
       </aside>
 
-      <div
-        className={`flex-1 overflow-y-auto p-6 transition-all duration-300 ${
-          sidebarOpen ? "ml-60" : "ml-0 "
-        }`}
-      >
-        <h1 className="text-2xl font-bold mb-4">Meus Eventos</h1>
+      <main className={`pt-24 px-6 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-0"}`}>
+        <h1 className="text-3xl font-extrabold text-white drop-shadow mb-8">Meus Eventos</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {eventos.map((evento) => (
             <MotionContainer
               key={evento.id}
               height="h-64"
               className="rounded-2xl shadow-xl bg-white bg-blend-overlay hover:shadow-2xl transition relative duration-700 transform hover:scale-105"
-              onClick={() => {
-                navigate(`/eventos/${evento.id}`);
-              }}
+              onClick={() => navigate(`/eventos/${evento.id}`)}
             >
-              <div className="absolute inset-0 bg-black bg-opacity-30 rounded-2xl">
-                <img
-                  src={evento.imagem_evento || ""}
-                  alt={evento.nome}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>
-              <div className="relative z-10 flex flex-col justify-between h-full">
+              <img
+                src={evento.imagem_evento || ""}
+                alt={evento.nome}
+                className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-40 rounded-2xl flex flex-col justify-between p-4">
                 <div>
-                  <h2 className="text-xl font-bold mb-2">
-                    <span className="bg-yellow-200 text-black px-2 rounded">
-                      {evento.nome}
-                    </span>
-                  </h2>
-
-                  <p className="text-white text-sm mb-1 drop-shadow">
-                    <span className="bg-yellow-200 text-black px-2 rounded">
-                      {new Date(evento.data).toLocaleDateString()} às{" "}
-                      {evento.hora}
-                    </span>
+                  <h2 className="text-lg font-bold text-white mb-2 drop-shadow">{evento.nome}</h2>
+                  <p className="text-sm text-white drop-shadow">
+                    {new Date(evento.data).toLocaleDateString()} - {evento.hora}
                   </p>
-                  <p className="text-white text-sm drop-shadow">
-                    <span className="bg-yellow-200 text-black px-2 rounded">
-                      {evento.descricao.length > 60
-                        ? evento.descricao.slice(0, 60) + "..."
-                        : evento.descricao}
-                    </span>
+                  <p className="text-sm text-white mt-1 drop-shadow">
+                    {evento.descricao.length > 60 ? evento.descricao.slice(0, 60) + "..." : evento.descricao}
                   </p>
                 </div>
-                <div className="flex justify-end gap-2 mt-4">
+                <div className="flex justify-end gap-2">
                   <button
-                    onClick={() => setEventoParaEditar(evento)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEventoParaEditar(evento);
+                    }}
                     className="bg-yellow-400 text-white px-3 py-1 rounded shadow hover:bg-yellow-500"
                   >
                     Editar
                   </button>
                   <button
-                    onClick={() => setEventoParaDeletar(evento)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEventoParaDeletar(evento);
+                    }}
                     className="bg-red-500 text-white px-3 py-1 rounded shadow hover:bg-red-600"
                   >
                     Excluir
@@ -176,7 +137,7 @@ export default function UsuarioEventos() {
             </MotionContainer>
           ))}
         </div>
-      </div>
+      </main>
 
       {eventoParaEditar && (
         <ModalEdicaoEvento
@@ -191,13 +152,8 @@ export default function UsuarioEventos() {
       {eventoParaDeletar && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl w-96 text-center">
-            <h2 className="text-xl font-semibold text-red-600 mb-4">
-              Confirmar Deleção
-            </h2>
-            <p className="mb-6">
-              Tem certeza que deseja deletar o evento{" "}
-              <strong>{eventoParaDeletar.nome}</strong>?
-            </p>
+            <h2 className="text-xl font-semibold text-red-600 mb-4">Confirmar Deleção</h2>
+            <p className="mb-6">Tem certeza que deseja deletar o evento <strong>{eventoParaDeletar.nome}</strong>?</p>
             <div className="flex justify-center gap-4">
               <button
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-lg transition"
