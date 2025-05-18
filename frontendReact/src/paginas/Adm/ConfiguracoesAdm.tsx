@@ -62,7 +62,29 @@ const ConfiguracoesAdm = () => {
           Configurações do Administrador
         </h1>
 
- 
+        <section className="bg-white modo-escuro:bg-[#2a2a2a] rounded-xl shadow-xl p-6 mb-6">
+          <h2 className="text-xl font-bold mb-4">Sistema</h2>
+          <div className="mb-4">
+            <label className="block mb-1">
+              Limitar criação de eventos após:
+            </label>
+            <input
+              type="time"
+              value={limiteHorario}
+              onChange={(e) => setLimiteHorario(e.target.value)}
+              className="border rounded-md px-3 py-1 modo-escuro:bg-[#333] modo-escuro:text-white modo-escuro:border-gray-500"
+            />
+          </div>
+          <div className="flex items-center gap-4">
+            <label>Permitir novos cadastros?</label>
+            <input
+              type="checkbox"
+              checked={cadastroHabilitado}
+              onChange={() => setCadastroHabilitado(!cadastroHabilitado)}
+              className="w-5 h-5"
+            />
+          </div>
+        </section>
 
         <section className="bg-white modo-escuro:bg-[#2a2a2a] rounded-xl shadow-xl p-6 mb-6">
           <h2 className="text-xl font-bold mb-4">Preferências</h2>
