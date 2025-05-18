@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../componentes/BarraNav.tsx";
 import ModalNovoUsuario from "./ModalNovoUsuario.tsx";
-import ModalEdicaoUsuario from "./ModalEdicaoUsuario.tsx";
+import ModalEdicaoUsuario from "../../componentes/ModalEdicaoUsuario";
 import BarraLateral from "../../componentes/BarraLateral.tsx";
 import { useAuth } from "../../contexts/AuthContext.tsx";
 import { useNavigate } from "react-router-dom";
 import FiltroUsuario from "../../componentes/FiltroUsuario.tsx";
 import Rodape from "../../componentes/Rodape";
-
 
 interface Usuario {
   email: string;
@@ -54,7 +53,6 @@ const AdmUsuario = () => {
   };
 
   useEffect(() => {
-    console.log("teste");
     console.log(usuario);
     if (!usuario) {
       navigate("/login");
@@ -120,7 +118,11 @@ const AdmUsuario = () => {
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen ">
       <Navbar onToggleSidebar={() => setSidebarAberta(!sidebarAberta)} />
       <BarraLateral isOpen={sidebarAberta} />
-<FiltroUsuario usuariosList={usuarios} setUsuarios={setUsuarios} sidebarAberta={sidebarAberta} />
+      <FiltroUsuario
+        usuariosList={usuarios}
+        setUsuarios={setUsuarios}
+        sidebarAberta={sidebarAberta}
+      />
 
       <div
         className={` w-90% bg-white rounded-3xl shadow-2xl p-8 transition-all duration-300 ${
@@ -285,7 +287,6 @@ const AdmUsuario = () => {
         </div>
       )}
     </div>
-    
   );
 };
 

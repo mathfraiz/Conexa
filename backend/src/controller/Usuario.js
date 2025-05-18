@@ -59,7 +59,16 @@ class Usuario {
     }
   }
 
-  static async atualizarUsuario(id, nome, email, telefone, senha, tipo, foto) {
+  static async atualizarUsuario(
+    id,
+    nome,
+    email,
+    telefone,
+    senha,
+    senhaNova,
+    tipo,
+    foto
+  ) {
     console.log("controller");
     try {
       let campos = [];
@@ -71,12 +80,22 @@ class Usuario {
 
       // Se foi fornecida uma nova senha, criptografa e adiciona ao update
       if (senha && senha.trim() !== "") {
-        const senhaCriptografada = await bcrypt.hash(senha, 10);
-        campos.push("senha = ?");
-        valores.push(senhaCriptografada);
+        console.log("verifica senha");
+        console.log(this.encontrarUsuarioPorId(id).senha !== senha);
+        console.log();
+        console.log("verifica senha");
+
+        const usuario = await this.encontrarUsuarioPorId(id);
+
+        const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+
+        if (senhaCorreta) {
+          const senhaCriptografada = await bcrypt.hash(senhaNova, 10);
+          campos.push("senha = ?");
+          valores.push(senhaCriptografada);
+        }
       }
 
-      // Se foi fornecida uma nova imagem de perfil
       if (foto) {
         campos.push("imagem_perfil = ?");
         valores.push(foto);
@@ -89,7 +108,14 @@ class Usuario {
       console.log(valores);
 
       const [result] = await pool.query(sql, valores);
-      return result.affectedRows;
+      console.log("controller1");
+      console.log(result);
+      console.log("controller2");
+
+      if (result.affectedRows) {
+        return this.encontrarUsuarioPorId(id);
+      }
+      return result;
     } catch (error) {
       console.log("Erro ao atualizar usuário:", error.message);
       return 0;

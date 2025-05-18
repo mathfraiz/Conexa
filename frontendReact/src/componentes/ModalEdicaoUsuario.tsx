@@ -1,9 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
+interface Usuario {
+  id: number;
+  nome: string;
+  email: string;
+  telefone: string;
+  tipo: string;
+  imagem_perfil: string | null;
+}
+
 interface ModalEdicaoUsuarioProps {
   isModalOpen: boolean;
   onClose: (foiSalvo: boolean) => void;
+  user?: Usuario | null;
 }
 
 const formatarTelefone = (valor: string) => {
@@ -15,17 +25,35 @@ const formatarTelefone = (valor: string) => {
   }
 };
 
+const base64ToFile = (base64: string, filename: string): File => {
+  const arr = base64.split(",");
+  const mime = arr[0].match(/:(.*?);/)?.[1] || "image/png";
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) u8arr[n] = bstr.charCodeAt(n);
+  return new File([u8arr], filename, { type: mime });
+};
+
 const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
   isModalOpen,
   onClose,
+  user,
 }) => {
-  const { usuario, token, login } = useAuth();
+  const { usuario: usuarioAuth, token, login } = useAuth();
   const modalRef = useRef<HTMLDivElement>(null);
+  let usuario;
+  if (user) {
+    usuario = user;
+  } else {
+    usuario = usuarioAuth;
+  }
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [imagemPerfil, setImagemPerfil] = useState<File | string | null>(null);
+  const [imagemPerfil, setImagemPerfil] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [alterarSenha, setAlterarSenha] = useState(false);
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
@@ -38,7 +66,14 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       setNome(usuario.nome);
       setEmail(usuario.email);
       setTelefone(formatarTelefone(usuario.telefone || ""));
-      setImagemPerfil(usuario.imagem_perfil || null);
+
+      if (usuario.imagem_perfil?.startsWith("data:image")) {
+        setPreview(usuario.imagem_perfil); // usado para exibir
+        const file = base64ToFile(usuario.imagem_perfil, "perfil.jpg");
+        setImagemPerfil(file); // usado no formData
+      } else {
+        setImagemPerfil(null);
+      }
     }
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -56,6 +91,16 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
     };
   }, [onClose, usuario]);
 
+  useEffect(() => {
+    if (imagemPerfil instanceof File) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result as string);
+      reader.readAsDataURL(imagemPerfil);
+    } else {
+      setPreview(null);
+    }
+  }, [imagemPerfil]);
+  console.log(imagemPerfil);
   if (!isModalOpen || !usuario) return null;
 
   const validarNome = (nome: string) => /^[A-Za-zÀ-ÿ\s]+$/.test(nome);
@@ -73,6 +118,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const novosErros: { [key: string]: boolean } = {
       nome: !validarNome(nome),
       email: !validarEmail(email),
@@ -91,50 +137,43 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       form.append("nome", nome);
       form.append("email", email);
       form.append("telefone", telefone);
-      form.append("senha", alterarSenha ? novaSenha : senhaAtual);
+      if (alterarSenha) {
+        form.append("senha", senhaAtual);
+        form.append("senhaNova", novaSenha);
+      }
+
       form.append("tipo", usuario.tipo);
-      if (imagemPerfil) {
+
+      if (imagemPerfil instanceof File) {
         form.append("imagem_perfil", imagemPerfil);
       }
-      console.log(token);
 
       const response = await fetch(
         `http://localhost:3000/usuario/${usuario.id}`,
         {
           method: "PUT",
           headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: form,
         }
       );
 
       if (response.ok) {
-        let imagemBase64 = "";
-
-        if (imagemPerfil instanceof File) {
-          imagemBase64 = await new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-              resolve(reader.result as string);
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(imagemPerfil);
-          });
-        } else if (typeof imagemPerfil === "string") {
-          imagemBase64 = imagemPerfil;
-        }
+        const resp = await response.json();
+        console.log("nome");
+        console.log(resp.nome);
         const dadosAtualizados = {
           ...usuario,
-          nome,
-          email,
-          telefone,
+          nome: resp.nome,
+          email: resp.email,
+          telefone: resp.telefone,
+          imagem_perfil: resp.imagem_perfil,
           
-          imagem_perfil: imagemBase64 ? imagemBase64 : "",
         };
+        console.log(resp);
 
-        console.log(dadosAtualizados);
-        login(dadosAtualizados, token!);
+        if (!user) login(dadosAtualizados, token!);
         onClose(true);
       }
     } catch (err) {
@@ -191,25 +230,30 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
           />
           {renderErro("telefone", "Telefone inválido. Ex: (41) 99999-9999")}
 
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-purple-700 font-semibold">
-              Deseja alterar a senha?
-            </span>
-            <button
-              type="button"
-              className="text-purple-600 hover:underline text-sm"
-              onClick={() => setAlterarSenha((prev) => !prev)}
-            >
-              {alterarSenha ? "Cancelar" : "Alterar"}
-            </button>
-          </div>
+          {(!user || user.id == usuarioAuth?.id) && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-purple-700 font-semibold">
+                Deseja alterar a senha?
+              </span>
+              <button
+                type="button"
+                className="text-white hover:underline hover:text-amber-500 text-sm"
+                onClick={() => setAlterarSenha((prev) => !prev)}
+              >
+                {alterarSenha ? "Cancelar" : "Alterar"}
+              </button>
+            </div>
+          )}
 
           {alterarSenha && (
             <>
               <input
                 type="password"
                 value={senhaAtual}
-                onChange={(e) => setSenhaAtual(e.target.value)}
+                onChange={(e) => {
+                  setSenhaAtual(e.target.value);
+                  console.log(e.target.value);
+                }}
                 placeholder="Senha Atual"
                 className={inputClass("senhaAtual")}
               />
@@ -218,7 +262,10 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
               <input
                 type="password"
                 value={novaSenha}
-                onChange={(e) => setNovaSenha(e.target.value)}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setNovaSenha(e.target.value);
+                }}
                 placeholder="Nova Senha"
                 className={inputClass("novaSenha")}
               />
@@ -230,7 +277,10 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
               <input
                 type="password"
                 value={confirmarSenha}
-                onChange={(e) => setConfirmarSenha(e.target.value)}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setConfirmarSenha(e.target.value);
+                }}
                 placeholder="Confirmar Nova Senha"
                 className={inputClass("confirmarSenha")}
               />
@@ -238,36 +288,42 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
             </>
           )}
 
-          <input
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              setImagemPerfil(file || null);
-            }}
-            className="w-full text-sm text-gray-500"
-            accept="image/*"
-          />
+          <div className="flex items-center gap-2">
+            {preview && (
+              <img
+                src={preview}
+                alt="Prévia"
+                className="w-24 h-24 object-cover rounded-xl border-2 border-purple-400 shadow-md"
+              />
+            )}
+
+            <label className="cursor-pointer bg-purple-100 text-purple-700 px-4 py-2 rounded-xl border border-purple-300 hover:bg-purple-200 transition">
+              Selecionar imagem
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setImagemPerfil(file);
+                  } else {
+                    setImagemPerfil(null);
+                  }
+                }}
+              />
+            </label>
+          </div>
 
           {imagemPerfil && (
             <div className="flex flex-col items-center">
-              <img
-                src={
-                  typeof imagemPerfil === "string"
-                    ? imagemPerfil
-                    : URL.createObjectURL(imagemPerfil)
-                }
-                alt="Preview"
-                className="w-24 h-24 rounded-full object-cover border-4 border-purple-500 shadow-md"
-              />
-              {typeof imagemPerfil !== "string" && (
-                <button
-                  type="button"
-                  onClick={() => setImagemPerfil(null)}
-                  className="text-orange-500 text-xs underline mt-2"
-                >
-                  Remover imagem
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => setImagemPerfil("vazio")}
+                className="text-orange-500 text-xs underline mt-2"
+              >
+                Remover imagem
+              </button>
             </div>
           )}
 

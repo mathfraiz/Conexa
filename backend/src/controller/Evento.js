@@ -36,7 +36,6 @@ const Evento = {
   async atualizarEvento(
     id,
     nome,
-    tema,
     descricao,
     descricao_completa,
     data,
@@ -45,9 +44,9 @@ const Evento = {
   ) {
     try {
       const [result] = await pool.query(
-        `UPDATE eventos SET nome = ?, tema = ?, descricao = ?, descricao_completa = ?, data = ?, hora = ?, imagem_evento = ?
+        `UPDATE eventos SET nome = ?,descricao = ?, descricao_completa = ?, data = ?, hora = ?, imagem_evento = ?
        WHERE id = ?`,
-        [nome, tema, descricao, descricao_completa, data, hora, imagem, id]
+        [nome, descricao, descricao_completa, data, hora, imagem, id]
       );
 
       return result.affectedRows > 0;

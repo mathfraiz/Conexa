@@ -32,6 +32,7 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
   const [descricaoCompleta, setDescricaoCompleta] = useState(
     evento.descricao_completa || ""
   );
+  console.log(data);
   const [imagem, setImagem] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,10 +45,12 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
     formData.append("hora", hora);
     formData.append("descricao", descricao);
     formData.append("descricao_completa", descricaoCompleta);
-    if (imagem) formData.append("imagem", imagem);
+    if (imagem) {
+      formData.append("imagem", imagem);
+    }
 
     try {
-      await fetch(`http://localhost:3000/eventos/${evento.id}`, {
+      await fetch(`http://localhost:3000/evento/${evento.id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -104,16 +107,26 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
             placeholder="Descrição completa"
           />
 
-          <span>
-            <img src={``} alt="" />
+          <div className="flex flex- items-center gap-2">
+            {imagem && (
+              <img
+                src={URL.createObjectURL(imagem)}
+                alt="Prévia"
+                className="w-24 h-24 object-cover rounded-xl border-2 border-purple-400 shadow-md"
+              />
+            )}
 
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImagem(e.target.files?.[0] || null)}
-              className="w-full text-sm text-gray-500"
-            />
-          </span>
+            <label className="cursor-pointer bg-purple-100 text-purple-700 px-4 py-2 rounded-xl border border-purple-300 hover:bg-purple-200 transition">
+              Selecionar imagem
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => setImagem(e.target.files?.[0] || null)}
+              />
+            </label>
+          </div>
+
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"

@@ -8,6 +8,7 @@ const routerUsuario = express.Router();
 
 // GET /usuarios
 routerUsuario.get("/usuario", async (req, res) => {
+  console.log("entrou no get usuarios");
   try {
     const usuarios = await Usuario.encontrarTodos();
     res.json(usuarios);
@@ -17,6 +18,7 @@ routerUsuario.get("/usuario", async (req, res) => {
 });
 
 routerUsuario.get("/usuario/me", authenticate, async (req, res) => {
+  console.log("entrou no get usuario/me");
   try {
     const usuario = await Usuario.encontrarUsuarioPorId(req.userId);
     if (!usuario) {
@@ -43,6 +45,7 @@ routerUsuario.post(
   upload.single("imagem_perfil"),
   async (req, res) => {
     try {
+      console.log("entrou no post usuario");
       const { nome, email, senha, telefone, tipo } = req.body;
       const foto = req.file?.buffer || null;
 
@@ -71,6 +74,7 @@ routerUsuario.post(
 );
 
 routerUsuario.post("/login", async (req, res) => {
+  console.log("entrou nop /login");
   const usuario = req.body;
 
   try {
@@ -106,6 +110,7 @@ routerUsuario.put(
   authenticate,
   upload.single("imagem_perfil"),
   async (req, res) => {
+    console.log("entrou no put usuario/id");
     const id = parseInt(req.params.id);
     console.log(id);
     console.log(req.userId);
@@ -116,7 +121,7 @@ routerUsuario.put(
     }
 
     try {
-      const { nome, email, telefone, senha, tipo } = req.body;
+      const { nome, email, telefone, senha, senhaNova, tipo } = req.body;
       const imagem = req.file?.buffer || null;
 
       const usuarioAtualizado = await Usuario.atualizarUsuario(
@@ -125,11 +130,21 @@ routerUsuario.put(
         email,
         telefone,
         senha,
+        senhaNova,
         tipo,
         imagem
       );
+      console.log("passou1");
+      if (usuarioAtualizado) {
+        if (usuarioAtualizado.imagem_perfil)
+          usuarioAtualizado.imagem_perfil = `data:image/jpeg;base64,${usuarioAtualizado.imagem_perfil.toString(
+            "base64"
+          )}`;
+      }
+      console.log("passou2");
 
-      res.json({ sucesso: true, atualizado: usuarioAtualizado });
+      console.log(usuarioAtualizado);
+      res.json(usuarioAtualizado);
     } catch (error) {
       console.log("Erro na rota PUT:", error);
       res.status(500).json({ erro: "Não foi possível atualizar o usuário" });
@@ -139,6 +154,7 @@ routerUsuario.put(
 
 // DELETE /usuarios/:id
 routerUsuario.delete("/usuario/:id", authenticate, async (req, res) => {
+  console.log("entrou no delete usuario");
   const id = parseInt(req.params.id);
 
   if (req.userTipo !== "admin" && req.userId !== id) {
@@ -155,6 +171,7 @@ routerUsuario.delete("/usuario/:id", authenticate, async (req, res) => {
 });
 
 routerUsuario.get("/usuario/:id", async (req, res) => {
+  console.log("entoru no get usuario/id");
   try {
     const id = req.params.id;
     const usuario = await Usuario.encontrarUsuarioPorId(id);
@@ -171,6 +188,7 @@ routerUsuario.get("/usuario/:id", async (req, res) => {
 });
 // EXPORTAR USUÁRIOS
 routerUsuario.get("/usuario/exportar", authenticate, async (req, res) => {
+  console.log("entrou no usuario/exportar");
   try {
     if (req.userTipo !== "admin") {
       return res.status(403).json({ erro: "Acesso negado" });
@@ -183,7 +201,9 @@ routerUsuario.get("/usuario/exportar", authenticate, async (req, res) => {
     res.setHeader("Content-Type", "application/json; charset=utf-8");
     res.status(200).send(json);
   } catch (err) {
-    res.status(500).json({ erro: "Erro ao exportar usuários", detalhes: err.message });
+    res
+      .status(500)
+      .json({ erro: "Erro ao exportar usuários", detalhes: err.message });
   }
 });
 

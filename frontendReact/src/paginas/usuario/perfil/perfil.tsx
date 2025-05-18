@@ -91,6 +91,7 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
         <ModalEdicaoUsuario
           isModalOpen={mostrarModal}
           onClose={handleCloseModal}
+          user={null}
         />
       )}
     </div>

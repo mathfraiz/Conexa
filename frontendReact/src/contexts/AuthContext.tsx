@@ -13,7 +13,7 @@ interface Usuario {
   email: string;
   tipo: string;
   telefone?: string;
-  imagem_perfil?: string;
+  imagem_perfil?: string | null;
 }
 
 interface AuthContextType {
