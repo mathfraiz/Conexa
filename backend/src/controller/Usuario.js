@@ -42,26 +42,22 @@ class Usuario {
     }
   }
 
-static async encontrarTodos() {
-  try {
-    const sql = `SELECT id, nome, email, telefone, tipo, imagem_perfil FROM usuario`;
-    const [rows] = await pool.query(sql);
-    const usuariosConvertidos = rows.map((user) => {
-      const { imagem_perfil, ...resto } = user;
-      return {
-        ...resto,
-        imagem_perfil: imagem_perfil
-          ? `data:image/jpeg;base64,${imagem_perfil.toString("base64")}`
+  static async encontrarTodos() {
+    try {
+      const sql = `SELECT * FROM usuario`;
+      const [rows] = await pool.query(sql);
+      const usuariosConvertidos = rows.map((user) => ({
+        ...user,
+        imagem_perfil: user.imagem_perfil
+          ? user.imagem_perfil.toString("base64")
           : null,
-      };
-    });
-    return usuariosConvertidos;
-  } catch (error) {
-    console.log("Erro ao buscar todos os usuários:", error.message);
-    return [];
+      }));
+      return usuariosConvertidos;
+    } catch (error) {
+      console.log("Erro ao buscar todos os usuários:", error.message);
+      return [];
+    }
   }
-}
-
 
   static async atualizarUsuario(id, nome, email, telefone, senha, tipo, foto) {
     console.log("controller");
