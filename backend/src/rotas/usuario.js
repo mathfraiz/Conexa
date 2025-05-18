@@ -6,16 +6,6 @@ import authenticate from "../middleware/authMiddleware.js";
 
 const routerUsuario = express.Router();
 
-// GET /usuarios
-routerUsuario.get("/usuario", async (req, res) => {
-  try {
-    const usuarios = await Usuario.encontrarTodos();
-    res.json(usuarios);
-  } catch {
-    res.status(500).json({ erro: "erro ao buscar todos os usuarios" });
-  }
-});
-
 routerUsuario.get("/usuario/me", authenticate, async (req, res) => {
   try {
     const usuario = await Usuario.encontrarUsuarioPorId(req.userId);
@@ -169,6 +159,7 @@ routerUsuario.get("/usuario/:id", async (req, res) => {
     res.status(500).json({ erro: "Erro ao buscar usuário" });
   }
 });
+
 // EXPORTAR USUÁRIOS
 routerUsuario.get("/usuario/exportar", authenticate, async (req, res) => {
   try {
@@ -177,7 +168,14 @@ routerUsuario.get("/usuario/exportar", authenticate, async (req, res) => {
     }
 
     const usuarios = await Usuario.encontrarTodos();
-    const json = JSON.stringify(usuarios, null, 2);
+
+    // Remover o campo de imagem do export
+    const usuariosSemImagem = usuarios.map((u) => {
+      const { imagem_perfil, ...resto } = u;
+      return resto;
+    });
+
+    const json = JSON.stringify(usuariosSemImagem, null, 2);
 
     res.setHeader("Content-Disposition", "attachment; filename=usuarios.json");
     res.setHeader("Content-Type", "application/json");
