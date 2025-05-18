@@ -406,19 +406,25 @@ const Cadastro: React.FC = () => {
               </div>
 
               {/* Nome */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Nome
-                </label>
-                <input
-                  type="text"
-                  placeholder="Digite seu nome"
-                  value={nome}
-                  onChange={handleNomeChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500"
-                  required
-                />
-              </div>
+<div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700">
+    Nome
+  </label>
+  <input
+    type="text"
+    placeholder="Digite seu nome"
+    value={nome}
+    onChange={handleNomeChange}
+    className={`mt-1 block w-full px-3 py-2 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500 ${
+      nomeErro ? "border-red-500 border-2" : "border border-gray-300"
+    }`}
+    required
+  />
+  {nomeErro && (
+    <p className="text-sm text-red-500 mt-2">{nomeErro}</p>
+  )}
+</div>
+
 
               {/* CEP */}
               {/* <div className="mb-4">
