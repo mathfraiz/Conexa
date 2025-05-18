@@ -83,14 +83,14 @@ const PaginaInicialLogin = () => {
         >
           <Link
             to="/cadastroEvento"
-            className="block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
+            className="block bg-purple-700 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
           >
             Criar Evento
           </Link>
           {/* Adicione mais links se quiser */}
           <Link
             to={"/eventos/usuario"}
-            className=" block bg-purple-700 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
+            className=" block bg-purple-700 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-300 mb-4 transition duration-700"
           >
             Meus Eventos
           </Link>
@@ -103,7 +103,7 @@ const PaginaInicialLogin = () => {
           }`}
         >
           {mensagem && (
-            <span className="bg-yellow-500 text-black text-lg">{mensagem}</span>
+            <span className="bg-yellow-500 text-white text-lg">{mensagem}</span>
           )}
 
           <FiltroEventos

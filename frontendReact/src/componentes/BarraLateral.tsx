@@ -8,7 +8,7 @@ interface Props {
 }
 
 const BarraLateral: React.FC<Props> = ({ isOpen }) => {
-  const {usuario} = useAuth()
+  const { usuario } = useAuth();
   // const [usuario,setUsuarioSession] = useSessionStorage<any>("usuario", {
   //   id: 0,
   //   nome: "",
@@ -18,7 +18,7 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
   //   tipo: "",
   //   imagem_perfil: "",
   // });
-  
+
   const [tipo, setTipo] = useState("");
 
   useEffect(() => {
@@ -37,27 +37,27 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
     >
       {isAdmin ? (
         <>
-          <Link 
+          <Link
             to="/"
-            className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
+            className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
           >
             Página Inicial
           </Link>
           <Link
             to="/admusuarios"
-            className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
+            className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
           >
             Gerenciar Usuarios
           </Link>
           <Link
             to="/admEventos"
-            className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
+            className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
           >
             Gerenciar Eventos
           </Link>
           <Link
             to="#"
-            className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
+            className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
           >
             Configurações
           </Link>
@@ -65,12 +65,11 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
       ) : tipo === "usuario" ? (
         <Link
           to="/cadastroEvento"
-          className="block bg-purple-300 text-black font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
+          className="block bg-purple-300 text-white font-semibold px-3 py-2 rounded shadow hover:bg-purple-200 mb-4"
         >
           Criar Evento
         </Link>
       ) : null}
-
     </aside>
   );
 };

@@ -180,7 +180,11 @@ const CriarEvento = () => {
         </Link>
       </aside>
 
-      <div className="bg-[url(/logo.jpg)] min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-200 p-6 bg-cover bg-center bg-no-repeat">
+      <div
+        className={`bg-[url(/logo.jpg)] min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-200 p-6 bg-cover bg-center bg-no-repeat transition-all duration-300 ${
+          sidebarOpen ? "ml-60 " : "ml-0 "
+        }`}
+      >
         <form
           onSubmit={handleSubmit}
           className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-2xl space-y-6 border border-gray-200"
@@ -204,7 +208,9 @@ const CriarEvento = () => {
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-gray-700">Tema</label>
+            <label className="block mb-1 font-medium text-gray-700 ">
+              Tema
+            </label>
             <select
               name="tema"
               value={tema}
