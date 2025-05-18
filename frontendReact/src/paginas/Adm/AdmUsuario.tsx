@@ -218,7 +218,7 @@ const AdmUsuario = () => {
       {isModalEdicaoOpen && usuarioSelecionado && (
         <ModalEdicaoUsuario
           isModalOpen={isModalEdicaoOpen}
-          usuario={usuarioSelecionado}
+          user={usuarioSelecionado}
           onClose={handleCloseModalEditarUsuario}
         />
       )}

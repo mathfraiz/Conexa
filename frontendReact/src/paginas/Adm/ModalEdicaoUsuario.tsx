@@ -3,11 +3,22 @@ import { useAuth } from "../../contexts/AuthContext";
 
 interface ModalEdicaoUsuarioProps {
   isModalOpen: boolean;
+  user: Usuario;
   onClose: (foiSalvo: boolean, mensagem?: string) => void;
+}
+
+interface Usuario {
+  email: string;
+  id: number;
+  imagem_perfil: string | null;
+  nome: string;
+  telefone: string;
+  tipo: string;
 }
 
 const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
   isModalOpen,
+  user,
   onClose,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -16,20 +27,19 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [senha, setSenha] = useState(""); // 🔒 Novo estado da senha
   const [tipo, setTipo] = useState("usuario");
   const [imagemPerfil, setImagemPerfil] = useState<File | string | null>(null);
   const [erros, setErros] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
-    if (usuario) {
-      setNome(usuario.nome || "");
-      setEmail(usuario.email || "");
-      setTelefone(usuario.telefone || "");
-      setTipo(usuario.tipo || "usuario");
-      setImagemPerfil(usuario.imagem_perfil || null);
+    if (user) {
+      setNome(user.nome || "");
+      setEmail(user.email || "");
+      setTelefone(user.telefone || "");
+      setTipo(user.tipo || "usuario");
+      setImagemPerfil(user.imagem_perfil || null);
     }
-  }, [usuario]);
+  }, [user]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -42,8 +52,6 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
   }, [isModalOpen, onClose]);
 
   const validarNome = (nome: string) => /^[A-Za-zÀ-ÿ\s]+$/.test(nome);
-  const validarTelefone = (telefone: string) =>
-    /^\(\d{2}\) \d{4,5}-\d{4}$/.test(telefone);
 
   const formatarTelefone = (valor: string) => {
     const numeros = valor.replace(/\D/g, "").slice(0, 11);
@@ -63,7 +71,6 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
 
     const novosErros = {
       nome: !validarNome(nome),
-      telefone: !validarTelefone(telefone),
     };
     setErros(novosErros);
     if (Object.values(novosErros).some(Boolean)) return;
@@ -76,16 +83,13 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       formData.append("email", email);
       formData.append("telefone", telefone);
       formData.append("tipo", tipo);
-
-      if (senha.trim() !== "") {
-        formData.append("senha", senha);
-      }
+      console.log(telefone);
 
       if (imagemPerfil instanceof File) {
         formData.append("imagem_perfil", imagemPerfil);
       }
 
-      const resp = await fetch(`http://localhost:3000/usuario/${usuario?.id}`, {
+      const resp = await fetch(`http://localhost:3000/usuario/${user?.id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -155,13 +159,6 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
             value={telefone}
             onChange={handleTelefoneChange}
             className={inputClass("telefone")}
-          />
-          <input
-            type="password"
-            placeholder="Nova senha (deixe em branco se não for mudar)"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            className={inputClass("senha")}
           />
           <select
             value={tipo}

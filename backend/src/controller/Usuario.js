@@ -59,7 +59,7 @@ class Usuario {
     }
   }
 
-  static async atualizarUsuario(id, nome, email, senha, telefone, tipo, foto) {
+  static async atualizarUsuario(id, nome, email, telefone, senha, tipo, foto) {
     console.log("controller");
     try {
       let campos = [];
@@ -83,11 +83,10 @@ class Usuario {
       }
 
       // Monta a SQL dinamicamente
-      const sql = `
-      UPDATE usuario SET ${campos.join(", ")}
-      WHERE id = ?
-    `;
+      const sql = `UPDATE usuario SET ${campos.join(", ")} WHERE id = ?`;
       valores.push(id);
+      console.log(sql);
+      console.log(valores);
 
       const [result] = await pool.query(sql, valores);
       return result.affectedRows;
