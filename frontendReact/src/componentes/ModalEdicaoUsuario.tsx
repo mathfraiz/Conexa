@@ -60,6 +60,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const [erros, setErros] = useState<{ [key: string]: boolean }>({});
+  const [erroSenha, setErroSenha] = useState("");
 
   useEffect(() => {
     if (usuario) {
@@ -128,8 +129,12 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       confirmarSenha: alterarSenha && novaSenha !== confirmarSenha,
     };
 
-    setErros(novosErros);
-    if (Object.values(novosErros).some((erro) => erro)) return;
+    if (Object.values(novosErros).some((erro) => erro)) {
+      setErros(novosErros);
+      setTimeout(() => {
+        setErros({});
+      }, 3000);
+    }
 
     try {
       setLoading(true);
@@ -169,12 +174,16 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
           email: resp.email,
           telefone: resp.telefone,
           imagem_perfil: resp.imagem_perfil,
-          
         };
         console.log(resp);
 
         if (!user) login(dadosAtualizados, token!);
         onClose(true);
+      } else if (response.status == 401) {
+        setErroSenha("senha incorreta");
+        setTimeout(() => {
+          setErroSenha("");
+        }, 2000);
       }
     } catch (err) {
       console.error("Erro ao atualizar perfil:", err);
@@ -189,7 +198,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
     } rounded-lg focus:ring-2 focus:ring-purple-500 text-black`;
 
   const renderErro = (campo: string, mensagem: string) =>
-    erros[campo] && <p className="text-sm text-red-500 mt-1">{mensagem}</p>;
+    erros[campo] && <p className="text-sm !text-red-500 mt-1">{mensagem}</p>;
 
   return (
     <div className="fixed top-[0rem] right-6 z-50 w-[400px] max-w-full px-2 animate-fade-in">
@@ -287,6 +296,11 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
               {renderErro("confirmarSenha", "As senhas não coincidem.")}
             </>
           )}
+          {erroSenha ? (
+            <p className="text-sm !text-red-500 mt-1">{erroSenha}</p>
+          ) : (
+            ""
+          )}
 
           <div className="flex items-center gap-2">
             {preview && (
@@ -319,7 +333,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
             <div className="flex flex-col items-center">
               <button
                 type="button"
-                onClick={() => setImagemPerfil("vazio")}
+                onClick={() => setImagemPerfil(null)}
                 className="text-orange-500 text-xs underline mt-2"
               >
                 Remover imagem

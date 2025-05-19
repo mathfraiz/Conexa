@@ -88,12 +88,14 @@ class Usuario {
         const usuario = await this.encontrarUsuarioPorId(id);
 
         const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+        console.log(senhaCorreta);
+        console.log("senhas");
 
         if (senhaCorreta) {
           const senhaCriptografada = await bcrypt.hash(senhaNova, 10);
           campos.push("senha = ?");
           valores.push(senhaCriptografada);
-        }
+        }else{return}
       }
 
       if (foto) {

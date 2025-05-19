@@ -115,7 +115,7 @@ const AdmUsuario = () => {
     }
   };
   return (
-    <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen ">
+    <div className=" bg-gradient-to-br from-purple-100 to-white min-h-screen ">
       <Navbar onToggleSidebar={() => setSidebarAberta(!sidebarAberta)} />
       <BarraLateral isOpen={sidebarAberta} />
       <FiltroUsuario
@@ -125,8 +125,8 @@ const AdmUsuario = () => {
       />
 
       <div
-        className={` w-90% bg-white rounded-3xl shadow-2xl p-8 transition-all duration-300 ${
-          sidebarAberta ? "ml-64 " : " m-10 ml-0"
+        className={` w-90% bg-white  rounded-3xl shadow-2xl p-8 transition-all duration-300 ${
+          sidebarAberta ? "ml-64 " : " m-10 ml-6"
         }`}
       >
         <div className="flex justify-between items-center mb-6">
@@ -286,6 +286,13 @@ const AdmUsuario = () => {
           </div>
         </div>
       )}
+      <div
+        className={` bottom-0  w-full transition-all duration-300 ${
+          sidebarAberta ? "ml-58 " : " m-10 ml-0"
+        }`}
+      >
+        <Rodape />
+      </div>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import ModalEdicaoEvento from "../../componentes/ModalEdicaoEvento";
 import { useAuth } from "../../contexts/AuthContext";
 import FiltroEventos from "../../componentes/FiltroEventos";
 import { Navigate, useNavigate } from "react-router-dom";
+import Rodape from "../../componentes/Rodape";
 
 interface Evento {
   id: number;
@@ -26,7 +27,7 @@ interface Evento {
 }
 
 const AdmEvento = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [EventoList, setEventoList] = useState<Evento[]>([]);
   const { usuario } = useAuth();
   const [eventos, setEventos] = useState<Evento[]>([]);
@@ -47,7 +48,7 @@ const AdmEvento = () => {
       const res = await fetch("http://localhost:3000/eventos");
       const data = await res.json();
       setEventos(data);
-      setEventoList(data)
+      setEventoList(data);
     } catch (err) {
       console.error("Erro ao buscar eventos:", err);
     }
@@ -59,7 +60,7 @@ const AdmEvento = () => {
     }
     if (usuario) {
       if (usuario?.tipo === "usuario") {
-      navigate("/PaginaInicialLogin");
+        navigate("/PaginaInicialLogin");
       }
       if (usuario?.id) {
         verificaTipo();
@@ -88,16 +89,19 @@ const AdmEvento = () => {
   };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen">
+    <div className=" bg-gradient-to-br from-purple-100 to-white min-h-screen">
       <Navbar onToggleSidebar={() => setSidebarAberta(!sidebarAberta)} />
       <BarraLateral isOpen={sidebarAberta} />
 
-<FiltroEventos eventosList={EventoList} setEventos={setEventos} sidebarAberta={sidebarAberta} />
-
+      <FiltroEventos
+        eventosList={EventoList}
+        setEventos={setEventos}
+        sidebarAberta={sidebarAberta}
+      />
 
       <div
         className={`bg-white rounded-3xl shadow-2xl p-8 transition-all duration-300 ${
-          sidebarAberta ? "ml-64" : "ml-0"
+          sidebarAberta ? "ml-64" : "ml-6"
         }`}
       >
         <div className="flex justify-between items-center mb-6">
@@ -238,6 +242,13 @@ const AdmEvento = () => {
           </div>
         </div>
       )}
+      <div
+        className={` bottom-0  w-full transition-all duration-300 ${
+          sidebarAberta ? "ml-58 " : " m-10 ml-0"
+        }`}
+      >
+        <Rodape />
+      </div>
     </div>
   );
 };

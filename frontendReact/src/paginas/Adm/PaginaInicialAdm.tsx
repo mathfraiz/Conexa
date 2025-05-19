@@ -14,7 +14,7 @@ export default function PaginaInicialAdmin() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-purple-50 modo-escuro:bg-[#9333ea] transition-colors duration-300">
+    <div className="flex flex-col gap bg-purple-50 modo-escuro:bg-[#9333ea] transition-colors duration-300">
       <Navbar onToggleSidebar={toggleSidebar} />
       <BarraLateral isOpen={isSidebarOpen} />
 
@@ -29,7 +29,10 @@ export default function PaginaInicialAdmin() {
             Bem-vindo de volta, {usuario?.nome || "Administrador"} 👋
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto mt-6 modo-escuro:text-gray-100 preservar-cor-gray">
-            Você está logado como <span className="font-semibold text-purple-700 preservar-cor">Administrador do Conexa</span>
+            Você está logado como{" "}
+            <span className="font-semibold text-purple-700 preservar-cor">
+              Administrador do Conexa
+            </span>
           </p>
         </section>
 
@@ -39,19 +42,28 @@ export default function PaginaInicialAdmin() {
             🛡️ Sua função vai além da supervisão
           </p>
           <p className="text-lg text-gray-700 modo-escuro:text-gray-100 leading-relaxed">
-            Administrar o Conexa é liderar com propósito. Você é o ponto de equilíbrio entre usuários, eventos e o ecossistema digital da plataforma.
-            Seu papel garante que todas as conexões aconteçam de forma fluida, segura e impactante.
+            Administrar o Conexa é liderar com propósito. Você é o ponto de
+            equilíbrio entre usuários, eventos e o ecossistema digital da
+            plataforma. Seu papel garante que todas as conexões aconteçam de
+            forma fluida, segura e impactante.
           </p>
           <p className="text-lg text-gray-700 modo-escuro:text-gray-100 leading-relaxed">
-            Neste painel, você encontra as ferramentas para manter a ordem, promover melhorias e acompanhar o que realmente importa.
-            Use essa central com responsabilidade e visão estratégica.
+            Neste painel, você encontra as ferramentas para manter a ordem,
+            promover melhorias e acompanhar o que realmente importa. Use essa
+            central com responsabilidade e visão estratégica.
           </p>
           <p className=" text-gray-500 modo-escuro:text-gray-200 italic text-base">
             “Excelência na gestão não se impõe — ela se sente em cada detalhe.”
           </p>
         </section>
       </main>
-      <Rodape /> {/* ✅ Copyright inserido aqui */}
+      <div
+        className={` bottom-0  w-full transition-all duration-300 mt-10  ${
+          isSidebarOpen ? "ml-58 " : "  ml-0"
+        }`}
+      >
+        <Rodape />
+      </div>
     </div>
   );
 }

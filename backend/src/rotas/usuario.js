@@ -140,8 +140,9 @@ routerUsuario.put(
           usuarioAtualizado.imagem_perfil = `data:image/jpeg;base64,${usuarioAtualizado.imagem_perfil.toString(
             "base64"
           )}`;
+      } else {res.status(401).json("senha incorreta");
+        console.log("senha incorreta")
       }
-      console.log("passou2");
 
       console.log(usuarioAtualizado);
       res.json(usuarioAtualizado);
