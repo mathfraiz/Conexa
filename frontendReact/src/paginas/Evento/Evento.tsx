@@ -102,13 +102,14 @@ const EventoPage = () => {
   };
 
   useEffect(() => {
+    console.log("usuario");
     if (!isAutenticado) {
-      navigate("/login");
-      return;
+      console.log("autebt");
+      // navigate("/login");
     }
     buscarEvento();
     verificaInscricao(evento?.id);
-  }, [id]);
+  }, [id, !isAutenticado]);
 
   useEffect(() => {
     buscarEndereco(evento?.endereco_id);
@@ -253,7 +254,6 @@ const EventoPage = () => {
     <div className="flex flex-col min-h-screen bg-purple-50">
       <Navbar onToggleSidebar={toggleSidebar} />
       <BarraLateral isOpen={sidebarOpen} />
-
       <div
         className={`flex-1 overflow-y-auto p-6 transition-all duration-300 ${
           sidebarOpen ? "ml-60" : "ml-0 "
@@ -378,7 +378,13 @@ const EventoPage = () => {
           <div></div>
         </div>
       </div>
-      <Rodape />
+      <div
+        className={` bottom-0 w-full transition-all duration-300 ${
+          sidebarOpen ? "ml-58 " : " ml-0"
+        }`}
+      >
+        <Rodape />
+      </div>{" "}
     </div>
   );
 };

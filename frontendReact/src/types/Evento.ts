@@ -5,7 +5,7 @@ export interface Evento {
   data: Date;
   hora: string;
   categoria: number;
-  imagem_evento: string | null;
+  imagem_evento: File | string | null;
   endereco_id: number;
   avaliacao_media: string;
   nome: string;
@@ -14,4 +14,3 @@ export interface Evento {
   nome_usuario: string;
   email_usuario: string;
 }
-

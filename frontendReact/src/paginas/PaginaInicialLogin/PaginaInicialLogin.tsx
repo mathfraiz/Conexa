@@ -6,7 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import FiltroEventos from "../../componentes/FiltroEventos";
 import BarraLateral from "../../componentes/BarraLateral";
 import Rodape from "../../componentes/Rodape";
-import {Evento} from "../../types/Evento";
+import { Evento } from "../../types/Evento";
 
 // interface User{
 //   id:number,
@@ -68,13 +68,13 @@ const PaginaInicialLogin = () => {
         <Navbar onToggleSidebar={toggleSidebar} />
       </div>
 
-      <div className="flex pt-8 mr-12  h-full">
+      <div className="flex pt-8   h-full">
         {/* Sidebar */}
         <BarraLateral isOpen={sidebarOpen} />
 
         {/* Conteúdo */}
         <main
-          className={`flex-1 overflow-y-auto flex-grow flex-wrap pl-6 transition-all duration-300 ${
+          className={`flex-1  overflow-y-auto flex-grow flex-wrap  transition-all overflow-y-hidden overflow-x-hidden duration-300 ${
             sidebarOpen ? "ml-60" : "ml-0 "
           }`}
         >
@@ -87,7 +87,7 @@ const PaginaInicialLogin = () => {
             sidebarAberta={sidebarOpen}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 mr-12 sm:grid-cols-2 pl-6 lg:grid-cols-3 gap-6 over">
             {eventos1.map((evento) => (
               <MotionContainer
                 key={evento.id}
@@ -139,15 +139,12 @@ const PaginaInicialLogin = () => {
               </MotionContainer>
             ))}
           </div>
+          <div
+            className={` bottom-0 w-full mt-10 transition-all duration-300 `}
+          >
+            <Rodape />
+          </div>
         </main>
-      </div>
-
-      <div
-        className={` bottom-0 w-full mt-auto transition-all duration-300 mt-10  ${
-          sidebarOpen ? "ml-58 " : "  ml-0"
-        }`}
-      >
-        <Rodape />
       </div>
     </div>
   );

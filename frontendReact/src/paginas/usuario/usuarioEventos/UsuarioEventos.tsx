@@ -6,6 +6,8 @@ import Navbar from "../../../componentes/BarraNav";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import { Evento } from "../../../types/Evento";
+import BarraLateral from "../../../componentes/BarraLateral";
+import Rodape from "../../../componentes/Rodape";
 
 export default function UsuarioEventos() {
   const [eventos, setEventos] = useState<Evento[]>([]);
@@ -71,50 +73,29 @@ export default function UsuarioEventos() {
   return (
     <div className="min-h-screen bg-[url(/logo.jpg)] bg-cover bg-center bg-no-repeat flex flex-col">
       <Navbar onToggleSidebar={toggleSidebar} />
-
-      <aside
-        className={`fixed top-16 left-0 z-40 h-full w-60 p-6 bg-white shadow-xl transition-transform duration-300 border-r-2 border-purple-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col gap-4">
-          <Link
-            to="/cadastroEvento"
-            className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
-          >
-            Criar Evento
-          </Link>
-          <Link
-            to="/eventos/usuario"
-            className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
-          >
-            Meus Eventos
-          </Link>
-        </div>
-      </aside>
-
+      <BarraLateral isOpen={sidebarOpen} />{" "}
       <main
-        className={`pt-24 px-6 transition-all duration-300 ${
+        className={`pt-24 px-6 overflow-y-auto flex-grow flex-wrap transition-all duration-300 ${
           sidebarOpen ? "ml-60" : "ml-0"
         }`}
       >
         <h1 className="text-3xl font-extrabold text-white drop-shadow mb-8">
           Meus Eventos
         </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 mr-12 sm:grid-cols-2 pl-6 lg:grid-cols-3 gap-6 over">
           {eventos.map((evento) => (
             <MotionContainer
               key={evento.id}
               height="h-64"
-              className="rounded-2xl shadow-xl bg-white bg-blend-overlay hover:shadow-2xl transition relative duration-700 transform hover:scale-105"
+              className="rounded-2xl shadow-xl  bg-white bg-blend-overlay hover:shadow-2xl transition relative duration-700 transform hover:scale-105"
               onClick={() => navigate(`/eventos/${evento.id}`)}
             >
               <img
                 src={evento.imagem_evento || ""}
                 alt={evento.nome}
-                className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                className="absolute inset-0 w-full h-full object-cover rounded-2xl "
               />
-              <div className="absolute inset-0 bg-black bg-opacity-40 rounded-2xl flex flex-col justify-between p-4">
+              <div className="absolute inset-0  bg-opacity-0 rounded-2xl flex flex-col justify-between p-4">
                 <div>
                   <h2 className="text-lg font-bold text-white mb-2 drop-shadow">
                     {evento.nome}
@@ -153,7 +134,6 @@ export default function UsuarioEventos() {
           ))}
         </div>
       </main>
-
       {eventoParaEditar && (
         <ModalEdicaoEvento
           evento={eventoParaEditar}
@@ -163,7 +143,6 @@ export default function UsuarioEventos() {
           }}
         />
       )}
-
       {eventoParaDeletar && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl w-96 text-center">
@@ -191,6 +170,13 @@ export default function UsuarioEventos() {
           </div>
         </div>
       )}
+      <div
+        className={` bottom-0 w-full transition-all duration-300 ${
+          sidebarOpen ? "ml-58 " : " ml-0"
+        }`}
+      >
+        <Rodape />
+      </div>
     </div>
   );
 }

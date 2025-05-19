@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {Evento} from "../types/Evento"
+import { Evento } from "../types/Evento";
 interface ModalEdicaoEventoProps {
   evento: Evento;
   onClose: (foiSalvo: boolean) => void;
@@ -17,8 +17,33 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
   const [descricaoCompleta, setDescricaoCompleta] = useState(
     evento.descricao_completa || ""
   );
-  console.log(data);
   const [imagem, setImagem] = useState<File | null>(null);
+
+  useEffect(() => {
+    if (evento.imagem_evento) {
+      if (typeof imagem === "string") {
+        const byteCharacters = atob(imagem);
+        const byteArrays: Uint8Array[] = [];
+
+        for (let i = 0; i < byteCharacters.length; i += 512) {
+          const slice = byteCharacters.slice(i, i + 512);
+          const byteNumbers = new Array(slice.length);
+          for (let j = 0; j < slice.length; j++) {
+            byteNumbers[j] = slice.charCodeAt(j);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
+        }
+
+        const file = new File(byteArrays, "imagem-evento.jpg", {
+          type: "image/jpeg",
+        });
+        setImagem(file);
+      }
+    }
+  }, [evento.imagem_evento]);
+
+  console.log(data);
 
   const handleSubmit = async (e: React.FormEvent) => {
     const token = sessionStorage.getItem("token");
@@ -30,7 +55,7 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
     formData.append("hora", hora);
     formData.append("descricao", descricao);
     formData.append("descricao_completa", descricaoCompleta);
-    if (imagem) {
+    if (imagem instanceof File) {
       formData.append("imagem", imagem);
     }
 

@@ -3,6 +3,7 @@ import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import BarraLateral from "../../componentes/BarraLateral";
+import Rodape from "../../componentes/Rodape";
 const CriarEvento = () => {
   const form = new FormData();
   const { usuario, token, logout } = useAuth();
@@ -350,36 +351,24 @@ const CriarEvento = () => {
             </p>
           </div>
 
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              Imagem do Evento
-            </label>
-            <input
-              name="imagem"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full"
-            />
+          <div className="flex flex- items-center gap-2">
             {imagemArquivo && (
-              <div>
-                <img
-                  src={
-                    imagemArquivo
-                      ? URL.createObjectURL(imagemArquivo)
-                      : "/placeholder.jpg"
-                  }
-                  alt="Imagem do Evento"
-                  className="w-40 h-40 object-cover rounded-lg shadow-md mx-auto"
-                />
-                <button
-                  className="bg-purple-100 rounded-lg p-"
-                  onClick={() => setImagemArquivo(null)}
-                >
-                  retirar imagem
-                </button>
-              </div>
+              <img
+                src={URL.createObjectURL(imagemArquivo)}
+                alt="Prévia"
+                className="w-24 h-24 object-cover rounded-xl border-2 border-purple-400 shadow-md"
+              />
             )}
+
+            <label className="cursor-pointer bg-purple-100 text-purple-700 px-4 py-2 rounded-xl border border-purple-300 hover:bg-purple-200 transition">
+              Selecionar imagem
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => setImagemArquivo(e.target.files?.[0] || null)}
+              />
+            </label>
           </div>
 
           <button
@@ -412,6 +401,14 @@ const CriarEvento = () => {
           </div>
         </div>
       )}
+
+      <div
+        className={` bottom-0  w-full transition-all duration-300 ${
+          sidebarOpen ? "ml-58 " : " ml-0"
+        }`}
+      >
+        <Rodape />
+      </div>
     </div>
   );
 };
