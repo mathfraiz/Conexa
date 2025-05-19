@@ -163,9 +163,10 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
           body: form,
         }
       );
+      const resp = await response.json();
 
       if (response.ok) {
-        const resp = await response.json();
+        
         console.log("nome");
         console.log(resp.nome);
         const dadosAtualizados = {
@@ -179,11 +180,15 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
 
         if (!user) login(dadosAtualizados, token!);
         onClose(true);
-      } else if (response.status == 401) {
+      } else if (response.status == 401 && resp.json() == "senha incorreta") {
         setErroSenha("senha incorreta");
         setTimeout(() => {
           setErroSenha("");
         }, 2000);
+      }
+      else {
+        console.log("response erro")
+        console.log(response.status)
       }
     } catch (err) {
       console.error("Erro ao atualizar perfil:", err);
@@ -246,7 +251,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
               </span>
               <button
                 type="button"
-                className="text-white hover:underline hover:text-amber-500 text-sm"
+                className="text-red-400 hover:underline hover:text-amber-500 text-sm"
                 onClick={() => setAlterarSenha((prev) => !prev)}
               >
                 {alterarSenha ? "Cancelar" : "Alterar"}

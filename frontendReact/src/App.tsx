@@ -7,9 +7,9 @@ import Home from "./paginas/index/index";
 import RecuperacaoSenha from "./paginas/recuperação/recuperação";
 import PaginaIncialLogin from "./paginas/PaginaInicialLogin/PaginaInicialLogin";
 import CriarEvento from "./paginas/cadastroEvento/cadastroEvento";
-import Index from "./paginas/index";
-import AdmUsuario from "./paginas/Adm/admUsuario";
-import Evento from "./paginas/Evento/Evento";
+// import Index from "./paginas/index";
+import AdmUsuario from "./paginas/Adm/AdmUsuario";
+import EventoPage from "./paginas/Evento/Evento";
 import AdmEvento from "./paginas/Adm/AdmEvento";
 import UsuarioEventos from "./paginas/usuario/usuarioEventos/UsuarioEventos";
 import ConfiguracoesAdm from "./paginas/Adm/ConfiguracoesAdm";
@@ -28,11 +28,10 @@ function App() {
           <Route path="/cadastroEvento" element={<CriarEvento />} />
           <Route path="/PaginaInicialLogin" element={<PaginaIncialLogin />} />
           <Route path="/admusuarios" element={<AdmUsuario />} />
-          <Route path="/eventos/:id" element={<Evento />} />
+          <Route path="/eventos/:id" element={<EventoPage />} />
           <Route path="/admEventos" element={<AdmEvento />} />
           <Route path="/Eventos/Usuario" element={<UsuarioEventos />} />
           <Route path="/configuracoes" element={<ConfiguracoesAdm />} />
-
         </Routes>
       </BrowserRouter>
     </div>

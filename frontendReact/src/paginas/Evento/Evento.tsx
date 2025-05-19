@@ -5,22 +5,8 @@ import Rodape from "../../componentes/Rodape";
 import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
 import BarraLateral from "../../componentes/BarraLateral";
+import { Evento } from "../../types/Evento";
 
-
-interface Evento {
-  id: number;
-  nome: string;
-  descricao: string;
-  descricao_completa: string;
-  data: Date;
-  hora: string;
-  endereco: string;
-  imagem_evento: string | null;
-  criado_por: number;
-  nome_usuario: string;
-  email_usuario: string;
-  endereco_id;
-}
 interface Endereco {
   id: number;
   logradouro: string;
@@ -29,7 +15,7 @@ interface Endereco {
   cidade: string;
   UF: string;
 }
-const Evento = () => {
+const EventoPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   // const [usuario] = useSessionStorage<any>("usuario", {
@@ -38,7 +24,7 @@ const Evento = () => {
   //   email: "",
   //   tipo: "",
   // });
-  const { usuario } = useAuth();
+  const { usuario, isAutenticado, logout } = useAuth();
   const [evento, setEvento] = useState<Evento | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [mensagem, setMensagem] = useState("");
@@ -114,15 +100,20 @@ const Evento = () => {
       setCarregando(false);
     }
   };
+
+  useEffect(() => {
+    if (!isAutenticado) {
+      navigate("/login");
+      return;
+    }
+    buscarEvento();
+    verificaInscricao(evento?.id);
+  }, [id]);
+
   useEffect(() => {
     buscarEndereco(evento?.endereco_id);
     buscarIncricoesUsuario(usuario?.id);
   }, [evento]);
-
-  useEffect(() => {
-    buscarEvento();
-    verificaInscricao(evento?.id);
-  }, [id]);
 
   useEffect(() => {
     verificaInscricao(evento?.id);
@@ -159,6 +150,7 @@ const Evento = () => {
         console.log(isncr);
         setIdInscricao(isncr.id);
       } else if (resp.status == 401) {
+        logout();
         navigate("/login");
       } else {
         setMensagem("Você já está inscrito ou ocorreu um erro.");
@@ -235,6 +227,10 @@ const Evento = () => {
           setMensagem("");
         }, 3000);
       }
+      if (resp.status == 401) {
+        logout();
+        navigate("/login");
+      }
     } catch (err) {
       console.error(err);
       setMensagem("Erro na conexão ao enviar avaliação.");
@@ -256,8 +252,7 @@ const Evento = () => {
   return (
     <div className="flex flex-col min-h-screen bg-purple-50">
       <Navbar onToggleSidebar={toggleSidebar} />
-<BarraLateral isOpen={sidebarOpen} />
-
+      <BarraLateral isOpen={sidebarOpen} />
 
       <div
         className={`flex-1 overflow-y-auto p-6 transition-all duration-300 ${
@@ -278,7 +273,6 @@ const Evento = () => {
               backgroundBlendMode: "overlay",
             }}
           >
-            {/* Dados principais */}
             <div
               className="rounded-lg shadow p-6 space-y-4"
               style={{
@@ -388,4 +382,4 @@ const Evento = () => {
     </div>
   );
 };
-export default Evento;
+export default EventoPage;

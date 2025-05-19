@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Perfil from "../paginas/usuario/perfil/perfil";
-import { Menu } from "lucide-react"; // ou qualquer ícone
+import { Menu } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
 const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {

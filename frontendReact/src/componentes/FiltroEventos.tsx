@@ -7,13 +7,11 @@ interface Props {
   sidebarAberta: boolean;
 }
 
-interface Props {
-  eventosList: Evento[];
-  setEventos: React.Dispatch<React.SetStateAction<Evento[]>>;
-  sidebarAberta: boolean;
-}
-
-const FiltroEventos: React.FC<Props> = ({ eventosList, setEventos, sidebarAberta }) => {
+const FiltroEventos: React.FC<Props> = ({
+  eventosList,
+  setEventos,
+  sidebarAberta,
+}) => {
   const [campoSelecionado, setCampoSelecionado] = useState("nome");
   const [valorFiltro, setValorFiltro] = useState("");
 
@@ -48,7 +46,11 @@ const FiltroEventos: React.FC<Props> = ({ eventosList, setEventos, sidebarAberta
   };
 
   return (
-    <div className={`transition-all duration-300 mb-4 ${sidebarAberta ? "ml-64" : "ml-0"}`}>
+    <div
+      className={`transition-all duration-300 mb-4 ${
+        sidebarAberta ? "ml-64" : "ml-0"
+      }`}
+    >
       <div className="flex flex-col md:flex-row justify-center items-center gap-4 p-4 bg-white shadow-md rounded-2xl mx-4 md:mx-16">
         <select
           className="w-32 px-4 py-2 rounded-lg border border-purple-700 text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 transition"

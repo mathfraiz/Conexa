@@ -42,7 +42,7 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
 
   const handleLogout = () => {
     logout();
-    sessionStorage.removeItem("token"); // ← limpa o token JWT
+    sessionStorage.removeItem("token");
     navigate("/login");
   };
 

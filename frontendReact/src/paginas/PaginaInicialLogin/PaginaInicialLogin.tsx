@@ -5,21 +5,9 @@ import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
 import FiltroEventos from "../../componentes/FiltroEventos";
 import BarraLateral from "../../componentes/BarraLateral";
+import Rodape from "../../componentes/Rodape";
+import {Evento} from "../../types/Evento";
 
-interface Evento {
-  id: number;
-  descricao: string;
-  descricao_completa: string;
-  data: Date;
-  hora: string;
-  categoria: number;
-  imagem_evento: string | null;
-  endereco_id: number;
-  avaliacao_media: string;
-  nome: string;
-  criado_em: Date;
-  criado_por: number;
-}
 // interface User{
 //   id:number,
 //   nome:string,
@@ -30,8 +18,8 @@ interface Evento {
 // }
 
 const PaginaInicialLogin = () => {
-  const navigate = useNavigate()
-  const { usuario } = useAuth();
+  const navigate = useNavigate();
+  const { usuario, logout } = useAuth();
   const [mensagem, setMensagem] = useState("");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -57,11 +45,17 @@ const PaginaInicialLogin = () => {
 
         setEventoList(data);
         setEventos(data);
+      } else if (response.status == 201) {
+        setMensagem("Sessao expirada");
+        setTimeout(() => {
+          logout();
+          navigate("/login");
+        });
       }
     } catch (e) {
       console.log("data", e);
       if (e) {
-        setMensagem("Nao foi possivel encontrar eventos");
+        setMensagem("Sessao expirada");
         return;
       }
     }
@@ -74,24 +68,24 @@ const PaginaInicialLogin = () => {
         <Navbar onToggleSidebar={toggleSidebar} />
       </div>
 
-      <div className="flex pt-8 h-full">
+      <div className="flex pt-8 mr-12  h-full">
         {/* Sidebar */}
-<BarraLateral isOpen={sidebarOpen} />
+        <BarraLateral isOpen={sidebarOpen} />
 
         {/* Conteúdo */}
         <main
-          className={`flex-1 overflow-y-auto pl-6 transition-all duration-300 ${
+          className={`flex-1 overflow-y-auto flex-grow flex-wrap pl-6 transition-all duration-300 ${
             sidebarOpen ? "ml-60" : "ml-0 "
           }`}
         >
           {mensagem && (
             <span className="bg-yellow-500 text-white text-lg">{mensagem}</span>
           )}
-<FiltroEventos
-  eventosList={eventosList}
-  setEventos={setEventos}
-  sidebarAberta={sidebarOpen}
-/>
+          <FiltroEventos
+            eventosList={eventosList}
+            setEventos={setEventos}
+            sidebarAberta={sidebarOpen}
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {eventos1.map((evento) => (
@@ -100,7 +94,7 @@ const PaginaInicialLogin = () => {
                 height="h-64"
                 animation={{ scale: 1 }}
                 transition={{ duration: 0.3 }}
-                className="rounded-2xl shadow-xl bg-white bg-blend-overlay hover:shadow-2xl transition relative duration-700 transform hover:scale-110"
+                className="rounded-2xl shadow-xl bg-white bg-blend-overlay hover:shadow-2xl transition relative duration-700 transform hover:scale-105"
                 onClick={() => {
                   location.href = `/eventos/${evento.id}`;
                 }}
@@ -146,6 +140,14 @@ const PaginaInicialLogin = () => {
             ))}
           </div>
         </main>
+      </div>
+
+      <div
+        className={` bottom-0 w-full mt-auto transition-all duration-300 mt-10  ${
+          sidebarOpen ? "ml-58 " : "  ml-0"
+        }`}
+      >
+        <Rodape />
       </div>
     </div>
   );

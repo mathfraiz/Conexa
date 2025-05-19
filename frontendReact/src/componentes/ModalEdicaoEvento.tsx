@@ -1,20 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-
-interface Evento {
-  id: number;
-  descricao: string;
-  descricao_completa: string;
-  data: Date;
-  hora: string;
-  categoria: number;
-  imagem_evento: string | null;
-  endereco_id: number;
-  avaliacao_media: string;
-  nome: string;
-  criado_em: Date;
-  criado_por: number;
-}
-
+import {Evento} from "../types/Evento"
 interface ModalEdicaoEventoProps {
   evento: Evento;
   onClose: (foiSalvo: boolean) => void;

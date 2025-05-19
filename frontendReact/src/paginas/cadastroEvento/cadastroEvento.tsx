@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import BarraLateral from "../../componentes/BarraLateral";
 const CriarEvento = () => {
   const form = new FormData();
-  const { usuario, token } = useAuth();
+  const { usuario, token, logout } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSideBarOpen] = useState(false);
 
@@ -137,6 +137,8 @@ const CriarEvento = () => {
         location.href = "/PaginaInicialLogin";
         setCadastroSucesso(true);
       } else if (response.status === 401) {
+        logout();
+        navigate("/login");
         console.log("erro");
       } else {
         setCadastroSucesso(false);
@@ -160,7 +162,7 @@ const CriarEvento = () => {
         />
       </div>
 
-<BarraLateral isOpen={sidebarOpen} />
+      <BarraLateral isOpen={sidebarOpen} />
 
       <div
         className={`bg-[url(/logo.jpg)] min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-200 p-6 bg-cover bg-center bg-no-repeat transition-all duration-300 ${
