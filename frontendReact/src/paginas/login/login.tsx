@@ -23,7 +23,7 @@ const Login: React.FC = () => {
     if (usuario) {
       if (usuario.id > 0) {
         if (usuario.tipo === "admin") {
-          navigate("/admusuarios");
+          navigate("/admin");
         } else if (usuario.tipo === "usuario") {
           navigate("/paginaInicialLogin");
         }
