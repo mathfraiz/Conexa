@@ -32,8 +32,9 @@ class Inscricao {
   }
   static async encontrarInscricaoPorUsuario(usuario_id) {
     try {
-      const sql = `SELECT * FROM inscricao WHERE usuario_id = ?`;
+      const sql = `SELECT eventos.* FROM eventos JOIN inscricao ON eventos.id = inscricao.evento_id WHERE inscricao.usuario_id = ?;`;
       const [rows] = await pool.query(sql, [usuario_id]);
+      console.log(rows);
       return rows;
     } catch (error) {
       throw new Error("Erro ao buscar inscrições do usuário: " + error.message);

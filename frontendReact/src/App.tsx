@@ -14,6 +14,7 @@ import AdmEvento from "./paginas/Adm/AdmEvento";
 import UsuarioEventos from "./paginas/usuario/usuarioEventos/UsuarioEventos";
 import ConfiguracoesAdm from "./paginas/Adm/ConfiguracoesAdm";
 import PaginaInicialAdmin from "./paginas/Adm/PaginaInicialAdm";
+import Inscritos from "./paginas/inscritos/inscritos";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/Eventos/Usuario" element={<UsuarioEventos />} />
           <Route path="/configuracoes" element={<ConfiguracoesAdm />} />
           <Route path="*" element={<Home />} />
+          <Route path="/Inscricoes" element={<Inscritos />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

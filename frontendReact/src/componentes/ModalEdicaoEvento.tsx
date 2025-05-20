@@ -41,7 +41,7 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
         setImagem(file);
       }
     }
-  }, [evento.imagem_evento]);
+  }, [evento.imagem_evento,imagem]);
 
   console.log(data);
 

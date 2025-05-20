@@ -40,23 +40,34 @@ const PaginaInicialLogin = () => {
   const respEventos = async () => {
     try {
       const response = await fetch("http://localhost:3000/eventos");
+
       if (response.ok) {
         const data = await response.json();
         console.log("data", data);
 
         setEventoList(data);
         setEventos(data);
-      } else if (response.status == 201) {
+      } else if (response.status == 401) {
         setMensagem("Sessao expirada");
         setTimeout(() => {
           logout();
           navigate("/login");
-        });
+        }, 3000);
       }
-    } catch (e) {
-      console.log("data", e);
-      if (e) {
-        setMensagem("Sessao expirada");
+    } catch (erro) {
+      if (
+        erro.message.includes("Failed to fetch") ||
+        erro.message.includes("ERR_CONNECTION_REFUSED")
+      ) {
+        setMensagem("erro ao acessar o backend tente novamente mais tarte");
+        setTimeout(() => {
+          setMensagem("");
+        }, 3000);
+        return;
+      }
+      console.log("data", erro);
+      if (erro) {
+        setMensagem(erro);
         return;
       }
     }
@@ -75,7 +86,7 @@ const PaginaInicialLogin = () => {
 
         {/* Conteúdo */}
         <main
-          className={`flex-1  overflow-y-auto flex-grow flex-wrap  transition-all overflow-y-hidden overflow-x-hidden duration-300 ${
+          className={`flex-1  overflow-y-auto flex-grow flex-wrap  transition-all overflow-y-hidden  min-h-screen overflow-x-hidden duration-300 ${
             sidebarOpen ? "ml-60" : "ml-0 "
           }`}
         >
@@ -88,7 +99,7 @@ const PaginaInicialLogin = () => {
             sidebarAberta={sidebarOpen}
           />
 
-          <div className="grid grid-cols-1 mr-12 sm:grid-cols-2 pl-6 lg:grid-cols-3 gap-6 over">
+          <div className="grid grid-cols-1 flex flex-grow mr-12 sm:grid-cols-2 pl-6 lg:grid-cols-3 gap-6 over">
             {eventos1.map((evento) => (
               <MotionContainer
                 key={evento.id}
@@ -140,8 +151,9 @@ const PaginaInicialLogin = () => {
               </MotionContainer>
             ))}
           </div>
+
           <div
-            className={` bottom-0 flex flex-grow  w-full mt-10 transition-all duration-300 `}
+            className={` bottom-0   w-full mt-10 transition-all duration-300 `}
           >
             <Rodape />
           </div>

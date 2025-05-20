@@ -1,100 +1,125 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MotionContainer from "../../componentes/MotionConteiner";
 import { Link } from "react-router-dom";
 import Navbar from "../../componentes/BarraNav";
+import { Evento } from "../../types/Evento";
+import BarraLateral from "../../componentes/BarraLateral";
+import { useAuth } from "../../contexts/AuthContext";
+import Rodape from "../../componentes/Rodape";
+import FiltroEventos from "../../componentes/FiltroEventos";
 
 const Inscritos = () => {
-  const eventosInscritos = [
-    {
-      id: 1,
-      titulo: "Workshop de Fotografia",
-      data: "20 de Abril - 14h",
-      imagem: "/evento1.jpg",
-    },
-    {
-      id: 2,
-      titulo: "Festival de Música",
-      data: "25 de Maio - 18h",
-      imagem: "/evento2.jpg",
-    },
-  ];
+  const { usuario, logout } = useAuth();
+  const [sideBarOpen, setSideBarOpen] = useState(false);
+  const [eventosList, setEventos] = useState<Evento[]>([]);
+
+  const buscarEventosUsuario = async () => {
+    try {
+      const resp = await fetch(
+        "http://localhost:3000/inscricoesUsuario/" + usuario?.id
+      );
+      if (resp.ok) {
+        const resposta = await resp.json();
+        setEventos(resposta);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    buscarEventosUsuario();
+  }, [usuario]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-white via-purple-50 to-purple-100 text-gray-800">
-      <Navbar onToggleSidebar={() => {}} />
+    <div className="min-h-screen  flex flex-col bg-[url(/logo.jpg)] text-white bg-cover bg-center">
+      {/* Navbar fixa no topo */}
+      <div className="flex-shrink-0">
+        <Navbar
+          onToggleSidebar={() => {
+            setSideBarOpen(!sideBarOpen);
+          }}
+        />
+      </div>
 
-      <div className="flex flex-col md:flex-row pt-24 px-6 max-w-7xl mx-auto">
+      <div className="flex pt-8   h-full">
         {/* Sidebar */}
-        <aside className="md:w-64 bg-white border border-purple-200 p-6 rounded-2xl shadow-md mb-8 md:mb-0 md:mr-10">
-          <h2 className="text-2xl font-bold text-purple-800 mb-6 border-b pb-2 border-purple-100">
-            Painel
-          </h2>
-          <nav className="flex flex-col gap-4">
-            <Link
-              to="/MeusEventos"
-              className="hover:bg-purple-50 text-purple-700 font-medium py-2 px-4 rounded-lg transition border border-purple-100"
-            >
-              Meus Eventos
-            </Link>
-            <Link
-              to="/inscritos"
-              className="bg-purple-200 text-purple-900 font-semibold py-2 px-4 rounded-lg shadow-inner transition"
-            >
-              Inscritos
-            </Link>
-            <Link
-              to="/configuracoes"
-              className="hover:bg-purple-50 text-purple-700 font-medium py-2 px-4 rounded-lg transition border border-purple-100"
-            >
-              Configurações
-            </Link>
-          </nav>
-        </aside>
+        <BarraLateral isOpen={sideBarOpen} />
 
-        {/* Conteúdo principal */}
-        <main className="flex-1">
-          <header className="mb-10">
-            <h1 className="text-4xl font-extrabold text-purple-800 mb-2">
-              Eventos Inscritos
-            </h1>
-            <p className="text-gray-500 text-lg">
-              Confira abaixo os eventos que você escolheu participar:
-            </p>
-          </header>
+        {/* Conteúdo */}
+        <main
+          className={`flex-1 flex flex-col transition-all overflow-hidden duration-300 min-h-screen ${
+            sideBarOpen ? "ml-60" : "ml-0"
+          }`}
+        >
+          <FiltroEventos
+            eventosList={eventosList!}
+            setEventos={setEventos}
+            sidebarAberta={sideBarOpen}
+          />
 
-          {eventosInscritos.length === 0 ? (
-            <div className="bg-white p-8 rounded-xl shadow text-center text-gray-500 text-lg">
-              Você ainda não se inscreveu em nenhum evento.
-            </div>
-          ) : (
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {eventosInscritos.map((evento) => (
-                <MotionContainer
-                  key={evento.id}
-                  height="h-64"
-                  animation={{ scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-transform bg-white"
-                >
-                  <img
-                    src={evento.imagem}
-                    alt={evento.titulo}
-                    className="absolute inset-0 w-full h-full object-cover opacity-90 hover:opacity-100 transition duration-300"
-                  />
-                  <div className="relative bg-black/60 backdrop-blur-sm p-5 rounded-b-2xl text-white z-10">
-                    <h4 className="text-xl font-bold mb-1">{evento.titulo}</h4>
-                    <p className="text-sm mb-2">{evento.data}</p>
-                    <Link
-                      to={`/eventos/${evento.id}`}
-                      className="text-purple-300 font-medium hover:underline"
-                    >
-                      Ver detalhes
-                    </Link>
+          {/* Aqui a grid ocupa todo o espaço disponível */}
+          {/* <div className="">
+
+          </div> */}
+          
+          <div className=" flex flex-grow grid grid-cols-1 mr-12 sm:grid-cols-2 pl-6 lg:grid-cols-3 gap-6">
+            {eventosList?.map((evento) => (
+              <MotionContainer
+                key={evento.id}
+                height="h-64"
+                animation={{ scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className="rounded-2xl shadow-xl bg-white bg-blend-overlay hover:shadow-2xl transition relative duration-700 transform hover:scale-105"
+                onClick={() => {
+                  location.href = `/eventos/${evento.id}`;
+                }}
+              >
+                <img
+                  src={evento.imagem_evento || ""}
+                  alt={evento.nome}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="relative bg-black/50 p-4 rounded-lg w-full text-white">
+                  <h4 className="text-lg font-bold">{evento.nome}</h4>
+                  <p className="text-sm">
+                    Data: {new Date(evento.data).toLocaleDateString()} -{" "}
+                    {evento.hora}
+                  </p>
+                  <Link
+                    to={`/eventos/${evento.id}`}
+                    className="text-purple-300 hover:underline"
+                  >
+                    Saiba mais
+                  </Link>
+                  <div className="flex gap-1 mt-2">
+                    {[1, 2, 3, 4, 5].map((estrela) => {
+                      const notaInteira = Math.floor(
+                        Number(evento.avaliacao_media)
+                      );
+                      return (
+                        <span
+                          key={estrela}
+                          className={`text-2xl ${
+                            estrela <= notaInteira
+                              ? "text-yellow-400"
+                              : "text-white"
+                          }`}
+                        >
+                          {estrela <= notaInteira ? "★" : "☆"}
+                        </span>
+                      );
+                    })}
                   </div>
-                </MotionContainer>
-              ))}
-            </section>
-          )}
+                </div>
+              </MotionContainer>
+            ))}
+          </div>
+
+          {/* Rodapé colado no fundo */}
+          <div className="mt-10">
+            <Rodape />
+          </div>
         </main>
       </div>
     </div>
