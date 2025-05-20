@@ -30,8 +30,9 @@ const PaginaInicialLogin = () => {
 
   useEffect(() => {
     if (!usuario) {
-      navigate("/login");
+      navigate("/");
     } else {
+      navigate("/PaginaInicialLogin");
       respEventos();
     }
   }, [usuario]);
@@ -111,7 +112,7 @@ const PaginaInicialLogin = () => {
                     {evento.hora}
                   </p>
                   <Link
-                    to={`/eventos'/${evento.id}`}
+                    to={`/eventos/${evento.id}`}
                     className="text-purple-300 hover:underline"
                   >
                     Saiba mais
@@ -140,7 +141,7 @@ const PaginaInicialLogin = () => {
             ))}
           </div>
           <div
-            className={` bottom-0 w-full mt-10 transition-all duration-300 `}
+            className={` bottom-0 flex flex-grow  w-full mt-10 transition-all duration-300 `}
           >
             <Rodape />
           </div>

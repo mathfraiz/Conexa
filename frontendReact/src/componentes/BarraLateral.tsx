@@ -43,59 +43,59 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-<div className="flex flex-col gap-4">
-  {isAdmin ? (
-    <>
-      <Link
-        to="/admin"
-        className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
-      >
-        Página Inicial
-      </Link>
-      <Link
-        to="/admusuarios"
-        className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
-      >
-        Gerenciar Usuários
-      </Link>
-      <Link
-        to="/admeventos"
-        className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
-      >
-        Gerenciar Eventos
-      </Link>
-      <Link
-        to="/configuracoes"
-        className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
-      >
-        Configurações
-      </Link>
-    </>
-  ) : tipo === "usuario" ? (
-    <>
-      <Link
-        to="/cadastroEvento"
-        className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
-      >
-        Criar Evento
-      </Link>
-      <Link
-        to="/eventos/usuario"
-        className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
-      >
-        Meus Eventos
-      </Link>
-    </>
-  ) : null}
+      <div className="flex flex-col gap-4">
+        {isAdmin ? (
+          <>
+            <Link
+              to="/admin"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Página Inicial
+            </Link>
+            <Link
+              to="/admusuarios"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Gerenciar Usuários
+            </Link>
+            <Link
+              to="/admeventos"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Gerenciar Eventos
+            </Link>
+            <Link
+              to="/configuracoes"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Configurações
+            </Link>
+          </>
+        ) : tipo === "usuario" ? (
+          <>
+            <Link
+              to="/cadastroEvento"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Criar Evento
+            </Link>
+            <Link
+              to="/eventos/usuario"
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Meus Eventos
+            </Link>
+          </>
+        ) : null}
 
-  {/* Botão "Sobre" para ambos os tipos */}
-  <Link
-    to="/"
-    className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
-  >
-    Sobre
-  </Link>
-</div>
+        {/* Botão "Sobre" para ambos os tipos */}
+        <Link
+          to="/"
+          className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+        >
+          Sobre
+        </Link>
+      </div>
 
       {/* Botão Modo Escuro */}
       <div className="pt-6 mt-2 mb-16 border-t border-purple-200">
@@ -105,7 +105,9 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
         <div
           onClick={() => setModoEscuro(!modoEscuro)}
           className={`w-12 h-6 flex items-center rounded-full cursor-pointer p-1 transition duration-300 ${
-            modoEscuro ? "bg-purple-700 justify-end" : "bg-purple-300 justify-start"
+            modoEscuro
+              ? "bg-purple-300 justify-end"
+              : "bg-purple-700 justify-start"
           }`}
         >
           <div className="w-4 h-4 bg-white rounded-full shadow-md transition-all duration-300" />

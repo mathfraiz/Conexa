@@ -54,7 +54,7 @@ export default function UsuarioEventos() {
     if (eventoParaDeletar) {
       const token = sessionStorage.getItem("token");
       const resposta = await fetch(
-        `http://localhost:3000/evento/${eventoParaDeletar.id}`,
+        `http://localhost:3000/eventos/${eventoParaDeletar.id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -62,6 +62,7 @@ export default function UsuarioEventos() {
       );
       if (resposta.ok) {
         setEventoParaDeletar(null);
+
         buscarEventos();
       } else if (resposta.status == 201) {
         logout();

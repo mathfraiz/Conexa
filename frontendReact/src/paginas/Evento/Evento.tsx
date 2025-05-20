@@ -24,7 +24,7 @@ const EventoPage = () => {
   //   email: "",
   //   tipo: "",
   // });
-  const { usuario, isAutenticado, logout } = useAuth();
+  const { usuario, logout } = useAuth();
   const [evento, setEvento] = useState<Evento | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [mensagem, setMensagem] = useState("");
@@ -103,13 +103,13 @@ const EventoPage = () => {
 
   useEffect(() => {
     console.log("usuario");
-    if (!isAutenticado) {
-      console.log("autebt");
-      // navigate("/login");
+    if (!usuario) {
+      console.log("oi");
+      return;
     }
     buscarEvento();
     verificaInscricao(evento?.id);
-  }, [id, !isAutenticado]);
+  }, [id, usuario]);
 
   useEffect(() => {
     buscarEndereco(evento?.endereco_id);
@@ -122,7 +122,7 @@ const EventoPage = () => {
 
   const inscreverUsuario = async () => {
     if (usuario?.id === 0) {
-      navigate("/login");
+      navigate("/");
       return;
     }
     console.log(usuario?.id, evento?.id);

@@ -1,12 +1,28 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../componentes/BarraNav";
 import BarraLateral from "../../componentes/BarraLateral";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const ConfiguracoesAdm = () => {
+  const navigate = useNavigate();
+  const { usuario } = useAuth();
   const [sidebarAberta, setSidebarAberta] = useState(false);
   const [tema, setTema] = useState("Claro");
   const [cadastroHabilitado, setCadastroHabilitado] = useState(true);
   const [limiteHorario, setLimiteHorario] = useState("");
+
+  useEffect(() => {
+    console.log(usuario);
+    if (!usuario) {
+      navigate("/");
+    }
+    if (usuario) {
+      if (usuario?.tipo === "usuario") {
+        navigate("/PaginaInicialLogin");
+      }
+    }
+  }, [usuario]);
 
   useEffect(() => {
     const temaSalvo = localStorage.getItem("tema");

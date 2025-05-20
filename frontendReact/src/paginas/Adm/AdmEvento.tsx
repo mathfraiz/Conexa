@@ -8,8 +8,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import FiltroEventos from "../../componentes/FiltroEventos";
 import { Navigate, useNavigate } from "react-router-dom";
 import Rodape from "../../componentes/Rodape";
-import Evento from "../../types/Evento";
-
+import {Evento} from "../../types/Evento.ts";
 
 const AdmEvento = () => {
   const navigate = useNavigate();
@@ -41,7 +40,7 @@ const AdmEvento = () => {
 
   useEffect(() => {
     if (!usuario) {
-      navigate("/login");
+      navigate("/");
     }
     if (usuario) {
       if (usuario?.tipo === "usuario") {

@@ -33,17 +33,7 @@ const Adm = () => {
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(
     null
   );
-  useEffect(() => verificaTipo());
 
-  const [usuarioSession, setUsuarioSessio] = useSessionStorage<any>("usuario", {
-    id: 0,
-    nome: "",
-    email: "",
-    senha: "",
-    telefone: "",
-    tipo: "",
-    imagem_perfil: "",
-  });
 
   const carregarUsuarios = async () => {
     try {
@@ -109,11 +99,7 @@ const Adm = () => {
       carregarUsuarios();
     }
   };
-  const verificaTipo = () => {
-    if (usuarioSession.tipo !== "admin") {
-      location.href = "http://localhost:3000/login";
-    }
-  };
+
 
   return (
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen ">

@@ -46,6 +46,11 @@ const AdmUsuario = () => {
       if (response.ok) {
         const data: Usuario[] = await response.json();
         setUsuarios(data);
+      } else {
+        setModalMensagem("erro ao buscar usuarios");
+        setTimeout(() => {
+          setModalMensagem("");
+        }, 3000);
       }
     } catch (error) {
       console.error("Erro ao buscar usuários:", error);
@@ -55,7 +60,7 @@ const AdmUsuario = () => {
   useEffect(() => {
     console.log(usuario);
     if (!usuario) {
-      navigate("/login");
+      navigate("/");
     }
     if (usuario) {
       if (usuario?.tipo === "usuario") {

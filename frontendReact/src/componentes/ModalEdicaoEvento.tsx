@@ -58,7 +58,6 @@ const ModalEdicaoEvento: React.FC<ModalEdicaoEventoProps> = ({
     if (imagem instanceof File) {
       formData.append("imagem", imagem);
     }
-
     try {
       await fetch(`http://localhost:3000/evento/${evento.id}`, {
         method: "PUT",

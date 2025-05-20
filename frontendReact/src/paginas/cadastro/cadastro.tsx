@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef, KeyboardEvent } from "react";
 import Rodape from "../../componentes/Rodape";
 import Navbar from "../../componentes/BarraNav";
 import { useAuth } from "../../contexts/AuthContext";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Cadastro: React.FC = () => {
   const [modalMensagem, setModalMensagem] = useState("");
   const { usuario, login } = useAuth();
 
   const [mostrarModal, setMostrarModal] = useState(false);
+  const navigate = useNavigate();
 
   // Form states
   const [nome, setNome] = useState("");
@@ -136,23 +138,21 @@ const Cadastro: React.FC = () => {
     return regexTelefone.test(telefone);
   };
   const validarNome = (nome: string) => {
-  const nomeLimpo = nome.trim();
-  const regex = /^[A-Za-zÀ-ÿ\s]{4,}$/; 
-  return regex.test(nomeLimpo);
-};
+    const nomeLimpo = nome.trim();
+    const regex = /^[A-Za-zÀ-ÿ\s]{4,}$/;
+    return regex.test(nomeLimpo);
+  };
 
   const handleNomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const valorLimpo = e.target.value.replace(/[^A-Za-zÀ-ÿ\s]/g, "");
-  setNome(valorLimpo);
+    const valorLimpo = e.target.value.replace(/[^A-Za-zÀ-ÿ\s]/g, "");
+    setNome(valorLimpo);
 
-  if (!validarNome(valorLimpo)) {
-    setNomeErro("Digite seu nome completo.");
-  } else {
-    setNomeErro("");
-  }
-};
-
-
+    if (!validarNome(valorLimpo)) {
+      setNomeErro("Digite seu nome completo.");
+    } else {
+      setNomeErro("");
+    }
+  };
 
   const formatarTelefone = (telefone: string) => {
     const numerosApenas = telefone.replace(/\D/g, "");
@@ -303,13 +303,14 @@ const Cadastro: React.FC = () => {
 
   useEffect(() => {
     if (!usuario) {
+      navigate("/login");
       return;
     }
     if (usuario.id > 0) {
       if (usuario?.tipo === "admin") {
-        location.href = "/admusuarios";
+        navigate("/admusuarios");
       } else if (usuario?.tipo === "usuario") {
-        location.href = "/paginaInicialLogin";
+        navigate("/paginaInicialLogin");
       }
     }
   }, [usuario]);
@@ -334,8 +335,10 @@ const Cadastro: React.FC = () => {
       form.set("imagem_perfil", imagemPreview);
     }
     if (!validarNome(nome)) {
-      setNomeErro("Preencha este campo com seu nome completo (mínimo 4 letras).");
-      return; 
+      setNomeErro(
+        "Preencha este campo com seu nome completo (mínimo 4 letras)."
+      );
+      return;
     }
 
     if (validarEmail(email)) {
@@ -406,25 +409,26 @@ const Cadastro: React.FC = () => {
               </div>
 
               {/* Nome */}
-<div className="mb-4">
-  <label className="block text-sm font-medium text-gray-700">
-    Nome
-  </label>
-  <input
-    type="text"
-    placeholder="Digite seu nome"
-    value={nome}
-    onChange={handleNomeChange}
-    className={`mt-1 block w-full px-3 py-2 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500 ${
-      nomeErro ? "border-red-500 border-2" : "border border-gray-300"
-    }`}
-    required
-  />
-  {nomeErro && (
-    <p className="text-sm text-red-500 mt-2">{nomeErro}</p>
-  )}
-</div>
-
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Nome
+                </label>
+                <input
+                  type="text"
+                  placeholder="Digite seu nome"
+                  value={nome}
+                  onChange={handleNomeChange}
+                  className={`mt-1 block w-full px-3 py-2 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500 ${
+                    nomeErro
+                      ? "border-red-500 border-2"
+                      : "border border-gray-300"
+                  }`}
+                  required
+                />
+                {nomeErro && (
+                  <p className="text-sm text-red-500 mt-2">{nomeErro}</p>
+                )}
+              </div>
 
               {/* CEP */}
               {/* <div className="mb-4">

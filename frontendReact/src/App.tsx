@@ -5,7 +5,7 @@ import Login from "./paginas/login/login";
 import Cadastro from "./paginas/cadastro/cadastro";
 import Home from "./paginas/index/index";
 import RecuperacaoSenha from "./paginas/recuperação/recuperação";
-import PaginaIncialLogin from "./paginas/PaginaInicialLogin/PaginaInicialLogin";
+import PaginaInicialLogin from "./paginas/PaginaInicialLogin/PaginaInicialLogin";
 import CriarEvento from "./paginas/cadastroEvento/cadastroEvento";
 // import Index from "./paginas/index";
 import AdmUsuario from "./paginas/Adm/AdmUsuario";
@@ -26,12 +26,13 @@ function App() {
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/recuperação" element={<RecuperacaoSenha />} />
           <Route path="/cadastroEvento" element={<CriarEvento />} />
-          <Route path="/PaginaInicialLogin" element={<PaginaIncialLogin />} />
+          <Route path="/PaginaInicialLogin" element={<PaginaInicialLogin />} />
           <Route path="/admusuarios" element={<AdmUsuario />} />
           <Route path="/eventos/:id" element={<EventoPage />} />
           <Route path="/admEventos" element={<AdmEvento />} />
           <Route path="/Eventos/Usuario" element={<UsuarioEventos />} />
           <Route path="/configuracoes" element={<ConfiguracoesAdm />} />
+          <Route path="*" element={<Home />} />
         </Routes>
       </BrowserRouter>
     </div>

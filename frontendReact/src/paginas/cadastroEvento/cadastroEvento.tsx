@@ -37,13 +37,14 @@ const CriarEvento = () => {
   form.append("numero", numero);
   form.append("cidade", cidade);
   form.append("UF", UF);
+
   if (imagemArquivo) {
     form.append("imagem", imagemArquivo);
   }
 
   useEffect(() => {
     if (usuario?.id === 0 || !usuario) {
-      location.href = "/login";
+      navigate("/");
     }
   }, [usuario]);
 
