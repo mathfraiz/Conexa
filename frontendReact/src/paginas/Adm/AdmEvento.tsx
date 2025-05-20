@@ -8,12 +8,12 @@ import { useAuth } from "../../contexts/AuthContext";
 import FiltroEventos from "../../componentes/FiltroEventos";
 import { Navigate, useNavigate } from "react-router-dom";
 import Rodape from "../../componentes/Rodape";
-import {Evento} from "../../types/Evento.ts";
+import { Evento } from "../../types/Evento.ts";
 
 const AdmEvento = () => {
   const navigate = useNavigate();
   const [EventoList, setEventoList] = useState<Evento[]>([]);
-  const { usuario } = useAuth();
+  const { usuario, token } = useAuth();
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [sidebarAberta, setSidebarAberta] = useState(false);
   const [isModalNovoOpen, setIsModalNovoOpen] = useState(false);
@@ -62,6 +62,9 @@ const AdmEvento = () => {
   const deletarEvento = async (id: number) => {
     try {
       const resp = await fetch(`http://localhost:3000/eventos/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         method: "DELETE",
       });
       if (resp.ok) {
