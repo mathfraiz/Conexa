@@ -1,22 +1,14 @@
 import React, { use, useEffect, useState } from "react";
 import Navbar from "../../componentes/BarraNav";
 import BarraLateral from "../../componentes/BarraLateral";
-import Rodape from "../../componentes/Rodape"; // ✅ Adicionado aqui
+import Rodape from "../../componentes/Rodape";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function PaginaInicialAdmin() {
-  const navigate = useNavigate();
   const { usuario } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  useEffect(() => {
-    if (!usuario) {
-      navigate("/");
-    } else if (usuario.tipo == "usuario") {
-      navigate("/PaginaInicialLogin");
-    }
-  });
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

@@ -122,7 +122,10 @@ routerUsuario.put(
 
     try {
       const { nome, email, telefone, senha, senhaNova, tipo } = req.body;
-      const imagem = req.file?.buffer || null;
+      let imagem = req.file?.buffer || null;
+      if (req.body.imagem_perfil == "") {
+        imagem = "vazio";
+      }
 
       const usuarioAtualizado = await Usuario.atualizarUsuario(
         id,
@@ -136,12 +139,14 @@ routerUsuario.put(
       );
       console.log("passou1");
       if (usuarioAtualizado) {
+        console.log("usuario image", usuarioAtualizado.imagem_perfil);
         if (usuarioAtualizado.imagem_perfil)
           usuarioAtualizado.imagem_perfil = `data:image/jpeg;base64,${usuarioAtualizado.imagem_perfil.toString(
             "base64"
           )}`;
-      } else {res.status(401).json("senha incorreta");
-        console.log("senha incorreta")
+      } else {
+        res.status(401).json("senha incorreta");
+        console.log("senha incorreta");
       }
 
       console.log(usuarioAtualizado);

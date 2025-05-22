@@ -98,9 +98,9 @@ const Cadastro: React.FC = () => {
           setTimeout(() => {
             setMostrarModal(false);
             if (loginData.usuario.tipo === "admin") {
-              location.href = "/admusuarios";
+              navigate("paginainiciallogin");
             } else {
-              location.href = "/paginaInicialLogin";
+              navigate("/admin");
             }
           }, 2000);
         } else {
@@ -301,20 +301,6 @@ const Cadastro: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (!usuario) {
-      navigate("/login");
-      return;
-    }
-    if (usuario.id > 0) {
-      if (usuario?.tipo === "admin") {
-        navigate("/admusuarios");
-      } else if (usuario?.tipo === "usuario") {
-        navigate("/paginaInicialLogin");
-      }
-    }
-  }, [usuario]);
-
   const toggleMostrarSenha = () => {
     setMostrarSenha(!mostrarSenha);
   };
@@ -372,42 +358,6 @@ const Cadastro: React.FC = () => {
           <div className="w-full max-w">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Cadastro</h2>
             <form onSubmit={handleSubmit}>
-              {/* Foto de Perfil */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Foto de Perfil
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImagemChange}
-                  ref={fileInputRef}
-                  className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 
-                       file:rounded-md file:border-0 file:text-purple-700 
-                       file:bg-purple-100 hover:file:bg-purple-200 cursor-pointer"
-                />
-                {imagemPreview && (
-                  <div className="mt-2 flex flex-col items-start">
-                    <img
-                      src={
-                        imagemPreview
-                          ? URL.createObjectURL(imagemPreview)
-                          : "/imagem_Icon_User.png"
-                      }
-                      alt="Preview"
-                      className="w-20 h-20 rounded-full object-cover border border-gray-300 shadow"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleRemoverImagem}
-                      className="mt-2 text-sm text-red-500 hover:text-red-700"
-                    >
-                      Remover imagem
-                    </button>
-                  </div>
-                )}
-              </div>
-
               {/* Nome */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
@@ -624,6 +574,42 @@ const Cadastro: React.FC = () => {
                     {mostrarSenhaConf ? "🔓" : "🔒"}
                   </button>
                 </div>
+              </div>
+              {/* Foto de Perfil */}
+              <div className="mb-4">
+                <div className="flex items-center gap-2">
+                  {imagemPreview && (
+                    <img
+                      src={
+                        imagemPreview
+                          ? URL.createObjectURL(imagemPreview)
+                          : "/imagem_Icon_User.png"
+                      }
+                      alt="Prévia"
+                      className="w-24 h-24 object-cover rounded-xl border-2 border-purple-400 shadow-md"
+                    />
+                  )}
+
+                  <label className="cursor-pointer bg-purple-100 text-purple-700 px-4 py-2 rounded-xl border border-purple-300 hover:bg-purple-200 transition">
+                    Selecionar imagem
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImagemChange}
+                    />
+                  </label>
+                </div>
+
+                {imagemPreview && (
+                  <button
+                    type="button"
+                    onClick={handleRemoverImagem}
+                    className="mt-2 text-sm text-red-500 hover:text-red-700"
+                  >
+                    Remover imagem
+                  </button>
+                )}
               </div>
 
               {/* Botão de Salvar */}

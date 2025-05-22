@@ -9,7 +9,7 @@ import Rodape from "../../componentes/Rodape";
 import FiltroEventos from "../../componentes/FiltroEventos";
 
 const Inscritos = () => {
-  const { usuario, logout } = useAuth();
+  const { usuario} = useAuth();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [eventosList, setEventos] = useState<Evento[]>([]);
 

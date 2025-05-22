@@ -42,12 +42,6 @@ const CriarEvento = () => {
     form.append("imagem", imagemArquivo);
   }
 
-  useEffect(() => {
-    if (usuario?.id === 0 || !usuario) {
-      navigate("/");
-    }
-  }, [usuario]);
-
   const [showModal, setShowModal] = useState(false);
   const [cadastroSucesso, setCadastroSucesso] = useState(false);
 

@@ -12,17 +12,6 @@ const ConfiguracoesAdm = () => {
   const [cadastroHabilitado, setCadastroHabilitado] = useState(true);
   const [limiteHorario, setLimiteHorario] = useState("");
 
-  useEffect(() => {
-    console.log(usuario);
-    if (!usuario) {
-      navigate("/");
-    }
-    if (usuario) {
-      if (usuario?.tipo === "usuario") {
-        navigate("/PaginaInicialLogin");
-      }
-    }
-  }, [usuario]);
 
   useEffect(() => {
     const temaSalvo = localStorage.getItem("tema");

@@ -95,15 +95,19 @@ class Usuario {
           const senhaCriptografada = await bcrypt.hash(senhaNova, 10);
           campos.push("senha = ?");
           valores.push(senhaCriptografada);
-        }else{return}
+        } else {
+          return;
+        }
       }
 
-      if (foto) {
+      if (foto == "vazio") {
+        campos.push("imagem_perfil = ?");
+        valores.push(null);
+      } else if (foto) {
         campos.push("imagem_perfil = ?");
         valores.push(foto);
       }
 
-      // Monta a SQL dinamicamente
       const sql = `UPDATE usuario SET ${campos.join(", ")} WHERE id = ?`;
       valores.push(id);
       console.log(sql);

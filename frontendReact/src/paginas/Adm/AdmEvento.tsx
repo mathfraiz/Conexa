@@ -38,27 +38,6 @@ const AdmEvento = () => {
     }
   };
 
-  useEffect(() => {
-    if (!usuario) {
-      navigate("/");
-    }
-    if (usuario) {
-      if (usuario?.tipo === "usuario") {
-        navigate("/PaginaInicialLogin");
-      }
-      if (usuario?.id) {
-        verificaTipo();
-      }
-    }
-    carregarEventos();
-  }, [usuario]);
-
-  const verificaTipo = () => {
-    if (usuario?.tipo !== "admin") {
-      navigate("/login");
-    }
-  };
-
   const deletarEvento = async (id: number) => {
     try {
       const resp = await fetch(`http://localhost:3000/eventos/${id}`, {

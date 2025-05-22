@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   isOpen: boolean;
 }
 
 const BarraLateral: React.FC<Props> = ({ isOpen }) => {
+  const navigate = useNavigate();
   const { usuario } = useAuth();
   const [tipo, setTipo] = useState("");
   const [modoEscuro, setModoEscuro] = useState(false);
@@ -35,8 +37,6 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
     localStorage.setItem("modoEscuro", JSON.stringify(modoEscuro));
   }, [modoEscuro]);
 
-  const isAdmin = tipo === "admin";
-
   return (
     <aside
       className={`fixed top-16 left-0 z-40 h-full w-60 p-6 bg-white shadow-xl transition-transform duration-300 border-r-2 border-purple-300 flex flex-col justify-between ${
@@ -44,63 +44,79 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
       }`}
     >
       <div className="flex flex-col gap-4">
-        {isAdmin ? (
+        {tipo === "admin" ? (
           <>
-            <Link
-              to="/admin"
+            <button
+              onClick={() => {
+                navigate("/admin");
+              }}
               className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
             >
               Página Inicial
-            </Link>
-            <Link
-              to="/admusuarios"
+            </button>
+            <button
+              onClick={() => {
+                navigate("/admusuarios");
+              }}
               className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
             >
               Gerenciar Usuários
-            </Link>
-            <Link
-              to="/admeventos"
+            </button>
+            <button
+              onClick={() => {
+                navigate("/admeventos");
+              }}
               className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
             >
               Gerenciar Eventos
-            </Link>
-            <Link
-              to="/configuracoes"
+            </button>
+            <button
+              onClick={() => {
+                navigate("/configuracoes");
+              }}
               className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
             >
               Configurações
-            </Link>
+            </button>
           </>
         ) : tipo === "usuario" ? (
           <>
-            <Link
-              to="/cadastroEvento"
+            <button
+              onClick={() => {
+                navigate("/cadastroEvento");
+              }}
               className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
             >
               Criar Evento
-            </Link>
-            <Link
-              to="/eventos/usuario"
+            </button>
+            <button
+              onClick={() => {
+                navigate("/eventos/usuario");
+              }}
               className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
             >
               Meus Eventos
-            </Link>
-            <Link
-              to="/Inscricoes"
+            </button>
+            <button
+              onClick={() => {
+                navigate("/inscricoes");
+              }}
               className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
             >
               Minhas incricoes
-            </Link>
+            </button>
           </>
         ) : null}
 
         {/* Botão "Sobre" para ambos os tipos */}
-        <Link
-          to="/"
+        <button
+          onClick={() => {
+            navigate("/");
+          }}
           className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
         >
           Sobre
-        </Link>
+        </button>
       </div>
 
       {/* Botão Modo Escuro */}

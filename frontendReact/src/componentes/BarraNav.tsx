@@ -18,7 +18,6 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
   const { usuario } = useAuth();
   const navigate = useNavigate();
 
-  const [isLogado, setIsLogado] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [modalPerfilOpen, setModalPerfilOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -33,21 +32,6 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  useEffect(() => {
-    if (!usuario) {
-      setIsLogado(false);
-      return;
-    } else {
-      if (usuario) {
-        if (usuario?.id > 0) {
-          setIsLogado(true);
-        } else if (usuario?.id === 0) {
-          setIsLogado(false);
-        }
-      }
-    }
-  }, [usuario]);
 
   const handleClosePerfil = (foiSalvo: boolean) => {
     setModalPerfilOpen(false);
@@ -81,10 +65,10 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
 
           <button
             onClick={() => {
-              if (isLogado && usuario?.tipo === "usuario") {
-                navigate("/PaginaInicialLogin");
-              } else {
-                navigate("/");
+              if (usuario?.tipo === "usuario") {
+                navigate("/paginainiciallogin");
+              } else if (usuario?.tipo === "admin") {
+                navigate("/admin");
               }
             }}
             className="text-3xl font-extrabold tracking-wide bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent animate-gradient transition duration-200 active:scale-95 active:translate-y-[1px] active:drop-shadow-md"
@@ -94,24 +78,21 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
         </div>
 
         <div className="flex items-center gap-6">
-          {!isLogado ? (
+          {!usuario ? (
             <>
-              {location.href != "http://localhost:5173/login" && (
-                <Link
-                  to="/login"
-                  className="bg-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-gray-300 transition-all"
-                >
-                  Entrar
-                </Link>
-              )}
-              {location.href !== "http://localhost:5173/cadastro" && (
-                <Link
-                  to="/cadastro"
-                  className="border-2 border-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-amber-400 transition-all"
-                >
-                  Criar Conta
-                </Link>
-              )}
+              <Link
+                to="/login"
+                className="bg-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-gray-300 transition-all"
+              >
+                Entrar
+              </Link>
+
+              <Link
+                to="/cadastro"
+                className="border-2 border-amber-400 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-amber-400 transition-all"
+              >
+                Criar Conta
+              </Link>
             </>
           ) : (
             <button

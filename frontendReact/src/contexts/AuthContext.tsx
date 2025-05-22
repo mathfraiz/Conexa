@@ -1,4 +1,3 @@
-// src/contexts/AuthContext.tsx
 import {
   createContext,
   useContext,
@@ -29,6 +28,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  
 
   useEffect(() => {
     const storedUsuario = sessionStorage.getItem("usuario");

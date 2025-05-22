@@ -29,12 +29,8 @@ const PaginaInicialLogin = () => {
   const [eventos1, setEventos] = useState<Evento[]>([]);
 
   useEffect(() => {
-    if (!usuario) {
-      navigate("/");
-    } else {
-      navigate("/PaginaInicialLogin");
-      respEventos();
-    }
+    if(usuario)
+    respEventos();
   }, [usuario]);
 
   const respEventos = async () => {

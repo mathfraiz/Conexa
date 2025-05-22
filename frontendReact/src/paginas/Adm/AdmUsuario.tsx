@@ -27,7 +27,6 @@ const AdmUsuario = () => {
     useState<string>("");
 
   const [modalOpen, setModalOpen] = useState(false);
-  const navigate = useNavigate();
   const [modalMensagem, setModalMensagem] = useState("");
   const [sucesso, setSucesso] = useState(true);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
@@ -58,15 +57,6 @@ const AdmUsuario = () => {
   };
 
   useEffect(() => {
-    console.log(usuario);
-    if (!usuario) {
-      navigate("/");
-    }
-    if (usuario) {
-      if (usuario?.tipo === "usuario") {
-        navigate("/PaginaInicialLogin");
-      }
-    }
     carregarUsuarios();
   }, [usuario]);
 

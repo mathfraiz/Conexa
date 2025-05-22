@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { url } from "inspector";
 
 interface Usuario {
   id: number;
@@ -151,6 +152,8 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
 
       if (imagemPerfil instanceof File) {
         form.append("imagem_perfil", imagemPerfil);
+      } else if (imagemPerfil == null) {
+        form.append("imagem_perfil", "");
       }
 
       const response = await fetch(
@@ -166,7 +169,6 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
       const resp = await response.json();
 
       if (response.ok) {
-        
         console.log("nome");
         console.log(resp.nome);
         const dadosAtualizados = {
@@ -185,10 +187,9 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
         setTimeout(() => {
           setErroSenha("");
         }, 2000);
-      }
-      else {
-        console.log("response erro")
-        console.log(response.status)
+      } else {
+        console.log("response erro");
+        console.log(response.status);
       }
     } catch (err) {
       console.error("Erro ao atualizar perfil:", err);
@@ -334,7 +335,7 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
             </label>
           </div>
 
-          {imagemPerfil && (
+          {imagemPerfil ? (
             <div className="flex flex-col items-center">
               <button
                 type="button"
@@ -344,6 +345,12 @@ const ModalEdicaoUsuario: React.FC<ModalEdicaoUsuarioProps> = ({
                 Remover imagem
               </button>
             </div>
+          ) : (
+            <img
+              src={preview || "./imagem_Icon_User.png"}
+              alt="Prévia"
+              className="w-24 h-24 object-cover rounded-xl border-2 border-purple-400 shadow-md"
+            />
           )}
 
           <div className="flex justify-end gap-3 pt-2 sticky bottom-0 bg-white pb-2">

@@ -24,7 +24,7 @@ const EventoPage = () => {
   //   email: "",
   //   tipo: "",
   // });
-  const { usuario, logout } = useAuth();
+  const { usuario, token, logout } = useAuth();
   const [evento, setEvento] = useState<Evento | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [mensagem, setMensagem] = useState("");
@@ -81,12 +81,12 @@ const EventoPage = () => {
       if (resp.ok) {
         const data = await resp.json();
         setEvento(data);
-        // buscarIncricoesUsuario(usuario.id);
+        buscarIncricoesUsuario(usuario?.id);
       } else {
         setMensagem("Evento não encontrado.");
         setTimeout(() => {
           setMensagem("");
-          navigate("/login");
+          navigate("/PaginaInicialLogin");
         }, 3000);
       }
     } catch (err) {
@@ -94,7 +94,7 @@ const EventoPage = () => {
       setMensagem("Erro ao buscar evento.");
       setTimeout(() => {
         setMensagem("");
-        navigate("/login");
+        navigate("/PaginaInicialLogin");
       }, 3000);
     } finally {
       setCarregando(false);
@@ -104,7 +104,6 @@ const EventoPage = () => {
   useEffect(() => {
     console.log("usuario");
     if (!usuario) {
-      console.log("oi");
       return;
     }
     buscarEvento();
@@ -121,12 +120,6 @@ const EventoPage = () => {
   }, [evento, inscricao]);
 
   const inscreverUsuario = async () => {
-    if (usuario?.id === 0) {
-      navigate("/");
-      return;
-    }
-    console.log(usuario?.id, evento?.id);
-
     try {
       const token = sessionStorage.getItem("token");
 
@@ -166,10 +159,6 @@ const EventoPage = () => {
   };
 
   const desinscreverUsuario = async (id: number) => {
-    const token = sessionStorage.getItem("token");
-    if (!usuario) {
-      return;
-    }
     try {
       const resp = await fetch(`http://localhost:3000/inscricao/${id}`, {
         method: "DELETE",
@@ -227,10 +216,6 @@ const EventoPage = () => {
         setTimeout(() => {
           setMensagem("");
         }, 3000);
-      }
-      if (resp.status == 401) {
-        logout();
-        navigate("/login");
       }
     } catch (err) {
       console.error(err);

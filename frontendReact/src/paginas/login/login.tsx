@@ -19,18 +19,6 @@ const Login: React.FC = () => {
   const sugestoesRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (usuario) {
-      if (usuario.id > 0) {
-        if (usuario.tipo === "admin") {
-          navigate("/admin");
-        } else if (usuario.tipo === "usuario") {
-          navigate("/paginaInicialLogin");
-        }
-      }
-    }
-  }, [usuario]);
-
   const logar = async (email: string, senha: string) => {
     if (!(email && senha)) return;
 
@@ -47,11 +35,14 @@ const Login: React.FC = () => {
         setVerdeMensagem(true);
         setModalMensagem("Login realizado com sucesso");
         setMostrarModal(true);
-        setTimeout(()=>{
-        login(data.usuario, data.token); // salva no contexto global
-
-        },3000)
-
+        login(data.usuario, data.token);
+        setTimeout(() => {
+          if (data.usuario?.tipo == "usuario") {
+            navigate("/paginainiciallogin");
+          } else if (data.usuario?.tipo == "admin") {
+            navigate("/admin");
+          }
+        }, 2000);
       } else {
         setVerdeMensagem(false);
         setModalMensagem("Email ou senha incorretos");

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ModalEdicaoUsuario from "../../../componentes/ModalEdicaoUsuario";
-import useSessionStorage from "../../../../hook/useSessionStorage";
 import { useAuth } from "../../../contexts/AuthContext";
 
 const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
@@ -29,8 +28,6 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
     };
   }, [onClosePerfil, mostrarModal]);
 
-  if (!usuario) return null;
-
   const handleEditarClick = () => {
     setMostrarModal(true);
   };
@@ -42,9 +39,9 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
 
   const handleLogout = () => {
     logout();
-    sessionStorage.removeItem("token");
     navigate("/login");
   };
+  
 
   return (
     <div className="fixed top-[0rem] right-6 z-50 w-80 animate-fade-in">
@@ -55,17 +52,17 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
         >
           <div className="flex flex-col items-center">
             <img
-              src={usuario.imagem_perfil || "./imagem_Icon_User.png"}
+              src={usuario?.imagem_perfil || "./imagem_Icon_User.png"}
               alt="Perfil"
               className="w-24 h-24 rounded-full object-cover border-4 border-purple-600 shadow-md"
             />
             <h2 className="text-xl font-bold text-purple-800 mt-4">
-              {usuario.nome}
+              {usuario?.nome}
             </h2>
-            <p className="text-gray-600 text-sm">{usuario.email}</p>
-            <p className="text-gray-600 text-sm">{usuario.telefone}</p>
+            <p className="text-gray-600 text-sm">{usuario?.email}</p>
+            <p className="text-gray-600 text-sm">{usuario?.telefone}</p>
             <span className="mt-2 px-3 py-1 text-sm font-medium text-purple-800 bg-purple-100 rounded-full">
-              {usuario.tipo === "admin" ? "Administrador" : "Usuário"}
+              {usuario?.tipo === "admin" ? "Administrador" : "Usuário"}
             </span>
           </div>
 
