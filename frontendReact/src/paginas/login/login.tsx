@@ -201,7 +201,7 @@ const Login: React.FC = () => {
             <p className="text-sm text-gray-600">
               Esqueceu a senha?{" "}
               <Link
-                to="/recuperacao"
+                to="/recuperação"
                 className="text-purple-600 hover:text-purple-500"
               >
                 Recuperar senha
