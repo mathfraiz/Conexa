@@ -29,8 +29,7 @@ const PaginaInicialLogin = () => {
   const [eventos1, setEventos] = useState<Evento[]>([]);
 
   useEffect(() => {
-    if(usuario)
-    respEventos();
+    if (usuario) respEventos();
   }, [usuario]);
 
   const respEventos = async () => {
@@ -70,32 +69,33 @@ const PaginaInicialLogin = () => {
   };
 
   return (
-    <div className="min-h-screen  flex flex-col bg-[url(/logo.jpg)] text-white bg-cover bg-center">
+    <div className="min-h-screen flex flex-col bg-[url(/logo.jpg)] text-white bg-cover bg-center">
       {/* Navbar fixa no topo */}
       <div className="flex-shrink-0">
         <Navbar onToggleSidebar={toggleSidebar} />
       </div>
 
-      <div className="flex pt-8   h-full">
+      <div className="flex flex-1">
         {/* Sidebar */}
         <BarraLateral isOpen={sidebarOpen} />
 
-        {/* Conteúdo */}
+        {/* Conteúdo principal */}
         <main
-          className={`flex-1  overflow-y-auto flex-grow flex-wrap  transition-all overflow-y-hidden  min-h-screen overflow-x-hidden duration-300 ${
-            sidebarOpen ? "ml-60" : "ml-0 "
+          className={`flex-1 flex flex-col overflow-x-hidden transition-all duration-300 ${
+            sidebarOpen ? "ml-60" : "ml-0"
           }`}
         >
           {mensagem && (
             <span className="bg-yellow-500 text-white text-lg">{mensagem}</span>
           )}
+
           <FiltroEventos
             eventosList={eventosList}
             setEventos={setEventos}
             sidebarAberta={sidebarOpen}
           />
 
-          <div className="grid grid-cols-1 flex flex-grow mr-12 sm:grid-cols-2 pl-6 lg:grid-cols-3 gap-6 over">
+          <div className="grid grid-cols-1 mr-12 sm:grid-cols-2 pl-6 lg:grid-cols-3 gap-6 flex-grow">
             {eventos1.map((evento) => (
               <MotionContainer
                 key={evento.id}
@@ -148,9 +148,7 @@ const PaginaInicialLogin = () => {
             ))}
           </div>
 
-          <div
-            className={` bottom-0   w-full mt-10 transition-all duration-300 `}
-          >
+          <div className="mt-auto">
             <Rodape />
           </div>
         </main>
