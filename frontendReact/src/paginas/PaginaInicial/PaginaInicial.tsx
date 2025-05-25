@@ -17,7 +17,7 @@ import { Evento } from "../../types/Evento";
 //   tipo:string,
 // }
 
-const PaginaInicialLogin = () => {
+const PaginaInicial = () => {
   const navigate = useNavigate();
   const { usuario, logout } = useAuth();
   const [mensagem, setMensagem] = useState("");
@@ -157,4 +157,4 @@ const PaginaInicialLogin = () => {
   );
 };
 
-export default PaginaInicialLogin;
+export default PaginaInicial;

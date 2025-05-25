@@ -86,7 +86,7 @@ const EventoPage = () => {
         setMensagem("Evento não encontrado.");
         setTimeout(() => {
           setMensagem("");
-          navigate("/PaginaInicialLogin");
+          navigate("/PaginaInicial");
         }, 3000);
       }
     } catch (err) {
@@ -94,7 +94,7 @@ const EventoPage = () => {
       setMensagem("Erro ao buscar evento.");
       setTimeout(() => {
         setMensagem("");
-        navigate("/PaginaInicialLogin");
+        navigate("/PaginaInicial");
       }, 3000);
     } finally {
       setCarregando(false);

@@ -83,7 +83,7 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
           <>
           <button
   onClick={() => {
-    navigate("/paginainiciallogin");
+    navigate("/paginainicial");
   }}
   className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
 >

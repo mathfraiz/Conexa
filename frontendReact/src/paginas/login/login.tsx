@@ -38,7 +38,7 @@ const Login: React.FC = () => {
         login(data.usuario, data.token);
         setTimeout(() => {
           if (data.usuario?.tipo == "usuario") {
-            navigate("/paginainiciallogin");
+            navigate("/paginainicial");
           } else if (data.usuario?.tipo == "admin") {
             navigate("/admin");
           }
