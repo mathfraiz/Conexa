@@ -34,7 +34,7 @@ export default function RotasApp() {
           <Route path="/admusuarios" element={<AdmUsuario />} />
           <Route path="/admeventos" element={<AdmEvento />} />
           <Route path="/configuracoes" element={<ConfiguracoesAdm />} />
-        </> 
+        </>
       )}
       {usuario?.tipo === "usuario" && (
         <>

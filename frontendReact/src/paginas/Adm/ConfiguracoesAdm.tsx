@@ -12,7 +12,6 @@ const ConfiguracoesAdm = () => {
   const [cadastroHabilitado, setCadastroHabilitado] = useState(true);
   const [limiteHorario, setLimiteHorario] = useState("");
 
-
   useEffect(() => {
     const temaSalvo = localStorage.getItem("tema");
     if (temaSalvo === "Escuro") {

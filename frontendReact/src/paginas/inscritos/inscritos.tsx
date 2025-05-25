@@ -9,7 +9,7 @@ import Rodape from "../../componentes/Rodape";
 import FiltroEventos from "../../componentes/FiltroEventos";
 
 const Inscritos = () => {
-  const { usuario} = useAuth();
+  const { usuario } = useAuth();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [eventosList, setEventos] = useState<Evento[]>([]);
 
@@ -62,7 +62,7 @@ const Inscritos = () => {
           {/* <div className="">
 
           </div> */}
-          
+
           <div className=" flex flex-grow grid grid-cols-1 mr-12 sm:grid-cols-2 pl-6 lg:grid-cols-3 gap-6">
             {eventosList?.map((evento) => (
               <MotionContainer

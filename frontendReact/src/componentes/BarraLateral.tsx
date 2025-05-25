@@ -81,14 +81,14 @@ const BarraLateral: React.FC<Props> = ({ isOpen }) => {
           </>
         ) : tipo === "usuario" ? (
           <>
-          <button
-  onClick={() => {
-    navigate("/paginainicial");
-  }}
-  className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
->
-  Página Inicial
-</button>
+            <button
+              onClick={() => {
+                navigate("/paginainicial");
+              }}
+              className="text-purple-700 font-bold py-2 px-4 rounded-xl border border-purple-500 hover:bg-purple-100 transition"
+            >
+              Página Inicial
+            </button>
 
             <button
               onClick={() => {

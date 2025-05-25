@@ -1,16 +1,16 @@
 #root {
   max-width: 1280px;
-  margin: 0px ;
+  margin: 0px;
   padding: 0px;
   text-align: center;
 }
-
 
 .read-the-docs {
   color: #888;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   overflow-x: hidden;
   margin: 0;
