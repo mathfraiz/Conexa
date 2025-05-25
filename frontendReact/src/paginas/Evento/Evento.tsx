@@ -258,64 +258,65 @@ const EventoPage = () => {
               backgroundBlendMode: "overlay",
             }}
           >
-            <div
-              className="rounded-lg shadow p-6 space-y-4"
-              style={{
-                backgroundImage: `
+            <div className="ignorar-modo-escuro">
+              <div
+                className="rounded-lg shadow p-6 space-y-4"
+                style={{
+                  backgroundImage: `
       linear-gradient(to right, rgba(202,196,202,0.9), rgba(7,7,7,0.7)),
       url(${evento?.imagem_evento || ""})
     `,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                backgroundBlendMode: "overlay",
-              }}
-            >
-              <h1 className="text-3xl font-bold text-purple-700">
-                {evento.nome}
-              </h1>
-              <p className="text-purple-700">
-                <strong>Data:</strong>{" "}
-                {new Date(evento.data).toLocaleDateString()}
-              </p>
-              <p className="text-purple-700">
-                <strong>Hora:</strong> {evento.hora}
-              </p>
-              <p className="text-purple-700">{evento.descricao}</p>
-              <p className="text-purple-700">
-                <strong>Criado por:</strong> {evento.nome_usuario}
-              </p>
-              {endereco && (
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  backgroundBlendMode: "overlay",
+                }}
+              >
+                <h1 className="text-3xl font-bold text-purple-700">
+                  {evento.nome}
+                </h1>
                 <p className="text-purple-700">
-                  <strong>Local:</strong> {endereco.logradouro},{" "}
-                  {endereco.numero}, {endereco.bairro} - {endereco.cidade}/
-                  {endereco.UF}
+                  <strong>Data:</strong>{" "}
+                  {new Date(evento.data).toLocaleDateString()}
                 </p>
-              )}
-              {idInscricao && (
-                <button
-                  onClick={() => {
-                    desinscreverUsuario(idInscricao);
-                  }}
-                  className="bg-red-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
-                >
-                  desinscrever
-                </button>
-              )}
-              ''{" "}
-              {!idInscricao && (
-                <button
-                  onClick={inscreverUsuario}
-                  className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
-                >
-                  Inscrever-se
-                </button>
-              )}
-              {mensagem && (
-                <p className="text-green-300 font-semibold">{mensagem}</p>
-              )}
+                <p className="text-purple-700">
+                  <strong>Hora:</strong> {evento.hora}
+                </p>
+                <p className="text-purple-700">{evento.descricao}</p>
+                <p className="text-purple-700">
+                  <strong>Criado por:</strong> {evento.nome_usuario}
+                </p>
+                {endereco && (
+                  <p className="text-purple-700">
+                    <strong>Local:</strong> {endereco.logradouro},{" "}
+                    {endereco.numero}, {endereco.bairro} - {endereco.cidade}/
+                    {endereco.UF}
+                  </p>
+                )}
+                {idInscricao && (
+                  <button
+                    onClick={() => {
+                      desinscreverUsuario(idInscricao);
+                    }}
+                    className="bg-red-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
+                  >
+                    desinscrever
+                  </button>
+                )}
+                ''{" "}
+                {!idInscricao && (
+                  <button
+                    onClick={inscreverUsuario}
+                    className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition"
+                  >
+                    Inscrever-se
+                  </button>
+                )}
+                {mensagem && (
+                  <p className="text-green-300 font-semibold">{mensagem}</p>
+                )}
+              </div>
             </div>
-
             {/* Descrição completa */}
             {evento.descricao_completa && (
               <div className="bg-white rounded-lg shadow p-6 text-purple-800 text-sm">
