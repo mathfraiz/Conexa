@@ -9,7 +9,6 @@ export default function PaginaInicialAdmin() {
   const { usuario } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };

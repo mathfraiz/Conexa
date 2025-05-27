@@ -24,8 +24,9 @@ const MotionContainer: React.FC<MotionContainerProps> = ({
   return (
     <motion.div
       className={`relative bg-cover bg-center w-full p-8  ${height} ${className}`}
-
-      style={{ backgroundImage:backgroundImage  ? `url(${backgroundImage})` : "none" } }
+      style={{
+        backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
+      }}
       initial={animation}
       animate={{ opacity: 1, y: 0 }}
       transition={transition}

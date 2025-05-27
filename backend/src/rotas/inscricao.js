@@ -29,7 +29,7 @@ routerInscricao.post("/inscricao", authenticate, async (req, res) => {
       res.ok(false).json(novaInscricao);
     }
     console.log("novas incricao", novaInscricao);
-    res.json(novaInscricao);  
+    res.json(novaInscricao);
   } catch (err) {
     res
       .status(500)
@@ -43,7 +43,6 @@ routerInscricao.delete("/inscricao/:id", async (req, res) => {
   try {
     const resultado = await Inscricao.deletarInscricao(id);
     res.json(resultado);
-    
   } catch (err) {
     res
       .status(500)
@@ -57,14 +56,11 @@ routerInscricao.get("/inscricoesUsuario/:id", async (req, res) => {
     const inscricoes = await Inscricao.encontrarInscricaoPorUsuario(userId);
     res.json(inscricoes);
   } catch (err) {
-
     res.status(500).json({
       erro: "Erro ao buscar inscrições do usuário",
       detalhes: err.message,
     });
   }
 });
-
-
 
 export default routerInscricao;

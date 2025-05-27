@@ -5,7 +5,7 @@ import Login from "../paginas/login/login";
 import Cadastro from "../paginas/cadastro/cadastro";
 import Home from "../paginas/index/index";
 import RecuperacaoSenha from "../paginas/recuperação/recuperação";
-import PaginaInicialLogin from "../paginas/PaginaInicialLogin/PaginaInicialLogin";
+import PaginaInicial from "../paginas/PaginaInicial/PaginaInicial";
 import CriarEvento from "../paginas/cadastroEvento/cadastroEvento";
 import AdmUsuario from "../paginas/Adm/AdmUsuario";
 import EventoPage from "../paginas/Evento/Evento";
@@ -32,17 +32,17 @@ export default function RotasApp() {
         <>
           <Route path="/admin" element={<PaginaInicialAdmin />} />
           <Route path="/admusuarios" element={<AdmUsuario />} />
-          <Route path="/admEventos" element={<AdmEvento />} />
+          <Route path="/admeventos" element={<AdmEvento />} />
           <Route path="/configuracoes" element={<ConfiguracoesAdm />} />
-        </> 
+        </>
       )}
       {usuario?.tipo === "usuario" && (
         <>
-          <Route path="/paginainiciallogin" element={<PaginaInicialLogin />} />
-          <Route path="/cadastroEvento" element={<CriarEvento />} />
+          <Route path="/paginainicial" element={<PaginaInicial />} />
+          <Route path="/cadastroevento" element={<CriarEvento />} />
           <Route path="/eventos/:id" element={<EventoPage />} />
-          <Route path="/Eventos/Usuario" element={<UsuarioEventos />} />
-          <Route path="/Inscricoes" element={<Inscritos />} />
+          <Route path="/eventos/usuario" element={<UsuarioEventos />} />
+          <Route path="/inscricoes" element={<Inscritos />} />
         </>
       )}
 

@@ -41,7 +41,6 @@ const Perfil: React.FC<{ onClosePerfil: (foiSalvo: boolean) => void }> = ({
     logout();
     navigate("/login");
   };
-  
 
   return (
     <div className="fixed top-[0rem] right-6 z-50 w-80 animate-fade-in">

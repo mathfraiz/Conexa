@@ -66,7 +66,7 @@ const Navbar = ({ onToggleSidebar }: { onToggleSidebar: () => void }) => {
           <button
             onClick={() => {
               if (usuario?.tipo === "usuario") {
-                navigate("/paginainiciallogin");
+                navigate("/paginainicial");
               } else if (usuario?.tipo === "admin") {
                 navigate("/admin");
               }

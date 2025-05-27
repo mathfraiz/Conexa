@@ -7,7 +7,7 @@ const routerEvento = express.Router();
 
 // GET /eventos
 routerEvento.get("/eventos", async (req, res) => {
-  console.log("entrou no get eventos")
+  console.log("entrou no get eventos");
   try {
     const eventos = await Evento.findAllEvento();
     res.json(eventos);
@@ -20,7 +20,7 @@ routerEvento.get("/eventos", async (req, res) => {
 
 // GET /evento/:id
 routerEvento.get("/evento/:id", async (req, res) => {
-    console.log("entrou no get eventos por id")
+  console.log("entrou no get eventos por id");
 
   try {
     const evento = await Evento.findEventoById(req.params.id);
@@ -35,7 +35,7 @@ routerEvento.get("/evento/:id", async (req, res) => {
 
 // GET /eventos/eventosMaisAvaliados
 routerEvento.get("/eventos/eventosMaisAvaliados", async (req, res) => {
-  console.log("entrou no get mais avaliados")
+  console.log("entrou no get mais avaliados");
   try {
     const eventosMaisAvaliados = await Evento.encontrarTopEventos();
     res.json(eventosMaisAvaliados);
@@ -52,7 +52,7 @@ routerEvento.post(
   authenticate,
   upload.single("imagem"),
   async (req, res) => {
-    console.log("entrou no post evento")
+    console.log("entrou no post evento");
     try {
       const img = req.file?.buffer;
 
@@ -109,7 +109,7 @@ routerEvento.post(
 );
 
 routerEvento.delete("/eventos/:id", authenticate, async (req, res) => {
-  console.log("entrou no delete evento")
+  console.log("entrou no delete evento");
   try {
     const id = req.params.id;
 
@@ -138,7 +138,7 @@ routerEvento.delete("/eventos/:id", authenticate, async (req, res) => {
 });
 
 routerEvento.get("/eventos/usuario/:id", authenticate, async (req, res) => {
-  console.log("entrou no get eventos de usuario especifico")
+  console.log("entrou no get eventos de usuario especifico");
   try {
     const id = parseInt(req.params.id);
 
@@ -165,9 +165,9 @@ routerEvento.put(
     const eventoId = parseInt(req.params.id);
     const { nome, descricao, descricao_completa, data, hora } = req.body;
     const imagem = req.file?.buffer || null;
- 
+
     try {
-      console.log("entrou no put eventos por id")
+      console.log("entrou no put eventos por id");
       // Busca o evento atual para verificar se o usuário tem permissão
       const eventoAtual = await Evento.findEventoById(eventoId);
       if (!eventoAtual) {
@@ -204,7 +204,7 @@ routerEvento.put(
 );
 // EXPORTAR EVENTOS
 routerEvento.get("/evento/exportar", authenticate, async (req, res) => {
-  console.log("entrou no evento/exportar")
+  console.log("entrou no evento/exportar");
   try {
     if (req.userTipo !== "admin") {
       return res.status(403).json({ erro: "Acesso negado" });
@@ -215,9 +215,10 @@ routerEvento.get("/evento/exportar", authenticate, async (req, res) => {
     res.setHeader("Content-Disposition", "attachment; filename=eventos.json");
     res.status(200).send(JSON.stringify(eventos, null, 2));
   } catch (err) {
-    res.status(500).json({ erro: "Erro ao exportar eventos", detalhes: err.message });
+    res
+      .status(500)
+      .json({ erro: "Erro ao exportar eventos", detalhes: err.message });
   }
 });
-
 
 export default routerEvento;

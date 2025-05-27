@@ -8,7 +8,7 @@ const emailSugeridos = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com"];
 
 const Login: React.FC = () => {
   const { usuario, login } = useAuth();
-
+  const [indiceSelecionado, setIndiceSelecionado] = useState<number>(-1);
   const [modalMensagem, setModalMensagem] = useState("");
   const [verdeMensagem, setVerdeMensagem] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -38,7 +38,7 @@ const Login: React.FC = () => {
         login(data.usuario, data.token);
         setTimeout(() => {
           if (data.usuario?.tipo == "usuario") {
-            navigate("/paginainiciallogin");
+            navigate("/paginainicial");
           } else if (data.usuario?.tipo == "admin") {
             navigate("/admin");
           }
@@ -125,15 +125,36 @@ const Login: React.FC = () => {
                 placeholder="Digite seu email"
                 value={email}
                 onChange={handleEmailChange}
+                onKeyDown={(e) => {
+                  if (mostrarSugestoes && sugestoes.length > 0) {
+                    if (e.key === "ArrowDown") {
+                      e.preventDefault();
+                      setIndiceSelecionado((prev) =>
+                        prev < sugestoes.length - 1 ? prev + 1 : 0
+                      );
+                    } else if (e.key === "ArrowUp") {
+                      e.preventDefault();
+                      setIndiceSelecionado((prev) =>
+                        prev > 0 ? prev - 1 : sugestoes.length - 1
+                      );
+                    } else if (e.key === "Enter" && indiceSelecionado >= 0) {
+                      e.preventDefault();
+                      selecionarSugestao(sugestoes[indiceSelecionado]);
+                    }
+                  }
+                }}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500"
                 required
               />
+
               {mostrarSugestoes && (
                 <ul className="absolute bg-white border border-gray-300 rounded-md w-full mt-1 shadow-md z-10">
-                  {sugestoes.map((s) => (
+                  {sugestoes.map((s, index) => (
                     <li
                       key={s}
-                      className="px-3 py-2 cursor-pointer hover:bg-purple-50"
+                      className={`px-3 py-2 cursor-pointer hover:bg-purple-50 ${
+                        indiceSelecionado === index ? "bg-purple-200" : ""
+                      }`}
                       onClick={() => selecionarSugestao(s)}
                     >
                       {email.split("@")[0]}@{s}
@@ -180,7 +201,7 @@ const Login: React.FC = () => {
             <p className="text-sm text-gray-600">
               Esqueceu a senha?{" "}
               <Link
-                to="/recuperacao"
+                to="/recuperação"
                 className="text-purple-600 hover:text-purple-500"
               >
                 Recuperar senha

@@ -34,7 +34,6 @@ const Adm = () => {
     null
   );
 
-
   const carregarUsuarios = async () => {
     try {
       const response = await fetch("http://localhost:3000/usuario");
@@ -99,7 +98,6 @@ const Adm = () => {
       carregarUsuarios();
     }
   };
-
 
   return (
     <div className="p-6 bg-gradient-to-br from-purple-100 to-white min-h-screen ">

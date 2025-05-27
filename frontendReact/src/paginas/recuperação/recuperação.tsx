@@ -11,7 +11,12 @@ const RecuperacaoSenha: React.FC = () => {
   const [sugestoes, setSugestoes] = useState<string[]>([]);
   const [mostrarSugestoes, setMostrarSugestoes] = useState(false);
 
-  const emailSugeridos = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com"];
+  const emailSugeridos = [
+    "gmail.com",
+    "hotmail.com",
+    "outlook.com",
+    "yahoo.com",
+  ];
   const sugestoesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -22,7 +27,9 @@ const RecuperacaoSenha: React.FC = () => {
   useEffect(() => {
     if (metodo === "email" && contato.includes("@")) {
       const dominio = contato.split("@")[1] || "";
-      const sugestoesFiltradas = emailSugeridos.filter((s) => s.startsWith(dominio));
+      const sugestoesFiltradas = emailSugeridos.filter((s) =>
+        s.startsWith(dominio)
+      );
       setSugestoes(sugestoesFiltradas);
       setMostrarSugestoes(sugestoesFiltradas.length > 0);
     } else {
@@ -62,7 +69,10 @@ const RecuperacaoSenha: React.FC = () => {
     let numeros = valor.replace(/\D/g, "");
     if (numeros.length > 11) numeros = numeros.slice(0, 11);
     if (numeros.length >= 2) {
-      numeros = `(${numeros.slice(0, 2)}) ${numeros.slice(2, 7)}-${numeros.slice(7)}`;
+      numeros = `(${numeros.slice(0, 2)}) ${numeros.slice(
+        2,
+        7
+      )}-${numeros.slice(7)}`;
     }
     return numeros.trim();
   };
@@ -90,30 +100,51 @@ const RecuperacaoSenha: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (erro) return;
-    setMensagem(`Se o ${metodo} estiver cadastrado, você receberá um código de verificação.`);
+    setMensagem(
+      `Se o ${metodo} estiver cadastrado, você receberá um código de verificação.`
+    );
   };
 
   return (
-    <main className="h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url('/logo2.jpg')" }}>
-      <Navbar/>
+    <main
+      className="h-screen flex flex-col items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: "url('/logo2.jpg')" }}
+    >
+      <Navbar />
       <div className="flex flex-1 items-center justify-center">
         <div className="w-full max-w-md p-8 bg-purple-100 rounded-lg shadow-2xl border border-gray-300">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Recuperação de Senha</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">
+            Recuperação de Senha
+          </h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Escolha um método</label>
-              <select value={metodo} onChange={handleMetodoChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500">
+              <label className="block text-sm font-medium text-gray-700">
+                Escolha um método
+              </label>
+              <select
+                value={metodo}
+                onChange={handleMetodoChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500"
+              >
                 <option value="email">Recuperar via E-mail</option>
                 <option value="telefone">Recuperar via Telefone</option>
               </select>
             </div>
 
             <div className="mb-4 relative" ref={sugestoesRef}>
-              <label className="block text-sm font-medium text-gray-700">{metodo === "email" ? "Digite seu e-mail" : "Digite seu telefone"}</label>
+              <label className="block text-sm font-medium text-gray-700">
+                {metodo === "email"
+                  ? "Digite seu e-mail"
+                  : "Digite seu telefone"}
+              </label>
               <input
                 ref={inputRef}
                 type={metodo === "email" ? "email" : "tel"}
-                placeholder={metodo === "email" ? "seuemail@exemplo.com" : "(XX) XXXXX-XXXX"}
+                placeholder={
+                  metodo === "email"
+                    ? "seuemail@exemplo.com"
+                    : "(XX) XXXXX-XXXX"
+                }
                 value={contato}
                 onChange={(e) => validarEntrada(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500"
@@ -126,7 +157,11 @@ const RecuperacaoSenha: React.FC = () => {
               {mostrarSugestoes && sugestoes.length > 0 && (
                 <ul className="absolute bg-white border border-gray-300 rounded-md w-full mt-1 shadow-md z-10">
                   {sugestoes.map((sugestao) => (
-                    <li key={sugestao} className="px-3 py-2 cursor-pointer hover:bg-purple-100" onClick={() => selecionarSugestao(sugestao)}>
+                    <li
+                      key={sugestao}
+                      className="px-3 py-2 cursor-pointer hover:bg-purple-100"
+                      onClick={() => selecionarSugestao(sugestao)}
+                    >
                       {contato.split("@")[0]}@{sugestao}
                     </li>
                   ))}
@@ -134,16 +169,28 @@ const RecuperacaoSenha: React.FC = () => {
               )}
             </div>
 
-            <button type="submit" className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all" disabled={!!erro}>
+            <button
+              type="submit"
+              className="w-full bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-purple-800 transition-all"
+              disabled={!!erro}
+            >
               Enviar Código de Verificação
             </button>
 
-            {mensagem && <p className="mt-4 text-sm text-green-600">{mensagem}</p>}
+            {mensagem && (
+              <p className="mt-4 text-sm text-green-600">{mensagem}</p>
+            )}
           </form>
 
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
-              Lembrou sua senha? <Link to="/login" className="text-purple-600 hover:text-purple-500">Faça login</Link>
+              Lembrou sua senha?{" "}
+              <Link
+                to="/login"
+                className="text-purple-600 hover:text-purple-500"
+              >
+                Faça login
+              </Link>
             </p>
           </div>
         </div>
