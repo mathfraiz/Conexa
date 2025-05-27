@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "./AuthContext";
 
-const TEMPO_INATIVIDADE = 10 * 60 * 1000;
+const tempoInativo = 10 * 60 * 1000;
 
 interface JwtPayload {
   exp: number;
@@ -40,7 +40,7 @@ export function useLogoutAuto() {
         logout();
         alert("sessao Expirada por inatividade");
         return;
-      }, TEMPO_INATIVIDADE);
+      }, tempoInativo);
     }
   };
 

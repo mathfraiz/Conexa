@@ -90,15 +90,16 @@ const Cadastro: React.FC = () => {
         if (loginResponse.ok) {
           const loginData = await loginResponse.json();
 
-          login(loginData.usuario, loginData.token); // Usa o contexto global
+          login(loginData.usuario, loginData.token);
 
           setModalMensagem("Cadastro e login realizados com sucesso!");
           setMostrarModal(true);
 
           setTimeout(() => {
             setMostrarModal(false);
-            if (loginData.usuario.tipo === "admin") {
-              navigate("paginainiciallogin");
+            console.log(loginData.usuario.tipo);
+            if (loginData.usuario.tipo === "usuario") {
+              navigate("/paginainiciallogin");
             } else {
               navigate("/admin");
             }
@@ -109,8 +110,13 @@ const Cadastro: React.FC = () => {
         }
       } else {
         console.error("Erro no cadastro:", data);
-        setModalMensagem("Erro ao cadastrar. Tente novamente.");
+        setModalMensagem(
+          "Erro ao cadastrar. Verifique seu email e tente novamente"
+        );
         setMostrarModal(true);
+        setTimeout(() => {
+          setMostrarModal(false);
+        }, 3000);
       }
     } catch (error) {
       console.error("Erro ao cadastrar:", error);
