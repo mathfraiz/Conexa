@@ -24,7 +24,7 @@ export default function UsuarioEventos() {
 
   useEffect(() => {
     buscarEventos();
-  },[]);
+  });
 
   const buscarEventos = async () => {
     try {
