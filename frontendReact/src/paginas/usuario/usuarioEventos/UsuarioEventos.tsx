@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import MotionContainer from "../../../componentes/MotionConteiner";
 import ModalEdicaoEvento from "../../../componentes/ModalEdicaoEvento";
 import Navbar from "../../../componentes/BarraNav";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import { Evento } from "../../../types/Evento";
 import BarraLateral from "../../../componentes/BarraLateral";
 import Rodape from "../../../componentes/Rodape";
+
+
 
 export default function UsuarioEventos() {
   const [eventos, setEventos] = useState<Evento[]>([]);
@@ -22,12 +23,8 @@ export default function UsuarioEventos() {
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   useEffect(() => {
-    if (usuario?.id === 0 || usuario?.tipo !== "usuario") {
-      navigate("/login");
-    } else {
-      buscarEventos();
-    }
-  }, [usuario]);
+    buscarEventos();
+  },[]);
 
   const buscarEventos = async () => {
     try {

@@ -18,13 +18,7 @@ const Cadastro: React.FC = () => {
   const [senha, setSenha] = useState("");
   const [confirmacaosenha, setConfirmacaosenha] = useState("");
   const [imagemPreview, setImagemPreview] = useState<File | null>(null);
-  // const [cep, setCep] = useState("");
-  // const [endereco, setEndereco] = useState("");
-  // const [bairro, setBairro] = useState("");
-  // const [cidade, setCidade] = useState("");
-  // const [uf, setUf] = useState("");
 
-  // Error states
   const [nomeErro, setNomeErro] = useState("");
   const [emailErro, setEmailErro] = useState("");
   const [senhaErro, setSenhaErro] = useState("");
@@ -350,6 +344,11 @@ const Cadastro: React.FC = () => {
       return;
     }
 
+    if(senha !== confirmacaosenha) {
+      setConfirmacaosenhaErro("As senhas não coincidem.");
+      return;
+    }
+
     await cadastrar(form);
   };
 
@@ -566,12 +565,17 @@ const Cadastro: React.FC = () => {
                     value={confirmacaosenha}
                     onChange={handleConfirmacaosenhaChange}
                     className={`mt-1 block w-full px-3 py-2 border border-gray-300 bg-purple-50 text-gray-900 rounded-lg shadow-md focus:ring-2 focus:ring-purple-500 ${
-                      confirmacaosenhaErro
+                      senha != confirmacaosenha
                         ? "border-red-500"
                         : "border-gray-300"
                     } rounded-md shadow-sm focus:ring-2 focus:ring-purple-500`}
                     required
                   />
+                  {(confirmacaosenha && senha != confirmacaosenha) && (
+                    <p className="text-sm text-red-500 mt-2">
+                      {"Senhas não coincidem"}
+                    </p>
+                  )}
                   <button
                     type="button"
                     onClick={() => setMostrarSenhaConf(!mostrarSenhaConf)}

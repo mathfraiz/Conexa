@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "./AuthContext";
 
-const tempoInativo = 10 * 60 * 1000;
+const tempoInativo = 10 * 60 * 60 * 1000 ; // 10 horas em milissegundos
 
 interface JwtPayload {
   exp: number;

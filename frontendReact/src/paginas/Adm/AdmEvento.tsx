@@ -54,6 +54,10 @@ const AdmEvento = () => {
     }
   };
 
+  useEffect(()=>{
+    carregarEventos()
+  })
+
   return (
     <div className=" bg-gradient-to-br from-purple-100 to-white min-h-screen">
       <Navbar onToggleSidebar={() => setSidebarAberta(!sidebarAberta)} />

@@ -12,6 +12,7 @@ const Evento = {
         ? `data:image/jpeg;base64,${evento.imagem_evento.toString("base64")}`
         : null,
     }));
+    console
 
     return eventosConvertidos;
   },
@@ -43,16 +44,44 @@ const Evento = {
     imagem
   ) {
     try {
-      const [result] = await pool.query(
-        `UPDATE eventos SET nome = ?,descricao = ?, descricao_completa = ?, data = ?, hora = ?, imagem_evento = ?
-       WHERE id = ?`,
-        [nome, descricao, descricao_completa, data, hora, imagem, id]
-      );
+      let campos = [];
+      let valores = [];
 
-      return result.affectedRows > 0;
+      // Campos obrigatórios que sempre atualizamos
+      campos.push(
+        "nome = ?",
+        "descricao = ?",
+        "descricao_completa = ?",
+        "data = ?",
+        "hora = ?"
+      );
+      valores.push(nome, descricao, descricao_completa, data, hora);
+
+      // Tratar imagem: se for "vazio", limpa (null); se existir, atualiza; se undefined, não altera
+      if (imagem === "vazio") {
+        campos.push("imagem_evento = ?");
+        valores.push(null);
+      } else if (imagem) {
+        campos.push("imagem_evento = ?");
+        valores.push(imagem);
+      }
+
+      const sql = `UPDATE eventos SET ${campos.join(", ")} WHERE id = ?`;
+      valores.push(id);
+
+      const [result] = await pool.query(sql, valores);
+
+      if (result.affectedRows > 0) {
+        // Retorna o evento atualizado
+        const [rows] = await pool.query("SELECT * FROM eventos WHERE id = ?", [
+          id,
+        ]);
+        return rows[0];
+      }
+      return null;
     } catch (err) {
       console.error("Erro no atualizarEvento:", err.message);
-      return false;
+      return null;
     }
   },
 
@@ -131,7 +160,6 @@ const Evento = {
        WHERE e.criado_por = ?`,
       [id]
     );
-
     const eventosConvertidos = rows.map((evento) => ({
       ...evento,
       imagem_evento: evento.imagem_evento

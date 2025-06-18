@@ -142,7 +142,7 @@ routerEvento.get("/eventos/usuario/:id", authenticate, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
 
-    // Proteção: só o próprio usuário ou um admin pode ver os eventos
+    //so o próprio usuário ou um admin pode ver os eventos
     if (req.userId !== id) {
       return res.status(403).json({ erro: "Acesso negado" });
     }

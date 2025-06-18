@@ -34,8 +34,15 @@ class Inscricao {
     try {
       const sql = `SELECT eventos.* FROM eventos JOIN inscricao ON eventos.id = inscricao.evento_id WHERE inscricao.usuario_id = ?;`;
       const [rows] = await pool.query(sql, [usuario_id]);
-      console.log(rows);
-      return rows;
+      const eventosConvertidos = rows.map((evento) => ({
+        ...evento,
+        imagem_evento: evento.imagem_evento
+          ? `data:image/jpeg;base64,${evento.imagem_evento.toString("base64")}`
+          : null,
+      }));
+      console.log(eventosConvertidos);
+
+      return eventosConvertidos;
     } catch (error) {
       throw new Error("Erro ao buscar inscrições do usuário: " + error.message);
     }
